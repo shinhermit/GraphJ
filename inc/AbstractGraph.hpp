@@ -2,17 +2,10 @@
 #define ABSTRACTGRAPH
 
 #include <set>
-#include <map>
 #include "Node.hpp"
 
 class AbstractGraph{
 public:
-  // AbstractGraph();
-  // AbstractGraph(const AbstractGraph & source);
-  // ~AbstractGraph();
-
-  // AbstractGraph & operator=(const AbstractGraph & source);
-
   // Prédicats
   virtual bool is_empty()=0;
   virtual bool has_node(Node::node_id id)=0;

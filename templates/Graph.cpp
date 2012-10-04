@@ -147,3 +147,23 @@ Type Graph<Type>::get_node_content(Node::node_id id){
     throw std::string("Graph<Type>::get_node_content(node_id) : given value is not an id of any node of the Graph");
   }
 }
+
+template<typename Type>
+unsigned long Graph<Type>::internally(Node::node_id node){
+  try{
+    return Graph0::internally(node);
+  }
+  catch(std::string){
+    throw std::string("Graph<Type>::internally(Node::node_id) : given node not in the graph");
+  }
+}
+
+template<typename Type>
+unsigned long Graph<Type>::externally(Node::node_id node){
+  try{
+    return Graph0::externally(node);
+  }
+  catch(std::string){
+    throw std::string("Graph<Type>::externally(Node::node_id) : given node not in the graph");
+  }
+}

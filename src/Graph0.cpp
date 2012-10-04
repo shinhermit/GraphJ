@@ -158,3 +158,42 @@ Node::node_id Graph0::last_node(){
     throw std::string("Graph0::last_node() : Attempt to access empty graph");
   }
 }
+
+unsigned long Graph0::internally(Node::node_id node){
+  std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
+  unsigned long count;
+
+  if( _nodes.count(node) ){
+
+    count = 0;
+    for(it = _topology.begin(); it != _topology.end(); it++){
+      if( it->second.count(node) ){
+	count ++;
+      }
+    }
+    return count;
+
+  }
+  else{
+    throw std::string("Graph0::internally(Node::node_id) : given id not in the graph");
+  }
+}
+
+unsigned long Graph0::externally(Node::node_id node){
+  std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
+
+  if( _nodes.count(node) > 0){
+
+    it = _topology.find(node);
+    if( it != _topology.end() ){
+      return it->second.size();
+    }
+    else{
+      return 0;
+    }
+
+  }
+  else{
+    throw std::string("Graph0::externally(Node::node_id) : given id not in the graph");
+  }
+}

@@ -1,20 +1,5 @@
 #include "AbstractGraph.hpp"
 
-// Graph0::Graph0():_it(_nodes.begin()){}
-
-// Graph0::Graph0(const Graph0 & source):_nodes(source._nodes),_topology(source._topology), _it(_nodes.begin()){
-// }
-
-// Graph0::~Graph0(){
-// }
-
-// Graph0 & Graph0::operator=(const Graph0 & source){
-//   _nodes = source._nodes;
-//   _topology = source._topology;
-//   _it = _nodes.begin();
-//   return *this;
-// }
-
 bool AbstractGraph::is_empty(){
  std::cout << "calling abstract AbstractGraph::is_empty()" << std::endl;
   return false;

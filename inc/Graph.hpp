@@ -36,6 +36,8 @@ public:
   Node::node_id next_node();
   Node::node_id previous_node();
   Node::node_id last_node();
+  unsigned long internally(Node::node_id node);
+  unsigned long externally(Node::node_id node);
   Type get_node_content(Node::node_id id);
 };
 

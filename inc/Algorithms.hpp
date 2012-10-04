@@ -1,5 +1,5 @@
-#ifndef GRAPH_ALGORITHMS
-#define GRAPH_ALGORITHMS
+#ifndef ALGORITHMS
+#define ALGORITHMS
 
 #include <deque>
 #include "Graph.hpp"

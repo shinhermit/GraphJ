@@ -1,11 +1,10 @@
 #ifndef GRAPH0
 #define GRAPH0
 
-#include <set>
 #include <map>
-#include "Node.hpp"
+#include "AbstractGraph.hpp"
 
-class Graph0{
+class Graph0 : public AbstractGraph{
 protected:
   std::set<Node::node_id> _nodes; /* id-sorted vector of all Nodes IDs*/
 
@@ -38,6 +37,8 @@ public:
   Node::node_id next_node();
   Node::node_id previous_node();
   Node::node_id last_node();
+  unsigned long internally(Node::node_id node);
+  unsigned long externally(Node::node_id node);
 };
 
 #endif
