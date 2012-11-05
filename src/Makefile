@@ -9,12 +9,18 @@ cmd = $(cc) -c $(flags) $(paths) $@.cpp -o $(obj)/$@.o
 
 ##CIBLES
 
+
 Node:
 	$(cmd)
 
 Edge:
 	$(cmd)
 
-Graph0:
+DiGraph:
 	$(cmd)
 
+DirectableGraph:
+	$(cmd)
+
+PonderableGraph:
+	$(cmd)

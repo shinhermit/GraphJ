@@ -1,44 +1,29 @@
 #ifndef GRAPH
 #define GRAPH
 
-#include "Graph0.hpp"
-#include "Node.hpp"
+#include "PonderableGraph.hpp"
 
 template <typename Type>
-class Graph : private Graph0{
-
+class Graph : public PonderableGraph{
 protected:
   std::map<Node::node_id, Type> _contents;
 
 public:
-  Graph();
+  Graph(EdgeType edgeType=UNDIRECTED, EdgeState state=WEIGHTED);
   Graph(const Graph & source);
-  ~Graph();
 
   Graph & operator=(const Graph & source);
 
-  // Prédicats
-  bool is_empty();
-  bool has_node(Node::node_id id);
-  bool has_edge(Node::node_id src_node, Node::node_id target_node);
-
-  //Constructeurs
+  // Adaptation des constructeurs
   void add_node(Node::node_id id, Type content);
   void remove_node(Node::node_id node_id);
-  void add_edge(Node::node_id src_node, Type content1, Node::node_id target_node, Type content2);
-  void add_edge(Node::node_id existing_src, Node::node_id existing_target);
+  void add_edge(Node::node_id src_node, Type content1, Node::node_id target_node, Type content2, typename Ponderable::Cost cost=1.F);
+  void add_edge(Node::node_id existing_src, Node::node_id existing_target, typename Ponderable::Cost cost=1.F) throw(std::invalid_argument);
   void remove_edge(Node::node_id src_node, Node::node_id target_node);
 
-  //Observateurs
-  unsigned long size()const;
-  std::set<Node::node_id> successors(Node::node_id node);
-  Node::node_id first_node();
-  Node::node_id next_node();
-  Node::node_id previous_node();
-  Node::node_id last_node();
-  unsigned long internally(Node::node_id node);
-  unsigned long externally(Node::node_id node);
-  Type get_node_content(Node::node_id id);
+  // Nouvelles opérations
+  void Graph<Type>::set_node_content(node::node_id id, Type content) throw(std::invalid_argument);
+  Type Graph<Type>::get_node_content(node::node_id id) throw(std::logic_error, std::invalid_argument);
 };
 
 #include "Graph.cpp"

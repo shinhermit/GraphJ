@@ -1,14 +1,19 @@
 #ifndef EDGE
 #define EDGE
 
+#include "Node.hpp"
+
 class Edge{
 private:
-  int _source;
-  int _target;
+  Node::node_id _source;
+  Node::node_id _target;
+
 public:
-  Edge(int node_id1, int node_id2);
+  Edge(Node::node_id node1, Node::node_id node2);
   Edge(const Edge & source);
-  ~Edge();
+
+  Node::node_id source()const;
+  Node::node_id target()const;
 };
 
 #endif

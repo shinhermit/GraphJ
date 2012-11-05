@@ -2,7 +2,9 @@
 #define ABSTRACTGRAPH
 
 #include <set>
+#include <fstream>
 #include "Node.hpp"
+#include "Edge.hpp"
 
 class AbstractGraph{
 public:
@@ -20,12 +22,15 @@ public:
   //observateurs
   virtual unsigned long size()const=0;
   virtual std::set<Node::node_id> successors(Node::node_id node)=0;
+  virtual std::set<Node::node_id> predecessors(Node::node_id node)=0;
+  virtual std::set<Node::node_id> adjacents(Node::node_id node)=0;
   virtual Node::node_id first_node()=0;
   virtual Node::node_id next_node()=0;
   virtual Node::node_id previous_node()=0;
   virtual Node::node_id last_node()=0;
   virtual unsigned long internally(Node::node_id node)=0;
   virtual unsigned long externally(Node::node_id node)=0;
+  virtual unsigned long degree(Node::node_id node)=0;
 };
 
 #endif

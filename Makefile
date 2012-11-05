@@ -15,15 +15,26 @@ cmd_exe = cd $(tst); make $@
 Node:
 	$(cmd_src)
 
-Graph0:
+Edge:
 	$(cmd_src)
+
+DiGraph:
+	$(cmd_src)
+
+DirectableGraph:
+	$(cmd_src)
+
+PonderableGraph:
+	$(cmd_src)
+
+all_classes: Node Edge DiGraph DirectableGraph PonderableGraph
 
 #les tests
 
-test_node:
+test_node: Node
 	$(cmd_exe)
 
-test_graph: Node Graph0
+test_graph: all_classes
 	$(cmd_exe)
 
 #Cleanings
