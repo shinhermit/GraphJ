@@ -14,6 +14,6 @@ cmd = $(cc) $(flags) $(paths) $@.cpp $(obj)/*.o -o ../$@.out
 test_node:
 	$(cmd)
 
-test_graph:
+test_directed:
 	$(cmd)
 

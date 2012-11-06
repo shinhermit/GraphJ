@@ -1,6 +1,6 @@
 
 template <typename Type>
-Graph<Type>::Graph(EdgeType edgeType=UNDIRECTED, EdgeState state=WEIGHTED):PonderableGraph::PonderableGraph(EdgeType edgeType=UNDIRECTED, EdgeState state=WEIGHTED){}
+Graph<Type>::Graph(DirectableGraph::EdgeType edgeType, PonderableGraph::EdgeState state):PonderableGraph(edgeType, state){}
 
 template <typename Type>
 Graph<Type>::Graph(const Graph<Type> & source):PonderableGraph::PonderableGraph(source), _contents(source._contents){}
@@ -10,20 +10,20 @@ Graph<Type> & Graph<Type>::operator=(const Graph<Type> & source){
 
   PonderableGraph::operator=(source);
 
-  _content = source._content;
+  _contents = source._contents;
   return *this;
 }
 
 template <typename Type>
-void Graph<Type>::add_node(node::node_id id, Type content){
+void Graph<Type>::add_node(Node::node_id id, Type content){
 
   PonderableGraph::add_node(id);
 
-  _contents.insert( std::pair<node_id, Type>(id, content) );
+  _contents.insert( std::pair<Node::node_id, Type>(id, content) );
 }
 
 template <typename Type>
-void Graph<Type>::remove_node(node::node_id id){
+void Graph<Type>::remove_node(Node::node_id id){
 
   PonderableGraph::remove_node(id);
 
@@ -31,27 +31,27 @@ void Graph<Type>::remove_node(node::node_id id){
 }
 
 template <typename Type>
-void Graph<Type>::add_edge(node::node_id src_node, Type content1, node::node_id target_node, Type content2, typename Ponderable::Cost cost){
+void Graph<Type>::add_edge(Node::node_id src_node, Type content1, Node::node_id target_node, Type content2, PonderableGraph::Cost cost){
 
   PonderableGraph::add_edge(src_node, target_node, cost);
 
-  _contents.insert( std::pair<node_id, Type>(src_node, content1) );
-  _contents.insert( std::pair<node_id, Type>(target_node, content2) );
+  _contents.insert( std::pair<Node::node_id, Type>(src_node, content1) );
+  _contents.insert( std::pair<Node::node_id, Type>(target_node, content2) );
 }
 
 template <typename Type>
-void Graph<Type>::add_edge(node::node_id existing_src, node::node_id existing_target, typename Ponderable::Cost cost){
+void Graph<Type>::add_edge(Node::node_id existing_src, Node::node_id existing_target, PonderableGraph::Cost cost) throw(std::invalid_argument){
 
   if( has_node(existing_src) && has_node(existing_target) ){
     PonderableGraph::add_edge(existing_src, existing_target, cost);
   }
   else{
-    throw std::invalid_argument("Graph<Type>::add_edge(node::node_id, node::node_id, typename Ponderable::Cost=1.F) : given nodes must already be in the Graph.\n Consider using:\n Graph<Type>::add_edge(node::node_id, Type, node::node_id, Type, typename Ponderable::Cost=1.F)");
+    throw std::invalid_argument("Graph<Type>::add_edge(node::node_id, node::node_id, PonderableGraph::Cost=1.F) : given nodes must already be in the Graph.\n Consider using:\n Graph<Type>::add_edge(node::node_id, Type, node::node_id, Type, PonderableGraph::Cost=1.F)");
   }
 }
 
 template <typename Type>
-void Graph<Type>::remove_edge(node::node_id node_src_node, node::node_id node_target_node){
+void Graph<Type>::remove_edge(Node::node_id src_node, Node::node_id target_node){
 
   PonderableGraph::remove_edge(src_node, target_node);
 
@@ -60,9 +60,9 @@ void Graph<Type>::remove_edge(node::node_id node_src_node, node::node_id node_ta
 }
 
 template <typename Type>
-void Graph<Type>::set_node_content(node::node_id id, Type content){
+void Graph<Type>::set_node_content(Node::node_id id, Type content) throw(std::invalid_argument){
   if( has_node(id) ){
-    _contents[id] = contents;
+    _contents[id] = content;
   }
   else{
     throw std::invalid_argument("Graph<Type>::set_node_content(node::node_id, Type) : given id does not refer to a valid node");
@@ -70,8 +70,8 @@ void Graph<Type>::set_node_content(node::node_id id, Type content){
 }
 
 template <typename Type>
-Type Graph<Type>::get_node_content(node::node_id id){
-  std::map<Node::node_id, Type>::iterator it;
+Type Graph<Type>::get_node_content(Node::node_id id) throw(std::logic_error, std::invalid_argument){
+  typename std::map<Node::node_id, Type>::iterator it;
 
   if( has_node(id) ){
     it = _contents.find(id);

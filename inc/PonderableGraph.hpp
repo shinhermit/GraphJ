@@ -11,7 +11,7 @@ public:
 protected:
   EdgeState _edgeState;
 
-  std::map<Edge, Cost> _weights;
+  std::map<Edge,Cost> _weights;
 
 public:
   PonderableGraph(EdgeType edgeType=UNDIRECTED, EdgeState state=WEIGHTED);
@@ -26,7 +26,7 @@ public:
 
   // Nouvelles opérations
   void setCost(Node::node_id node1, Node::node_id node2, Cost cost) throw(std::invalid_argument, std::logic_error);
-  Cost getCost(Node::node_id node1, Node::node_id node2)const throw(std::invalid_argument, std::logic_error);
+  Cost getCost(Node::node_id node1, Node::node_id node2) throw(std::invalid_argument, std::logic_error);
 
 };
 

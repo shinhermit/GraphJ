@@ -92,7 +92,7 @@ unsigned long DiGraph::size()const{
   return _nodes.size();
 }
 
-std::set<Node::node_id> DiGraph::successors(Node::node_id node){
+std::set<Node::node_id> DiGraph::successors(Node::node_id node) throw(std::invalid_argument){
   std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
 
   if( _nodes.count(node) ){
@@ -111,14 +111,12 @@ std::set<Node::node_id> DiGraph::successors(Node::node_id node){
   }
 }
 
-std::set<Node::node_id> DiGraph::predecessors(Node::node_id node){
+std::set<Node::node_id> DiGraph::predecessors(Node::node_id node) throw(std::invalid_argument){
   std::set<Node::node_id> preds;
   std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
-  unsigned long count;
 
   if( _nodes.count(node) ){
 
-    count = 0;
     for(it = _topology.begin(); it != _topology.end(); it++){
       if( it->second.count(node) ){
 	preds.insert(it->first);
@@ -142,7 +140,7 @@ std::set<Node::node_id> DiGraph::adjacents(Node::node_id node) throw(std::invali
   return preds;
 }
 
-Node::node_id DiGraph::first_node(){
+Node::node_id DiGraph::first_node() throw(std::out_of_range){
   if( _nodes.size() > 0 ){
     _it = _nodes.begin();
     return *_it;
@@ -152,7 +150,7 @@ Node::node_id DiGraph::first_node(){
   }
 }
 
-Node::node_id DiGraph::next_node(){
+Node::node_id DiGraph::next_node() throw(std::out_of_range){
   if( _nodes.size() > 0 ){
 
     if( _it != _nodes.end() )
@@ -171,7 +169,7 @@ Node::node_id DiGraph::next_node(){
   }
 }
 
-Node::node_id DiGraph::previous_node(){
+Node::node_id DiGraph::previous_node() throw(std::out_of_range){
   if( _nodes.size() > 0 ){
     if(_it != _nodes.begin() ){
       _it--;
@@ -188,7 +186,7 @@ Node::node_id DiGraph::previous_node(){
   }
 }
 
-Node::node_id DiGraph::last_node(){
+Node::node_id DiGraph::last_node() throw(std::out_of_range){
   if( _nodes.size() > 0 ){
     _it = _nodes.end();
     _it --;
@@ -199,7 +197,7 @@ Node::node_id DiGraph::last_node(){
   }
 }
 
-unsigned long DiGraph::internally(Node::node_id node){
+unsigned long DiGraph::internally(Node::node_id node) throw(std::invalid_argument){
   std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
   unsigned long count;
 
@@ -219,7 +217,7 @@ unsigned long DiGraph::internally(Node::node_id node){
   }
 }
 
-unsigned long DiGraph::externally(Node::node_id node){
+unsigned long DiGraph::externally(Node::node_id node) throw(std::invalid_argument){
   std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
 
   if( _nodes.count(node) > 0){
@@ -238,6 +236,6 @@ unsigned long DiGraph::externally(Node::node_id node){
   }
 }
 
-unsigned long DiGraph::degree(Node::node_id node){
+unsigned long DiGraph::degree(Node::node_id node) throw(std::invalid_argument){
   return externally(node) + internally(node);
 }

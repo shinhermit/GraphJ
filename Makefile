@@ -34,7 +34,7 @@ all_classes: Node Edge DiGraph DirectableGraph PonderableGraph
 test_node: Node
 	$(cmd_exe)
 
-test_graph: all_classes
+test_directed: all_classes
 	$(cmd_exe)
 
 #Cleanings

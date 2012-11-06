@@ -9,7 +9,7 @@ bool DirectableGraph::has_edge(Node::node_id id1, Node::node_id id2){
 
   has = DiGraph::has_edge(id1, id2);
 
-  if(!has && _edgeType == EdgeType::UNDIRECTED){
+  if(!has && _edgeType == UNDIRECTED){
     has = DiGraph::has_edge(id2, id1);
   }
 
@@ -19,14 +19,14 @@ bool DirectableGraph::has_edge(Node::node_id id1, Node::node_id id2){
 void DirectableGraph::add_edge(Node::node_id id1, Node::node_id id2){
   DiGraph::add_edge(id1, id2);
 
-  if(_edgeType == EdgeType::UNDIRECTED){
+  if(_edgeType == UNDIRECTED){
     DiGraph::add_edge(id2, id1);
   }
 }
 
-std::set<Node::node_id> DirectableGraph::predecessors(Node::node_id node){
+std::set<Node::node_id> DirectableGraph::predecessors(Node::node_id node) throw(std::invalid_argument){
 
-  if(_edgeType == EdgeType::DIRECTED){
+  if(_edgeType == DIRECTED){
     return DiGraph::predecessors(node);
   }
   else{
@@ -36,7 +36,7 @@ std::set<Node::node_id> DirectableGraph::predecessors(Node::node_id node){
 
 std::set<Node::node_id> DirectableGraph::adjacents(Node::node_id node) throw(std::invalid_argument){
 
-  if(_edgeType == EdgeType::DIRECTED){
+  if(_edgeType == DIRECTED){
     return DiGraph::adjacents(node);
   }
   else{
@@ -44,9 +44,9 @@ std::set<Node::node_id> DirectableGraph::adjacents(Node::node_id node) throw(std
   }
 }
 
-unsigned long DirectableGraph::internally(Node::node_id node){
+unsigned long DirectableGraph::internally(Node::node_id node) throw(std::invalid_argument){
 
-  if(_edgeType == EdgeType::DIRECTED){
+  if(_edgeType == DIRECTED){
     return DiGraph::internally(node);
   }
   else{
@@ -54,9 +54,9 @@ unsigned long DirectableGraph::internally(Node::node_id node){
   }
 }
 
-unsigned long DirectableGraph::degree(Node::node_id node){
+unsigned long DirectableGraph::degree(Node::node_id node) throw(std::invalid_argument){
 
-  if(_edgeType == EdgeType::DIRECTED){
+  if(_edgeType == DIRECTED){
     return DiGraph::degree(node);
   }
   else{
