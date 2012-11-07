@@ -24,3 +24,6 @@ DirectableGraph:
 
 PonderableGraph:
 	$(cmd)
+
+Color:
+	$(cmd)

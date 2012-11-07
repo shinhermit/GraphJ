@@ -29,6 +29,11 @@ PonderableGraph:
 
 all_classes: Node Edge DiGraph DirectableGraph PonderableGraph
 
+#Autres classes (utilitaires)
+
+Color:
+	$(cmd_src)
+
 #les tests
 
 test_node: Node
