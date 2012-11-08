@@ -9,19 +9,19 @@ bool WeightedEdge::operator==(const WeightedEdge & ref)const{
 }
 
 bool WeightedEdge::operator<(const WeightedEdge & ref)const{
-  return _cost < ref._cost;
+  return (_cost < ref._cost) || ( _cost == ref._cost && Edge::operator<(ref) );
 }
 
 bool WeightedEdge::operator<=(const WeightedEdge & ref)const{
-  return _cost <= ref._cost;
+  return operator<(ref) || operator==(ref);
 }
 
 bool WeightedEdge::operator>(const WeightedEdge & ref)const{
-  return _cost > ref._cost;
+  return !operator<=(ref);
 }
 
 bool WeightedEdge::operator>=(const WeightedEdge & ref)const{
-  return _cost >= ref._cost;
+  return !operator<(ref);
 }
 
 bool WeightedEdge::operator!=(const WeightedEdge & ref)const{

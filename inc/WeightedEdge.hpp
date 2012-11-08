@@ -10,14 +10,14 @@ protected:
 
 public:
   WeightedEdge(Node::node_id node1, Node::node_id node2, GraphTypes::Cost cost);
-  WeightedEdge(const Edge & source);
+  WeightedEdge(const WeightedEdge & source);
 
-  bool operator==(const Edge & ref)const;
-  bool operator<(const Edge & ref)const;
-  bool operator<=(const Edge & ref)const;
-  bool operator>(const Edge & ref)const;
-  bool operator>=(const Edge & ref)const;
-  bool operator!=(const Edge & ref)const;
+  bool operator==(const WeightedEdge & ref)const;
+  bool operator<(const WeightedEdge & ref)const;
+  bool operator<=(const WeightedEdge & ref)const;
+  bool operator>(const WeightedEdge & ref)const;
+  bool operator>=(const WeightedEdge & ref)const;
+  bool operator!=(const WeightedEdge & ref)const;
 
   GraphTypes::Cost cost()const;
 };
