@@ -1,6 +1,6 @@
 
 template <typename Type>
-Graph<Type>::Graph(DirectableGraph::EdgeType edgeType, PonderableGraph::EdgeState state):PonderableGraph(edgeType, state){}
+Graph<Type>::Graph(GraphTypes::EdgeType edgeType, GraphTypes::EdgeState state):PonderableGraph(edgeType, state){}
 
 template <typename Type>
 Graph<Type>::Graph(const Graph<Type> & source):PonderableGraph::PonderableGraph(source), _contents(source._contents){}
@@ -31,7 +31,7 @@ void Graph<Type>::remove_node(Node::node_id id){
 }
 
 template <typename Type>
-void Graph<Type>::add_edge(Node::node_id src_node, Type content1, Node::node_id target_node, Type content2, PonderableGraph::Cost cost){
+void Graph<Type>::add_edge(Node::node_id src_node, Type content1, Node::node_id target_node, Type content2, GraphTypes::Cost cost){
 
   PonderableGraph::add_edge(src_node, target_node, cost);
 
@@ -40,7 +40,7 @@ void Graph<Type>::add_edge(Node::node_id src_node, Type content1, Node::node_id 
 }
 
 template <typename Type>
-void Graph<Type>::add_edge(Node::node_id existing_src, Node::node_id existing_target, PonderableGraph::Cost cost) throw(std::invalid_argument){
+void Graph<Type>::add_edge(Node::node_id existing_src, Node::node_id existing_target, GraphTypes::Cost cost) throw(std::invalid_argument){
 
   if( has_node(existing_src) && has_node(existing_target) ){
     PonderableGraph::add_edge(existing_src, existing_target, cost);

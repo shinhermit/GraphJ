@@ -1,8 +1,8 @@
 #include "DiGraph.hpp"
 
-DiGraph::DiGraph():_it(_nodes.begin()){}
+DiGraph::DiGraph():_nb_of_edges(0), _it(_nodes.begin()){}
 
-DiGraph::DiGraph(const DiGraph & source):_nodes(source._nodes),_topology(source._topology), _it(_nodes.begin()){
+DiGraph::DiGraph(const DiGraph & source):_nodes(source._nodes), _nb_of_edges(source._nb_of_edges), _topology(source._topology), _it(_nodes.begin()){
 }
 
 DiGraph::~DiGraph(){
@@ -10,6 +10,7 @@ DiGraph::~DiGraph(){
 
 DiGraph & DiGraph::operator=(const DiGraph & source){
   _nodes = source._nodes;
+  _nb_of_edges = source._nb_of_edges;
   _topology = source._topology;
   _it = _nodes.begin();
   return *this;
@@ -39,6 +40,14 @@ bool DiGraph::has_edge(Node::node_id id1, Node::node_id id2){
   return has;
 }
 
+bool DiGraph::is_directed(){
+  return true;
+}
+
+bool DiGraph::is_weighted(){
+  return false;
+}
+
 void DiGraph::add_node(Node::node_id id){
   _nodes.insert(id);
   _it = _nodes.begin();
@@ -55,6 +64,7 @@ void DiGraph::remove_node(Node::node_id id){
       pos_as_succ = it->second.find(id);
       if( pos_as_succ != it->second.end() ){
 	it->second.erase(pos_as_succ);
+	_nb_of_edges --;
       }
 
       //if we emptied the list of successors
@@ -64,7 +74,12 @@ void DiGraph::remove_node(Node::node_id id){
     }
 
     //erasing the list of successors of the node
-    _topology.erase(id);
+    it = _topology.find(id);
+    if( it != _topology.end() ){
+      _nb_of_edges -= it->second.size();
+      _topology.erase(it);
+    }
+    
 
     //erasing the node
     _nodes.erase(pos);
@@ -73,23 +88,36 @@ void DiGraph::remove_node(Node::node_id id){
 }
 
 void DiGraph::add_edge(Node::node_id id1, Node::node_id id2){
+  std::pair<std::set<Node::node_id>::iterator, bool> status;
+
   _nodes.insert(id1);
   _nodes.insert(id2);
 
   if( !_topology.count(id1) ){
     _topology.insert( std::pair<Node::node_id, std::set<Node::node_id> >(id1, std::set<Node::node_id>()) );
   }
-  _topology[id1].insert(id2);
+
+  status = _topology[id1].insert(id2);
+  if(status.second) _nb_of_edges++;
 }
 
 void DiGraph::remove_edge(Node::node_id id1, Node::node_id id2){
-  //the order of these instructions is important
-  remove_node(id2);
-  remove_node(id1);
+  std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
+  std::set<Node::node_id>::size_type t;
+
+  it = _topology.find(id1);
+  if( it != _topology.end() ){
+    t = it->second.erase(id2);
+    if(t > 0) _nb_of_edges--;
+  }
 }
 
-unsigned long DiGraph::size()const{
+unsigned long DiGraph::nodes_size()const{
   return _nodes.size();
+}
+
+unsigned long DiGraph::edges_size()const{
+  return _nb_of_edges;
 }
 
 std::set<Node::node_id> DiGraph::successors(Node::node_id node) throw(std::invalid_argument){

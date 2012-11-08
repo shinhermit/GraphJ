@@ -4,7 +4,7 @@
 #include "Node.hpp"
 
 class Edge{
-private:
+protected:
   Node::node_id _source;
   Node::node_id _target;
 

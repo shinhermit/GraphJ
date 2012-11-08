@@ -4,7 +4,7 @@
 #include "Printer.hpp"
 
 int main(){
-  Graph<std::string> graph(DirectableGraph::DIRECTED, PonderableGraph::UNWEIGHTED);
+  Graph<std::string> graph(GraphTypes::DIRECTED, GraphTypes::UNWEIGHTED);
   std::string nom, choix;
   Node::node_id id, id2;
 

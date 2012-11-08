@@ -18,6 +18,9 @@ Node:
 Edge:
 	$(cmd_src)
 
+WeightedEdge:
+	$(cmd_src)
+
 DiGraph:
 	$(cmd_src)
 
