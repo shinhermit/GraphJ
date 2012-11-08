@@ -13,6 +13,9 @@ cmd = $(cc) -c $(flags) $(paths) $@.cpp -o $(obj)/$@.o
 Node:
 	$(cmd)
 
+WeightedNeighbour:
+	$(cmd)
+
 Edge:
 	$(cmd)
 

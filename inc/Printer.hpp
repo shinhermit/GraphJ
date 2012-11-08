@@ -6,7 +6,7 @@
 template<typename Type>
 class Printer : public Visitor<Type>{
 public:
-  typedef enum{NODES, CONTENTS} What;
+  enum{NODES, CONTENTS} What;
 
 private:
   What _what;

@@ -7,14 +7,19 @@ class Node{
 public:
   typedef unsigned long node_id;
 
-private:
+protected:
   node_id _id;
 
 public:
   Node(node_id id);
   Node(const Node & source);
-  ~Node();
-  Node & operator=(const Node & source);
+
+  bool operator==(const Node & ref)const;
+  bool operator<(const Node & ref)const;
+  bool operator<=(const Node & ref)const;
+  bool operator>(const Node & ref)const;
+  bool operator>=(const Node & ref)const;
+  bool operator!=(const Node & ref)const;
 
   node_id id()const;
 };

@@ -15,6 +15,9 @@ cmd_exe = cd $(tst); make $@
 Node:
 	$(cmd_src)
 
+WeightedNeighbour:
+	$(cmd_src)
+
 Edge:
 	$(cmd_src)
 

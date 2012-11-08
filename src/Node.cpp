@@ -4,11 +4,28 @@ Node::Node(Node::node_id id):_id(id){}
 
 Node::Node(const Node & source):_id(source._id){}
 
-Node::~Node(){}
+bool Edge::operator==(const Edge & ref)const{
+  return _id == ref._id;
+}
 
-Node & Node::operator=(const Node & source){
-  _id = source._id;
-  return *this;
+bool Edge::operator<(const Edge & ref)const{
+  return _id < ref._id;
+}
+
+bool Edge::operator<=(const Edge & ref)const{
+  return operator<(ref) || operator==(ref);
+}
+
+bool Edge::operator>(const Edge & ref)const{
+  return !operator<=(ref);
+}
+
+bool Edge::operator>=(const Edge & ref)const{
+  return !operator<(ref);  
+}
+
+bool Edge::operator!=(const Edge & ref)const{
+  return !operator==(ref);
 }
 
 Node::node_id Node::id()const{
