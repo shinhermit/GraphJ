@@ -41,7 +41,7 @@ int main(){
   Algorithms::breadth_first_search<std::string>(graph, printer);
 
   std::cout << "Affichage par les noms:"<<std::endl;
-  printer.print_what(Printer<std::string>::CONTENTS);
+  printer.print_what(GraphTypes::CONTENTS);
   Algorithms::breadth_first_search<std::string>(graph, printer);
 
   return 0;

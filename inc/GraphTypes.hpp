@@ -9,6 +9,8 @@ public:
   enum EdgeType{DIRECTED, UNDIRECTED};
 
   enum EdgeState{WEIGHTED, UNWEIGHTED};
+
+  enum What{NODES, CONTENTS};
 };
 
 #endif

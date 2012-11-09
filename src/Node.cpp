@@ -4,27 +4,27 @@ Node::Node(Node::node_id id):_id(id){}
 
 Node::Node(const Node & source):_id(source._id){}
 
-bool Edge::operator==(const Edge & ref)const{
+bool Node::operator==(const Node & ref)const{
   return _id == ref._id;
 }
 
-bool Edge::operator<(const Edge & ref)const{
+bool Node::operator<(const Node & ref)const{
   return _id < ref._id;
 }
 
-bool Edge::operator<=(const Edge & ref)const{
+bool Node::operator<=(const Node & ref)const{
   return operator<(ref) || operator==(ref);
 }
 
-bool Edge::operator>(const Edge & ref)const{
+bool Node::operator>(const Node & ref)const{
   return !operator<=(ref);
 }
 
-bool Edge::operator>=(const Edge & ref)const{
+bool Node::operator>=(const Node & ref)const{
   return !operator<(ref);  
 }
 
-bool Edge::operator!=(const Edge & ref)const{
+bool Node::operator!=(const Node & ref)const{
   return !operator==(ref);
 }
 

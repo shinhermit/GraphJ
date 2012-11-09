@@ -118,8 +118,9 @@ Graph<Type> Algorithms::acm_kruskal(Graph<Type> & graph){
   std::map<Node::node_id, unsigned long> color_mapper;
   std::set<WeightedEdge> sorted_edges;
   std::set<WeightedEdge>::iterator it;
-  Graph<Type> acm;
+  Graph<Type> acm; //il faudrait récupérer les options de graph ( is_directed(), is_weighted() )
   Node::node_id node1, node2;
+  Type node1_content, node2_content;
   unsigned long i, graph_size, node1_color, node2_color, acm_color;
   GraphTypes::Cost cost;
 
@@ -137,7 +138,11 @@ Graph<Type> Algorithms::acm_kruskal(Graph<Type> & graph){
 
   while( it != sorted_edges.end() && acm.nodes_size() < graph_size ){
     node1 = it->source();
+    node1_content = graph.getContent(node1);
+
     node2 = it->target();
+    node2_content = graph.getContent(node2);
+
     cost = it->cost();
 
     node1_color = color_mapper[node1];
@@ -147,7 +152,7 @@ Graph<Type> Algorithms::acm_kruskal(Graph<Type> & graph){
       color_mapper[node1] = acm_color;
       color_mapper[node2] = acm_color;
 
-      acm.add_edge( node1, node2, cost );
+      acm.add_edge( node1, node1_content, node2, node2_content, cost );
     }
 
     it++;
@@ -156,7 +161,59 @@ Graph<Type> Algorithms::acm_kruskal(Graph<Type> & graph){
   return acm;
 }
 
+template<typename Type>
+std::set<WeightedEdge> Algorithms::weightedNeighboursFromSuccessors(Graph<Type> graph, Node::node_id node){
+  std::set<WeightedEdge> weightedNeighbours;
+  std::set<Node::node_id> successors;
+  std::set<Node::node_id>::iterator it ;
+
+  successors = graph.successors(node);
+
+  for(it = successors.begin(); it != successors.end(); it++){    
+    weightedNeighbours.insert( WeightedEdge( node, *it, graph.getCost(node, *it) ) );
+  }
+
+  return weightedNeighbours;
+}
 
 template<typename Type>
 Graph<Type> Algorithms::acm_prim(Graph<Type> & graph){
+  std::set<WeightedEdge> fusion, newNeighbours;
+  Graph<Type> alterableCopy;
+  Graph<Type> acm;
+  WeightedEdge min_edge;
+  Node::node_id first_node, source_node, target_node;
+  Type content;
+  GraphTypes::Cost cost;
+
+  alterableCopy = graph;
+
+  first_node = alterableCopy.first_node();
+  acm.add_node( first_node, alterableCopy.getContent(first_node) );
+
+  fusion = weightedNeighboursFromSuccessors(alterableCopy, first_node);
+  
+  alterableCopy.remove_node(first_node);
+
+  while( alterableCopy.size() > 0 ){
+    min_edge = *fusion.begin();
+
+    source_node = min_edge.source();
+    target_node = min_edge.target();
+    cost = min_edge.cost();
+    content = alterableCopy.getContent(target_node);
+
+    acm.add_node(target_node, content);
+    acm.add_edge(source_node, target_node, cost);
+
+    fusion.erase( fusion.begin() );
+
+    newNeighbours = weightedNeighboursFromSuccessors(alterableCopy, target_node);
+
+    fusion.insert( newNeighbours.begin(), newNeighbours.end() );
+
+    alterableCopy.remove_node(target_node);
+  }
+
+  return acm;
 }

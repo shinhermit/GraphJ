@@ -1,5 +1,5 @@
 template<typename Type>
-Printer<Type>::Printer(What what_to_treat):_what(what_to_treat){}
+Printer<Type>::Printer(GraphTypes::What what_to_treat):_what(what_to_treat){}
 
 template<typename Type>
 Printer<Type>::~Printer(){}
@@ -9,7 +9,7 @@ void Printer<Type>::treat(Graph<Type> graph, Node::node_id node){
   std::set<Node::node_id> successors;
   std::set<Node::node_id>::iterator it;
 
-  if( _what == Printer<Type>::CONTENTS ){
+  if( _what == GraphTypes::CONTENTS ){
     try{
       successors = graph.successors(node);
 
@@ -44,6 +44,6 @@ void Printer<Type>::treat(Graph<Type> graph, Node::node_id node){
 }
 
 template<typename Type>
-void Printer<Type>::print_what(What what){
+void Printer<Type>::print_what(GraphTypes::What what){
   _what = what;
 }

@@ -27,6 +27,9 @@ namespace Algorithms{
   Graph<Type> acm_kruskal(Graph<Type> & graph);
 
   template<typename Type>
+  std::set<WeightedEdge> weightedNeighboursFromSuccessors(Graph<Type> graph, Node::node_id node);
+
+  template<typename Type>
   Graph<Type> acm_prim(Graph<Type> & graph);
 };
 
