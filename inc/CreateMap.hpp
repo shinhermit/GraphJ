@@ -1,8 +1,6 @@
 #ifndef CREATEMAP
 #define CREATEMAP
 
-#include <string>
-#include <sstream>
 #include <map>
 
 /**

@@ -5,7 +5,8 @@
 #include "Graph.hpp"
 #include "Visitor.hpp"
 #include "WeightedEdge.hpp"
-#include "WeightedEdgeSorter.hpp"
+#include "WeightedNode.hpp"
+#include "NamedColor.hpp"
 
 namespace Algorithms{
   template<typename Type>
@@ -24,6 +25,9 @@ namespace Algorithms{
   std::map<Node::node_id, int> color_each_node(Graph<Type> & graph);
 
   template<typename Type>
+  std::set<WeightedEdge> sort_edges_by_weights(Graph<Type> & graph);
+
+  template<typename Type>
   Graph<Type> acm_kruskal(Graph<Type> & graph);
 
   template<typename Type>
@@ -31,6 +35,15 @@ namespace Algorithms{
 
   template<typename Type>
   Graph<Type> acm_prim(Graph<Type> & graph);
+
+  template<typename Type>
+  std::set<WeightedNode> sort_nodes_by_degrees(Graph<Type> & graph);
+
+  template<typename Type>
+  bool partite_compatible(Graph<Type> graph, Node::node_id node, std::set<Node::node_id> partite);
+
+  template<typename Type>
+  std::map<Node::node_id, NamedColor> welsh_coloring(Graph<Type> & graph);
 };
 
 #include "Algorithms.cpp"

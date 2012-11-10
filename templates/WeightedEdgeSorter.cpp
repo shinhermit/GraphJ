@@ -13,8 +13,6 @@ void WeightedEdgeSorter<Type>::treat(Graph<Type> graph, Node::node_id node){
 
   successors = graph.successors(node);
 
-  if( successors.size() > 0 ){
-
     for(it = successors.begin(); it != successors.end(); it++){
 
       cost = graph.getCost(node, *it);
@@ -29,8 +27,6 @@ void WeightedEdgeSorter<Type>::treat(Graph<Type> graph, Node::node_id node){
       }
 
     }
-
-  }
 }
 
 template<typename Type>
