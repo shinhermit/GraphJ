@@ -1,0 +1,45 @@
+//La procédure fusion présentée plus loin
+//Peut être en O(n²) dans le pire des cas (graphe complet):
+//première boucle: n-1 voisins
+//test d'existence de s dans voisins: parcours de n-1 éléments
+
+procedure acm_prim(G, acm: Graphe)
+	variables
+		voisins, nouveaux_voisins : Ensemble<Arête>
+		s1, v_min : Sommet
+		a_min : Arête
+
+	début
+		. considérer le premier sommet s1 de G
+		. mettre dans voisins toutes les arêtes impliquant s1
+		. trier voisins par ordre croissants de coûts
+		. ajouter s1 à acm
+		. TANT QUE voisins est non vide ET nb_sommets(acm) < nb_sommets(G) FAIRE
+			. considérer l'arête a_min du voisin le plus proche, a_min = premier(voisins)
+			. récupérer le plus proche voisin, v_min = target(premier(voisins))
+			. ajouter v_min à acm
+			. retirer a_min de voisins
+			. mettre nouveaux_voisins = adjacents(G, v_min)
+			. faire fusion(acm, voisins, nouveaux_voisins)
+			. trier voisins par ordre croissant de coûts
+	fin
+
+
+
+
+
+procedure fusion(Graphe acm, Ensemble<Sommet_pondéré> voisins, Ensemble<Sommet_pondéré> nouveaux_voisins)
+	variables
+		(s,p) : Sommet_pondéré
+
+	début
+		. POUR CHAQUE sommet pondéré (s,p) de nouveaux_voisins FAIRE
+			. SI s n'est pas dans acm
+				. SI s n'apparaît pas dans voisins
+					. ajouter (s,p) à voisins
+				. SINON
+					. SI s est dans voisins avec un poids p'
+						. SI p < p'
+							. ajouter (s,p) à voisins
+	fin
+

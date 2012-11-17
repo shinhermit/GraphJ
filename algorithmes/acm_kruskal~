@@ -1,0 +1,49 @@
+procedure acm_kruskal (G, acm : Graph)
+	variables
+		sorted_edges : Liste d'arcs
+		current_edge : Edge
+
+	début
+		. colorer distinctement tous les sommets
+		. mettre la liste des arcs dans sorted_edges
+		. trier sorted_edges par ordre croissant des coûts
+		
+		. considérer le premier élément de sorted_edges, current_edge = premier(sorted_edges)
+		. TANTQUE  nb_sommets(acm) < nb_sommets(G) FAIRE
+			. SI les extrémités de current_edge sont de couleurs différentes
+				. faire recolorer(G, acm, current_edge) //recoloration des sommets en fonction des informations courantes
+				. ajouter l'arc current_edge au graphe acm
+			. considérer l'élément suivant de sorted_edges, current_edge = suivant(sorted_edges)
+	fin
+
+
+
+
+procedure recolorer(G, acm : Graph; (s1, S2): Edge)
+	variables
+		col : Couleur
+		A : Graph
+		s_a: sommet
+	
+	début
+		. SI s1 et s2 ne sont pas encore des sommets du graph acm
+		  	. choisir arbitrairement col entre couleur(s1) ou couleur(s2)
+		  	. mettre couleur(s1) = col
+		  	. mettre couleur(s2) = col
+		. SINON
+			. SI s1 est dans acm et s2 n'est pas encore dans acm
+				. mettre couleur(s2) = couleur(s1)
+			. SINON
+				. SI s2 est dans acm et s1 n'est pas encore dans acm
+					. mettre couleur(s1) = couleur(s2)
+				. SINON
+					. SI nb_même_couleur(acm,s1) < nb_même_couleur(acm, s2)
+					  //nb_même_couleur(G,s) nombre de sommet de même couleur que s dans  G
+						. Pour tout sommet s_a de acm tq couleur(s_a) == couleur(s1)
+							. mettre couleur(s_a) = couleur(s2)
+					. SINON
+						. Pour tout sommet s_a de acm tq couleur(s_a) == couleur(s2)
+							. mettre couleur(s_a) = couleur(s1)
+
+	fin
+

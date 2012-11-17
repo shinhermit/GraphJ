@@ -15,6 +15,7 @@ public:
   virtual bool has_edge(Node::node_id id1, Node::node_id id2)=0;
   virtual bool is_directed()=0;
   virtual bool is_weighted()=0;
+  virtual bool at_nodes_end()=0;
 
   //Constructeurs
   virtual void add_node(Node::node_id id)=0;

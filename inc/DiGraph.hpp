@@ -28,6 +28,7 @@ public:
   bool has_edge(Node::node_id id1, Node::node_id id2);
   bool is_directed();
   bool is_weighted();
+  bool at_nodes_end();
 
   //Constructeurs
   void add_node(Node::node_id id);

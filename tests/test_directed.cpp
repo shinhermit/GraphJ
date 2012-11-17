@@ -1,12 +1,15 @@
 #include <string>
 #include "Graph.hpp"
-#include "Algorithms.hpp"
 #include "Printer.hpp"
+#include "Traverse.hpp"
+#include "Acm.hpp"
+#include "Coloring.hpp"
 
 int main(){
   Graph<std::string> graph(GraphTypes::DIRECTED, GraphTypes::UNWEIGHTED);
   std::string nom, choix;
   Node::node_id id, id2;
+  Traverse<std::string> traverse;
 
   std::cout << std::endl << "------ Simulation de la relation \"fourni\" (ou \"vend à\") entre des entreprises ------" << std::endl << "Saisie du graphe: Entrez le nom d'une entreprise et son identifiant unique:" << std::endl;
 
@@ -38,11 +41,11 @@ int main(){
 
   std::cout << "Affichage compacte:"<<std::endl;
   Printer<std::string> printer;
-  Algorithms::breadth_first_search<std::string>(graph, printer);
+  traverse.breadth(graph, printer);
 
   std::cout << "Affichage par les noms:"<<std::endl;
   printer.print_what(GraphTypes::CONTENTS);
-  Algorithms::breadth_first_search<std::string>(graph, printer);
+  traverse.breadth(graph, printer);
 
   return 0;
 }

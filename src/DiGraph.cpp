@@ -48,6 +48,10 @@ bool DiGraph::is_weighted(){
   return false;
 }
 
+bool DiGraph::at_nodes_end(){
+  return _it == _nodes.end();
+}
+
 void DiGraph::add_node(Node::node_id id){
   _nodes.insert(id);
   _it = _nodes.begin();
