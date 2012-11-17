@@ -4,6 +4,7 @@ src = ./src
 obj = ./obj
 tst = ./tests
 tmp = ./templates
+algo = ./algorithmes
 cmd_src = cd $(src); make $@
 cmd_exe = cd $(tst); make $@
 
@@ -51,7 +52,7 @@ test_directed: all_classes
 #Cleanings
 
 cleantemp:
-	rm -f *~ $(inc)/*~ $(src)/*~ $(tst)/*~ $(tmp)/*~
+	rm -f *~ $(inc)/*~ $(src)/*~ $(tst)/*~ $(tmp)/*~ $(algo)/*~
 
 cleanobj:
 	rm -f $(obj)/*.o
