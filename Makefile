@@ -16,7 +16,7 @@ cmd_exe = cd $(tst); make $@
 Node:
 	$(cmd_src)
 
-WeightedNeighbour:
+WeightedNode:
 	$(cmd_src)
 
 Edge:
@@ -34,12 +34,10 @@ DirectableGraph:
 PonderableGraph:
 	$(cmd_src)
 
-all_classes: Node Edge DiGraph DirectableGraph PonderableGraph
-
-#Autres classes (utilitaires)
-
-Color:
+NamedColor:
 	$(cmd_src)
+
+all_classes: Node WeightedNode Edge WeightedEdge DiGraph DirectableGraph PonderableGraph NamedColor
 
 #les tests
 
@@ -47,6 +45,9 @@ test_node: Node
 	$(cmd_exe)
 
 test_directed: all_classes
+	$(cmd_exe)
+
+test_acm: all_classes
 	$(cmd_exe)
 
 #Cleanings

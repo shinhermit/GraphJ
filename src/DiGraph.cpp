@@ -188,13 +188,7 @@ Node::node_id DiGraph::next_node() throw(std::out_of_range){
     if( _it != _nodes.end() )
       _it++;
 
-    if(_it != _nodes.end() ){
-      return *_it;
-    }
-    else{
-      _it = _nodes.begin();
-      return *_it;
-    }
+    return *_it;
   }
   else{
     throw std::out_of_range("DiGraph::next_node() : Attempt to access empty graph");
@@ -203,15 +197,10 @@ Node::node_id DiGraph::next_node() throw(std::out_of_range){
 
 Node::node_id DiGraph::previous_node() throw(std::out_of_range){
   if( _nodes.size() > 0 ){
-    if(_it != _nodes.begin() ){
+    if(_it != _nodes.begin() )
       _it--;
-      return *_it;
-    }
-    else{
-      _it = _nodes.end();
-      _it--;
-      return *_it;
-    }
+
+    return *_it;
   }
   else{
     throw std::out_of_range("DiGraph::next_node() : Attempt to access empty graph");

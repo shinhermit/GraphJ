@@ -13,7 +13,7 @@ cmd = $(cc) -c $(flags) $(paths) $@.cpp -o $(obj)/$@.o
 Node:
 	$(cmd)
 
-WeightedNeighbour:
+WeightedNode:
 	$(cmd)
 
 Edge:
@@ -31,5 +31,5 @@ DirectableGraph:
 PonderableGraph:
 	$(cmd)
 
-Color:
+NamedColor:
 	$(cmd)

@@ -1,0 +1,5 @@
+prédicat is_container()
+et modification des manipulateur pour tenir compte des prédicats
+	is_directed()
+	is_weighted()
+	is_container()

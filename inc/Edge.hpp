@@ -9,6 +9,7 @@ protected:
   Node::node_id _target;
 
 public:
+  Edge();
   Edge(Node::node_id node1, Node::node_id node2);
   Edge(const Edge & source);
 

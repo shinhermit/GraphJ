@@ -10,6 +10,7 @@ void Traverse<Type>::breadth_once(Graph<Type> & graph, Node::node_id node, Visit
     son = waiters.front();
     waiters.pop_front();
     visitor.treat(graph, son);
+    marker.insert(son);
 
     nodes_set = graph.successors(son);
     grand_successors.assign(nodes_set.begin(), nodes_set.end());
@@ -29,15 +30,13 @@ void Traverse<Type>::breadth_once(Graph<Type> & graph, Node::node_id node, Visit
 
 template<typename Type>
 void Traverse<Type>::breadth(Graph<Type> & graph, Visitor<Type> & visitor){
-  unsigned long i, size;
   Node::node_id node;
   std::set<Node::node_id> marker;
 
-  size = graph.nodes_size();
-  if(size > 0){
+  if( graph.nodes_size() > 0){
     node = graph.first_node();
 
-    for(i=0; i < size; i++){
+    while( !graph.at_nodes_end() ){
       if( !marker.count(node) )
 	breadth_once(graph, node, visitor, marker);
 
@@ -74,15 +73,13 @@ void Traverse<Type>::depth_once(Graph<Type> & graph, Node::node_id node, Visitor
 template<typename Type>
 void Traverse<Type>::depth(Graph<Type> & graph, Visitor<Type> & visitor){
   Node::node_id node;
-  unsigned long i, size;
   std::set<Node::node_id> marker;
 
-  size = graph.nodes_size();
-  if( size > 0 ){
+  if( graph.nodes_size() > 0 ){
 
     node = graph.first_node();
 
-    for(i=0; i < size; i++){
+    while( !graph.at_nodes_end() ){
       if( !marker.count(node) )
 	depth_once(graph, node, visitor, marker);
 

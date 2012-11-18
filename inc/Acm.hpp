@@ -4,7 +4,7 @@
 #include "Graph.hpp"
 #include "WeightedEdge.hpp"
 
-template<typename Type>
+template<typename Type=GraphTypes::Default>
 class Acm{
 private:
   //for Kurskal's algorithm

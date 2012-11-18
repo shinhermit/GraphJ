@@ -11,6 +11,10 @@ public:
   enum EdgeState{WEIGHTED, UNWEIGHTED};
 
   enum What{NODES, CONTENTS};
+
+  enum NodeType{CONTAINER, NOCONTENT};
+
+  enum Default{DEFAULT};
 };
 
 #endif
