@@ -49,8 +49,8 @@ public:
   Node::node_id previous_node() throw(std::out_of_range);
   Node::node_id last_node() throw(std::out_of_range);
 
-  unsigned long internally(Node::node_id node) throw(std::invalid_argument);
-  unsigned long externally(Node::node_id node) throw(std::invalid_argument);
+  unsigned long in_degree(Node::node_id node) throw(std::invalid_argument);
+  unsigned long out_degree(Node::node_id node) throw(std::invalid_argument);
   unsigned long degree(Node::node_id node) throw(std::invalid_argument);
 };
 

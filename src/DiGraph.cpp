@@ -218,7 +218,7 @@ Node::node_id DiGraph::last_node() throw(std::out_of_range){
   }
 }
 
-unsigned long DiGraph::internally(Node::node_id node) throw(std::invalid_argument){
+unsigned long DiGraph::in_degree(Node::node_id node) throw(std::invalid_argument){
   std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
   unsigned long count;
 
@@ -234,11 +234,11 @@ unsigned long DiGraph::internally(Node::node_id node) throw(std::invalid_argumen
 
   }
   else{
-    throw std::invalid_argument("DiGraph::internally(Node::node_id) : given id not in the graph");
+    throw std::invalid_argument("DiGraph::in_degree(Node::node_id) : given id not in the graph");
   }
 }
 
-unsigned long DiGraph::externally(Node::node_id node) throw(std::invalid_argument){
+unsigned long DiGraph::out_degree(Node::node_id node) throw(std::invalid_argument){
   std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
 
   if( _nodes.count(node) > 0){
@@ -253,10 +253,10 @@ unsigned long DiGraph::externally(Node::node_id node) throw(std::invalid_argumen
 
   }
   else{
-    throw std::invalid_argument("DiGraph::externally(Node::node_id) : given id not in the graph");
+    throw std::invalid_argument("DiGraph::out_degree(Node::node_id) : given id not in the graph");
   }
 }
 
 unsigned long DiGraph::degree(Node::node_id node) throw(std::invalid_argument){
-  return externally(node) + internally(node);
+  return out_degree(node) + in_degree(node);
 }

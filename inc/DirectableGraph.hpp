@@ -23,7 +23,7 @@ public:
   // Adaptation des observateurs
   std::set<Node::node_id> predecessors(Node::node_id node) throw(std::invalid_argument);
   std::set<Node::node_id> adjacents(Node::node_id node) throw(std::invalid_argument);
-  unsigned long internally(Node::node_id node) throw(std::invalid_argument);
+  unsigned long in_degree(Node::node_id node) throw(std::invalid_argument);
   unsigned long degree(Node::node_id node) throw(std::invalid_argument);
 };
 

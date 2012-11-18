@@ -52,13 +52,13 @@ std::set<Node::node_id> DirectableGraph::adjacents(Node::node_id node) throw(std
   }
 }
 
-unsigned long DirectableGraph::internally(Node::node_id node) throw(std::invalid_argument){
+unsigned long DirectableGraph::in_degree(Node::node_id node) throw(std::invalid_argument){
 
   if(_edgeType == GraphTypes::DIRECTED){
-    return DiGraph::internally(node);
+    return DiGraph::in_degree(node);
   }
   else{
-    return DiGraph::externally(node);
+    return DiGraph::out_degree(node);
   }
 }
 
@@ -68,6 +68,6 @@ unsigned long DirectableGraph::degree(Node::node_id node) throw(std::invalid_arg
     return DiGraph::degree(node);
   }
   else{
-    return DiGraph::externally(node);
+    return DiGraph::out_degree(node);
   }  
 }

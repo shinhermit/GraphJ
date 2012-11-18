@@ -36,8 +36,8 @@ public:
   virtual Node::node_id previous_node()=0;
   virtual Node::node_id last_node()=0;
 
-  virtual unsigned long internally(Node::node_id node)=0;
-  virtual unsigned long externally(Node::node_id node)=0;
+  virtual unsigned long in_degree(Node::node_id node)=0;
+  virtual unsigned long out_degree(Node::node_id node)=0;
   virtual unsigned long degree(Node::node_id node)=0;
 };
 
