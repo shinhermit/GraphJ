@@ -15,6 +15,9 @@ public:
 
   Graph & operator=(const Graph & source);
 
+  // Adaptation des prédicats
+  bool is_container();
+
   // Adaptation des constructeurs
   void add_node(Node::node_id id, Type content);
   void add_node(Node::node_id id) throw(std::logic_error);
@@ -22,6 +25,9 @@ public:
   void add_edge(Node::node_id src_node, Type content1, Node::node_id target_node, Type content2, GraphTypes::Cost cost=1.F);
   void add_edge(Node::node_id existing_src, Node::node_id existing_target, GraphTypes::Cost cost=1.F) throw(std::invalid_argument);
   void remove_edge(Node::node_id src_node, Node::node_id target_node);
+
+  // Adaptation des observateurs
+  GraphTypes::NodeType nodeType()const;
 
   // Nouvelles opérations
   void set_node_content(Node::node_id id, Type content) throw(std::logic_error, std::invalid_argument);

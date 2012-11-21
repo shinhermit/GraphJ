@@ -28,6 +28,7 @@ public:
   bool has_edge(Node::node_id id1, Node::node_id id2);
   bool is_directed();
   bool is_weighted();
+  bool is_container();
   bool at_nodes_end();
 
   //Constructeurs
@@ -39,6 +40,9 @@ public:
   //observateurs
   unsigned long nodes_size()const;
   unsigned long edges_size()const;
+  GraphTypes::NodeType nodeType()const;
+  GraphTypes::EdgeType edgeType()const;
+  GraphTypes::EdgeState edgeState()const;
 
   std::set<Node::node_id> successors(Node::node_id node) throw(std::invalid_argument);
   std::set<Node::node_id> predecessors(Node::node_id node) throw(std::invalid_argument);

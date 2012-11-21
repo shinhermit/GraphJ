@@ -11,22 +11,17 @@ void DefaultVisitor<Type>::treat(Graph<Type> graph, Node::node_id node){
   std::ostringstream oss;
 
   if( _what == GraphTypes::CONTENTS ){
-    try{
-      successors = graph.successors(node);
+    successors = graph.successors(node);
 
-      oss << graph.get_node_content(node) << ": ";
+    oss << graph.get_node_content(node) << ": ";
 
-      for(it = successors.begin(); it != successors.end(); it++){
-	oss << graph.get_node_content(*it) << ", ";
-      }
-
-      oss << std::endl;
-
-      _buffer += oss.str();
+    for(it = successors.begin(); it != successors.end(); it++){
+      oss << graph.get_node_content(*it) << ", ";
     }
-    catch(std::string & e ){
-      oss << "0 n" << node << std::endl << e << std::endl;
-    }
+
+    oss << std::endl;
+
+    _buffer += oss.str();
   }
   else{
     if( graph.has_node(node) ){

@@ -12,3 +12,9 @@ Kruskal & Prim
 	*Amélioration possibles (non implémentées):
 		*Kruskal: lors du tri, garder les autres ordres possibles pour les valeurs égales
 		*Prim: lors du choix du sommet le plus proche, mettre en liste d'attente les autres choix possibles.
+	*Remarque: (voir fichier test_acm_directed.cpp
+		*L'agorithme de Kruskal marche avec un graphe orienté
+		*L'algorithme de Prim ne fonctionne pas avec un graphe orienté
+			*compréhensible, connaissant notre représentation: le plus proche adjacent n'est pris que dans le liste des successeurs du noeud, où ne figure pas les arêtes entrantes (qui peuvent avoir un coût plus faible)
+				*Cela est cohérent avec le fait que la liste d'adjacence, tout comme l'algortihme de Kruskal, est orienté arête (ou arc)
+		*CORRECTION de la section ci-dessus: pour que l'algorithme de Prim fonctionne avec les graphes orientés, il faut bien prendre la précaution de "fusionner" les sommets en tenant compte des deux sens (le traiter comme un non orienté).

@@ -61,7 +61,8 @@ std::map<Node::node_id, NamedColor::ColorName> Coloring<Type>::welsh(Graph<Type>
 
       sorted_nodes.erase( --sorted_nodes.end() ); //same as --rbegin().base()
 
-      for( it_sn = sorted_nodes.begin(); it_sn != sorted_nodes.end(); it_sn++ )
+      it_sn = sorted_nodes.begin();
+      while( it_sn != sorted_nodes.end() )
 	{
 	  current_node = it_sn->id();
 
@@ -70,6 +71,10 @@ std::map<Node::node_id, NamedColor::ColorName> Coloring<Type>::welsh(Graph<Type>
 	      color_mapper.insert( std::pair<Node::node_id, NamedColor::ColorName>(current_node, *it_color) );
 	      partites_list[*it_color].insert(current_node);
 	      sorted_nodes.erase(it_sn++);
+	    }
+	  else
+	    {
+	      it_sn++;
 	    }
 
 	}

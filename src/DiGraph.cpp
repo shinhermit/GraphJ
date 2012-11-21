@@ -48,6 +48,10 @@ bool DiGraph::is_weighted(){
   return false;
 }
 
+bool DiGraph::is_container(){
+  return false;
+}
+
 bool DiGraph::at_nodes_end(){
   return _it == _nodes.end();
 }
@@ -64,7 +68,8 @@ void DiGraph::remove_node(Node::node_id id){
   pos = _nodes.find(id);
   if( pos != _nodes.end() ){
     //erasing the node in all successors lists
-    for(it=_topology.begin(); it!=_topology.end(); it++){
+    it=_topology.begin();
+    while( it!=_topology.end() ){
       pos_as_succ = it->second.find(id);
       if( pos_as_succ != it->second.end() ){
 	it->second.erase(pos_as_succ);
@@ -74,6 +79,9 @@ void DiGraph::remove_node(Node::node_id id){
       //if we emptied the list of successors
       if(it->second.size() == 0){
 	_topology.erase(it++); //possible issue: will this change it? (side effect). Solving side effect by post-incrementation
+      }
+      else{
+	it++;
       }
     }
 
@@ -122,6 +130,18 @@ unsigned long DiGraph::nodes_size()const{
 
 unsigned long DiGraph::edges_size()const{
   return _nb_of_edges;
+}
+
+GraphTypes::NodeType DiGraph::nodeType()const{
+  return GraphTypes::NOCONTENT;
+}
+
+GraphTypes::EdgeType DiGraph::edgeType()const{
+  return GraphTypes::DIRECTED;
+}
+
+GraphTypes::EdgeState DiGraph::edgeState()const{
+  return GraphTypes::UNWEIGHTED;
 }
 
 std::set<Node::node_id> DiGraph::successors(Node::node_id node) throw(std::invalid_argument){

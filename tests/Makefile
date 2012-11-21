@@ -17,6 +17,9 @@ test_node:
 test_directed:
 	$(cmd)
 
+test_acm_directed:
+	$(cmd)
+
 test_acm:
 	$(cmd)
 

@@ -20,11 +20,11 @@ std::map<Node::node_id, unsigned long> Acm<Type>::_color_each_node(Graph<Type> &
 }
 
 template<typename Type>
-void Acm<Type>::_update_colors(Graph<Type> & graph, Graph<Type> & acm, std::map<Node::node_id, unsigned long> & color_mapper, Node::node_id node1, Node::node_id node2){
-    unsigned long col1, col2, master_col, slave_col;
-    bool has1, has2;
-    Node::node_id node;
-    std::map<Node::node_id, unsigned long>::iterator it, it_col1, it_col2;
+void Acm<Type>::_update_colors(Graph<Type> & graph, Graph<> & acm, std::map<Node::node_id, unsigned long> & color_mapper, Node::node_id node1, Node::node_id node2){
+  unsigned long col1, col2, master_col, slave_col;
+  bool has1, has2;
+  Node::node_id node;
+  std::map<Node::node_id, unsigned long>::iterator it, it_col1, it_col2;
 
   has1 = acm.has_node(node1);
   has2 = acm.has_node(node2);
@@ -75,13 +75,10 @@ std::set<WeightedEdge> Acm<Type>::_sort_edges_by_weights(Graph<Type> & graph){
   std::set<Node::node_id>::iterator it;
   Node::node_id node;
   GraphTypes::Cost cost;
-  unsigned long i, graph_size;
 
   node = graph.first_node();
-  graph_size = graph.nodes_size();
-  i = 0;
 
-  while(i < graph_size){
+  while( !graph.at_nodes_end() ){
 
     successors = graph.successors(node);
 
@@ -89,17 +86,17 @@ std::set<WeightedEdge> Acm<Type>::_sort_edges_by_weights(Graph<Type> & graph){
 
       cost = graph.getCost(node, *it);
 
-      if( graph.is_directed() ){
 	sorted_edges.insert( WeightedEdge(node, *it, cost) );
-      }
-      else{
-	if( !graph.has_edge(*it, node) ){
-	  sorted_edges.insert( WeightedEdge(node, *it, cost) );
-	}
-      }
+      // if( graph.is_directed() ){
+      // 	sorted_edges.insert( WeightedEdge(node, *it, cost) );
+      // }
+      // else{
+      // 	if( !graph.has_edge(*it, node) ){
+      // 	  sorted_edges.insert( WeightedEdge(node, *it, cost) );
+      // 	}
+      // }
 
     }
-    i++;
     node = graph.next_node();
   }
 
@@ -109,7 +106,7 @@ std::set<WeightedEdge> Acm<Type>::_sort_edges_by_weights(Graph<Type> & graph){
 template<typename Type>
 std::set<WeightedEdge> Acm<Type>::_weightedNeighboursFromSuccessors(Graph<Type> graph, Node::node_id node){
   std::set<WeightedEdge> weightedNeighbours;
-  std::set<Node::node_id> successors;
+  std::set<Node::node_id> successors, predecessors;
   std::set<Node::node_id>::iterator it ;
 
   successors = graph.successors(node);
@@ -118,17 +115,25 @@ std::set<WeightedEdge> Acm<Type>::_weightedNeighboursFromSuccessors(Graph<Type> 
     weightedNeighbours.insert( WeightedEdge( node, *it, graph.getCost(node, *it) ) );
   }
 
+  if( graph.is_directed() ){
+
+    predecessors = graph.predecessors(node);
+
+    for(it = predecessors.begin(); it != predecessors.end(); it++){    
+      weightedNeighbours.insert( WeightedEdge( node, *it, graph.getCost(*it, node) ) );
+    }
+  }
+
   return weightedNeighbours;
 }
 
 template<typename Type>
-Graph<Type> Acm<Type>::kruskal(Graph<Type> & graph){
+Graph<> Acm<Type>::kruskal(Graph<Type> & graph){
   std::map<Node::node_id, unsigned long> color_mapper;
   std::set<WeightedEdge> sorted_edges;
   std::set<WeightedEdge>::iterator it;
-  Graph<Type> acm; //il faudrait récupérer les options de graph ( is_directed(), is_weighted() )
+  Graph<> acm(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
   Node::node_id node1, node2;
-  Type node1_content, node2_content;
   unsigned long graph_size, node1_color, node2_color;
   GraphTypes::Cost cost;
 
@@ -141,11 +146,7 @@ Graph<Type> Acm<Type>::kruskal(Graph<Type> & graph){
 
   while( it != sorted_edges.end() && acm.nodes_size() < graph_size ){
     node1 = it->source();
-    node1_content = graph.get_node_content(node1);
-
     node2 = it->target();
-    node2_content = graph.get_node_content(node2);
-
     cost = it->cost();
 
     node1_color = color_mapper[node1];
@@ -154,7 +155,7 @@ Graph<Type> Acm<Type>::kruskal(Graph<Type> & graph){
     if( node1_color != node2_color ){
       _update_colors(graph, acm, color_mapper, node1, node2);
 
-      acm.add_edge( node1, node1_content, node2, node2_content, cost );
+      acm.add_edge(node1, node2, cost);
     }
 
     it++;
@@ -164,19 +165,18 @@ Graph<Type> Acm<Type>::kruskal(Graph<Type> & graph){
 }
 
 template<typename Type>
-Graph<Type> Acm<Type>::prim(Graph<Type> & graph){
+Graph<> Acm<Type>::prim(Graph<Type> & graph){
   std::set<WeightedEdge> fusion, newNeighbours;
   Graph<Type> alterableCopy;
-  Graph<Type> acm;
+  Graph<> acm( graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT );
   WeightedEdge min_edge(0,0,0);
   Node::node_id first_node, source_node, target_node;
-  Type content;
   GraphTypes::Cost cost;
 
   alterableCopy = graph;
 
   first_node = alterableCopy.first_node();
-  acm.add_node( first_node, alterableCopy.get_node_content(first_node) );
+  acm.add_node(first_node);
 
   fusion = _weightedNeighboursFromSuccessors(alterableCopy, first_node);
   
@@ -184,22 +184,21 @@ Graph<Type> Acm<Type>::prim(Graph<Type> & graph){
 
   while( alterableCopy.nodes_size() > 0 ){
     min_edge = *fusion.begin();
+    fusion.erase( fusion.begin() );
 
     source_node = min_edge.source();
     target_node = min_edge.target();
     cost = min_edge.cost();
-    content = alterableCopy.get_node_content(target_node);
 
-    acm.add_node(target_node, content);
-    acm.add_edge(source_node, target_node, cost);
+    if( alterableCopy.has_node(target_node) ){
+      acm.add_edge(source_node, target_node, cost);
 
-    fusion.erase( fusion.begin() );
+      newNeighbours = _weightedNeighboursFromSuccessors(alterableCopy, target_node);
 
-    newNeighbours = _weightedNeighboursFromSuccessors(alterableCopy, target_node);
+      fusion.insert( newNeighbours.begin(), newNeighbours.end() );
 
-    fusion.insert( newNeighbours.begin(), newNeighbours.end() );
-
-    alterableCopy.remove_node(target_node);
+      alterableCopy.remove_node(target_node);
+    }
   }
 
   return acm;

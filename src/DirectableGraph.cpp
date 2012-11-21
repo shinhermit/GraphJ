@@ -20,16 +20,16 @@ bool DirectableGraph::is_directed(){
   return _edgeType == GraphTypes::DIRECTED;
 }
 
-bool DirectableGraph::is_weighted(){
-  return false;
-}
-
 void DirectableGraph::add_edge(Node::node_id id1, Node::node_id id2){
   DiGraph::add_edge(id1, id2);
 
   if(_edgeType == GraphTypes::UNDIRECTED){
     DiGraph::add_edge(id2, id1);
   }
+}
+
+GraphTypes::EdgeType DirectableGraph::edgeType()const{
+  return _edgeType;
 }
 
 std::set<Node::node_id> DirectableGraph::predecessors(Node::node_id node) throw(std::invalid_argument){

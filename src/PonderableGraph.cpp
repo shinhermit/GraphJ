@@ -18,13 +18,17 @@ bool PonderableGraph::is_weighted(){
 void PonderableGraph::remove_node(Node::node_id id){
   std::map<Edge, float>::iterator it;
 
-  for(it = _weights.begin(); it != _weights.end(); it++){
+  it = _weights.begin();
+  while( it != _weights.end() ){
     if(it->first.source() == id || it->first.target() == id){
       _weights.erase(it++);
     }
+    else{
+      it++;
+    }
   }
 
-  DirectableGraph::remove_node(id);
+  DiGraph::remove_node(id);
 }
 
 void PonderableGraph::add_edge(Node::node_id id1, Node::node_id id2,GraphTypes::Cost cost){
@@ -53,6 +57,10 @@ void PonderableGraph::remove_edge(Node::node_id id1, Node::node_id id2){
       _weights.erase(it);
     }
   }
+}
+
+GraphTypes::EdgeState PonderableGraph::edgeState()const{
+  return _edgeState;
 }
 
 void PonderableGraph::setCost(Node::node_id node1, Node::node_id node2, GraphTypes::Cost cost) throw(std::invalid_argument, std::logic_error){
@@ -88,7 +96,7 @@ GraphTypes::Cost PonderableGraph::getCost(Node::node_id node1, Node::node_id nod
   if(_edgeState == GraphTypes::WEIGHTED){
 
     if( !has_edge(node1, node2) ){
-      throw std::invalid_argument("PonderableGraph::add_getCost(node_id, node_id): given arguments do not refer to a valid edge");
+      throw std::invalid_argument("PonderableGraph::getCost(node_id, node_id): given arguments do not refer to a valid edge");
     }
     else{
       it = _weights.find( Edge(node1, node2) );
@@ -106,5 +114,22 @@ GraphTypes::Cost PonderableGraph::getCost(Node::node_id node1, Node::node_id nod
   }
   else{
     throw std::logic_error("PonderableGraph::getCost(Node::node_id, Node::node_id)const : the graph is an graphTypes::UNWEIGHTED graph");
+  }
+}
+
+GraphTypes::Cost PonderableGraph::cost() throw(std::logic_error){
+  std::map<Edge,GraphTypes::Cost>::iterator it;
+  GraphTypes::Cost cost;
+
+  if(_edgeState == GraphTypes::UNWEIGHTED){
+    throw std::logic_error("PonderableGraph::cost()const : the type of the graph is graphTypes::UNWEIGHTED");
+  }
+  else{
+    cost = 0;
+    for(it = _weights.begin(); it != _weights.end(); it++){
+      cost += it->second;
+    }
+
+    return cost;
   }
 }

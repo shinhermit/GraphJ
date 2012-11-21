@@ -4,7 +4,7 @@
 #include "Exporter.hpp"
 
 int main(){
-  Graph<> graph(GraphTypes::UNDIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
+  Graph<> graph(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
   Graph<> min_tree( graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT );
   Acm<> acm;
   Exporter<> exporte(GraphTypes::NODES);

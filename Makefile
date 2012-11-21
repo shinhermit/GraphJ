@@ -47,6 +47,9 @@ test_node: Node
 test_directed: all_classes
 	$(cmd_exe)
 
+test_acm_directed: all_classes
+	$(cmd_exe)
+
 test_acm: all_classes
 	$(cmd_exe)
 

@@ -15,6 +15,7 @@ public:
   virtual bool has_edge(Node::node_id id1, Node::node_id id2)=0;
   virtual bool is_directed()=0;
   virtual bool is_weighted()=0;
+  virtual bool is_container()=0;
   virtual bool at_nodes_end()=0;
 
   //Constructeurs
@@ -26,6 +27,9 @@ public:
   //observateurs
   virtual unsigned long nodes_size()const=0;
   virtual unsigned long edges_size()const=0;
+  virtual GraphTypes::NodeType nodeType()const=0;
+  virtual GraphTypes::EdgeType edgeType()const=0;
+  virtual GraphTypes::EdgeState edgeState()const=0;
 
   virtual std::set<Node::node_id> successors(Node::node_id node)=0;
   virtual std::set<Node::node_id> predecessors(Node::node_id node)=0;

@@ -16,6 +16,11 @@ Graph<Type> & Graph<Type>::operator=(const Graph<Type> & source){
 }
 
 template <typename Type>
+bool Graph<Type>::is_container(){
+  return _nodeType == GraphTypes::CONTAINER;
+}
+
+template <typename Type>
 void Graph<Type>::add_node(Node::node_id id, Type content){
 
   PonderableGraph::add_node(id);
@@ -60,7 +65,7 @@ template <typename Type>
 void Graph<Type>::add_edge(Node::node_id existing_src, Node::node_id existing_target, GraphTypes::Cost cost) throw(std::invalid_argument){
 
   if( _nodeType == GraphTypes::CONTAINER && ( !has_node(existing_src) || !has_node(existing_target) ) ){
-    throw std::invalid_argument("Graph<Type>::add_edge(node::node_id, node::node_id, PonderableGraph::Cost=1.F) : given nodes must already be in the Graph.\n Consider using:\n Graph<Type>::add_edge(node::node_id, Type, node::node_id, Type, PonderableGraph::Cost=1.F)");
+    throw std::invalid_argument("Graph<Type>::add_edge(node::node_id, node::node_id, PonderableGraph::Cost=1.F) : given nodes must already be in the Graph.\n Consider using:\n Graph<Type>::add_edge(Node::node_id, Type, Node::node_id, Type, PonderableGraph::Cost=1.F)");
   }
   else{
     PonderableGraph::add_edge(existing_src, existing_target, cost);
@@ -76,6 +81,11 @@ void Graph<Type>::remove_edge(Node::node_id src_node, Node::node_id target_node)
     _contents.erase(src_node);
     _contents.erase(target_node);
   }
+}
+
+template <typename Type>
+GraphTypes::NodeType Graph<Type>::nodeType()const{
+  return _nodeType;
 }
 
 template <typename Type>
