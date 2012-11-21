@@ -5,7 +5,7 @@
 #include "WeightedNode.hpp"
 #include "NamedColor.hpp"
 
-template<typename Type>
+template<typename Type=GraphTypes::Default>
 class Coloring{
 private:
   static std::set<WeightedNode> _sort_nodes_by_degrees(Graph<Type> & graph);

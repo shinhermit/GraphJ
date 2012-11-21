@@ -53,6 +53,9 @@ test_acm_directed: all_classes
 test_acm: all_classes
 	$(cmd_exe)
 
+test_coloring: all_classes
+	$(cmd_exe)
+
 #Cleanings
 
 cleantemp:

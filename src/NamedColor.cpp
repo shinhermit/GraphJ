@@ -25,6 +25,10 @@ std::string NamedColor::toString(){
   return _toString[_col];
 }
 
+std::string NamedColor::ToString(NamedColor::ColorName color){
+  return _toString[color];
+}
+
 int NamedColor::hexaValue(){
   return _hexaValue[_col];
 }

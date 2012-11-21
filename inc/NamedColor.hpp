@@ -25,6 +25,7 @@ public:
   friend std::ostream & operator<<(std::ostream & out, NamedColor & col);
 
   std::string toString();
+  static std::string ToString(ColorName color);
 
   int hexaValue();
 

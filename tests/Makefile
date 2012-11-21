@@ -23,3 +23,6 @@ test_acm_directed:
 test_acm:
 	$(cmd)
 
+test_coloring:
+	$(cmd)
+

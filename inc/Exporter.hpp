@@ -7,6 +7,7 @@
 #include "Traverse.hpp"
 #include "DefaultVisitor.hpp"
 #include "GraphvizVisitor.hpp"
+#include "NamedColor.hpp"
 
 template<typename Type=GraphTypes::Default>
 class Exporter{
@@ -22,6 +23,7 @@ public:
   void toStream(Graph<Type> & graph, std::ostream & out);
 
   std::string toGraphviz(Graph<Type> & graph);
+  std::string toGraphviz(Graph<Type> & graph, std::map<Node::node_id, NamedColor::ColorName> color_mapper);
   void toGraphviz(Graph<Type> & graph, std::string filename);
 };
 
