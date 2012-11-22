@@ -1,12 +1,12 @@
 #include "NamedColor.hpp"
 
-std::map<NamedColor::ColorName, std::string> NamedColor::_toString = CreateMap<NamedColor::ColorName, std::string>(NamedColor::Red, "red")(NamedColor::Green, "green")(NamedColor::Bleu, "bleu")(NamedColor::Yellow,"yellow")(NamedColor::Brown,"brown")(NamedColor::Purple,"purple")(NamedColor::Black,"black")(NamedColor::White,"white")(NamedColor::Orange,"orange")(NamedColor::Gray,"gray")(NamedColor::Pink,"pink")(NamedColor::Bordeaux, "bordeaux");
+std::map<NamedColor::ColorName, std::string> NamedColor::_toString = CreateMap<NamedColor::ColorName, std::string>(NamedColor::Red, "red")(NamedColor::Green, "green")(NamedColor::Blue, "blue")(NamedColor::Yellow,"yellow")(NamedColor::Brown,"brown")(NamedColor::Purple,"purple")(NamedColor::Black,"black")(NamedColor::White,"white")(NamedColor::Orange,"orange")(NamedColor::Gray,"gray")(NamedColor::Pink,"pink")(NamedColor::Bordeaux, "bordeaux");
 
-std::map<NamedColor::ColorName, int> NamedColor::_hexaValue = CreateMap<NamedColor::ColorName, int>(NamedColor::Red, 0xff0000)(NamedColor::Green, 0x00ff00)(NamedColor::Bleu, 0x0000ff)(NamedColor::Yellow, 0xfff000)(NamedColor::Brown, 0x683100)(NamedColor::Purple,0x68005d)(NamedColor::Black,0x000000)(NamedColor::White,0xffffff)(NamedColor::Orange,0xffa00b)(NamedColor::Gray,0x727272)(NamedColor::Pink,0xff82a5)(NamedColor::Bordeaux, 0x6d0701);
+std::map<NamedColor::ColorName, int> NamedColor::_hexaValue = CreateMap<NamedColor::ColorName, int>(NamedColor::Red, 0xff0000)(NamedColor::Green, 0x00ff00)(NamedColor::Blue, 0x0000ff)(NamedColor::Yellow, 0xfff000)(NamedColor::Brown, 0x683100)(NamedColor::Purple,0x68005d)(NamedColor::Black,0x000000)(NamedColor::White,0xffffff)(NamedColor::Orange,0xffa00b)(NamedColor::Gray,0x727272)(NamedColor::Pink,0xff82a5)(NamedColor::Bordeaux, 0x6d0701);
 
 std::set<NamedColor::ColorName> NamedColor::allNames()
 {  
-  return CreateSet<ColorName>(Red)(Green)(Bleu)(Yellow)(Brown)(Purple)(Black)(White)(Orange)(Gray)(Pink)(Bordeaux);
+  return CreateSet<ColorName>(Red)(Green)(Blue)(Yellow)(Brown)(Purple)(Black)(White)(Orange)(Gray)(Pink)(Bordeaux);
 }
 
 NamedColor::NamedColor(NamedColor::ColorName col):_col(col){}

@@ -10,7 +10,7 @@
 
 class NamedColor{
 public:
-  enum ColorName {Red, Green, Bleu, Yellow, Brown, Purple, Black, White, Orange, Gray, Pink, Bordeaux};
+  enum ColorName {Red, Green, Blue, Yellow, Brown, Purple, Black, White, Orange, Gray, Pink, Bordeaux};
 
 private:
   ColorName _col;

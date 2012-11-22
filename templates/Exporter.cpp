@@ -45,40 +45,32 @@ std::string Exporter<Type>::toGraphviz(Graph<Type> & graph)
 template<typename Type>
 std::string Exporter<Type>::toGraphviz(Graph<Type> & graph, std::map<Node::node_id, NamedColor::ColorName> color_mapper)
 {
-  std::set<Node::node_id> successors;
-  std::set<Node::node_id>::iterator it;
+  Traverse<Type> traverse;
+  GraphvizVisitor<Type> visitor(_what);
   Node::node_id node;
-  std::ostringstream oss;
+  std::ostringstream oss117;
   std::string stringColor;
 
   if( graph.is_directed() )
-    oss << "digraph G{" << std::endl;
+    oss117 << "digraph G{" << std::endl;
   else
-    oss << "graph G{" << std::endl;
+    oss117 << "graph G{" << std::endl;
 
+  traverse.breadth(graph, visitor);  
+  oss117 << visitor.nodes_representation() << std::endl;
+
+  //coloration
   node = graph.first_node();
-
   while( !graph.at_nodes_end() ){
-    successors = graph.successors(node);
-
-    if( graph.is_directed() )
-      oss << node << " -> {";
-    else
-      oss << node << " -- {";
-      
-    for(it = successors.begin(); it != successors.end(); it++){
-      oss << *it << "; ";
-    }
-
     stringColor = NamedColor::ToString(color_mapper[node]);
-    oss << "} [color=" << stringColor << "]" << std::endl;
+    oss117 << node <<" [style=filled, color=" << stringColor << "]" << std::endl;
 
     node = graph.next_node();
   }
 
-  oss << "}";
+  oss117 << "}";
 
-  return oss.str();
+  return oss117.str();
   
 }
 template<typename Type>
