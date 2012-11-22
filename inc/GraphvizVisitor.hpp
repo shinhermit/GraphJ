@@ -11,6 +11,7 @@ class GraphvizVisitor : public Visitor<Type>{
 private:
   GraphTypes::What _what;
   std::string _buffer;
+  std::set<Node::node_id> _visited;
 
 public:
   GraphvizVisitor(GraphTypes::What what_to_display=GraphTypes::NODES);

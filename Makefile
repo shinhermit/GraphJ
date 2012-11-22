@@ -61,10 +61,13 @@ test_coloring: all_classes
 cleantemp:
 	rm -f *~ $(inc)/*~ $(src)/*~ $(tst)/*~ $(tmp)/*~ $(algo)/*~
 
+cleanressources:
+	rm -f *.jpg *.dot
+
 cleanobj:
 	rm -f $(obj)/*.o
 
 distclean:
 	rm -f *.out
 
-cleanall: cleantemp cleanobj distclean
+cleanall: cleantemp cleanobj distclean cleanressources

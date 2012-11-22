@@ -9,7 +9,9 @@ void GraphvizVisitor<Type>::treat(Graph<Type> graph, Node::node_id node){
   std::set<Node::node_id> successors;
   std::set<Node::node_id>::iterator it;
   std::ostringstream oss;
-  
+
+  _visited.insert(node);
+
   if(_what==GraphTypes::CONTENTS){
     successors = graph.successors(node);
     
@@ -19,7 +21,9 @@ void GraphvizVisitor<Type>::treat(Graph<Type> graph, Node::node_id node){
       oss << graph.get_node_content(node) << " -- {" ;
     
     for(it = successors.begin(); it != successors.end(); it++){
-      oss << graph.get_node_content(*it) << "; ";
+	if( !graph.is_directed() && !_visited.count(*it) ){
+	oss << graph.get_node_content(*it) << "; ";
+      }
     }
 
     oss << "}" << std::endl;
@@ -37,7 +41,9 @@ void GraphvizVisitor<Type>::treat(Graph<Type> graph, Node::node_id node){
 	oss << node << " -- {";
       
       for(it = successors.begin(); it != successors.end(); it++){
-	oss << *it << "; ";
+	if( !graph.is_directed() && !_visited.count(*it) ){
+	  oss << *it << "; ";
+	}
       }
       
       oss << "}" << std::endl;
