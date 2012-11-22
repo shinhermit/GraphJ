@@ -25,6 +25,7 @@ public:
   std::string toGraphviz(Graph<Type> & graph);
   std::string toGraphviz(Graph<Type> & graph, std::map<Node::node_id, NamedColor::ColorName> color_mapper);
   void toGraphviz(Graph<Type> & graph, std::string filename);
+  void toGraphviz(Graph<Type> & graph, std::map<Node::node_id, NamedColor::ColorName> color_mapper, std::string filename);
 };
 
 #include "Exporter.cpp"

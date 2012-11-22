@@ -73,6 +73,7 @@ std::string Exporter<Type>::toGraphviz(Graph<Type> & graph, std::map<Node::node_
   return oss117.str();
   
 }
+
 template<typename Type>
 void Exporter<Type>::toGraphviz(Graph<Type> & graph, std::string filename)
 {
@@ -80,6 +81,17 @@ void Exporter<Type>::toGraphviz(Graph<Type> & graph, std::string filename)
   file.open(filename.c_str(), std::ios::out | std::ios::trunc);
 
   file << toGraphviz(graph);
+
+  file.close();
+}
+
+template<typename Type>
+void Exporter<Type>::toGraphviz(Graph<Type> & graph, std::map<Node::node_id, NamedColor::ColorName> color_mapper, std::string filename)
+{
+  std::ofstream file;
+  file.open(filename.c_str(), std::ios::out | std::ios::trunc);
+
+  file << toGraphviz(graph, color_mapper);
 
   file.close();
 }
