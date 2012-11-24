@@ -56,6 +56,8 @@ std::string Exporter<Type>::toGraphviz(Graph<Type> & graph, std::map<Node::node_
   else
     oss117 << "graph G{" << std::endl;
 
+  oss117 << "node [style=filled]" << std::endl << std::endl;
+
   traverse.breadth(graph, visitor);  
   oss117 << visitor.nodes_representation() << std::endl;
 
@@ -63,7 +65,7 @@ std::string Exporter<Type>::toGraphviz(Graph<Type> & graph, std::map<Node::node_
   node = graph.first_node();
   while( !graph.at_nodes_end() ){
     stringColor = NamedColor::ToString(color_mapper[node]);
-    oss117 << node <<" [style=filled, color=" << stringColor << "]" << std::endl;
+    oss117 << node <<" [color=" << stringColor << "]" << std::endl;
 
     node = graph.next_node();
   }
