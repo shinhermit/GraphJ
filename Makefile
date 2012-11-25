@@ -56,7 +56,7 @@ test_acm: all_classes
 test_coloring: all_classes
 	$(cmd_exe)
 
-test_tp2: all_classes
+reseau_routier: all_classes
 	$(cmd_exe)
 
 #Cleanings

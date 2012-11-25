@@ -26,6 +26,6 @@ test_acm:
 test_coloring:
 	$(cmd)
 
-test_tp2:
+reseau_routier:
 	$(cmd)
 
