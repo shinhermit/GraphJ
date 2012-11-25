@@ -7,7 +7,7 @@ int main(){
   Graph<> graph(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
   Graph<> min_tree( graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT );
   Acm<> acm;
-  Exporter<> exporte(GraphTypes::NODES);
+  Exporter<> exporte;
 
   /*
     Graphe de l'annale: contrôle continu Novembre 2008

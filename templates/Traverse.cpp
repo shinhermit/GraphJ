@@ -1,4 +1,17 @@
 template<typename Type>
+void Traverse<Type>::nodes(Graph<Type> & graph, Visitor<Type> & visitor){
+  Node::node_id node;
+
+  node = graph.first_node();
+
+  while( !graph.at_nodes_end() ){
+    visitor.treat(graph, node);
+
+    node = graph.next_node();
+  }
+}
+
+template<typename Type>
 void Traverse<Type>::breadth_once(Graph<Type> & graph, Node::node_id node, Visitor<Type> & visitor, std::set<Node::node_id> & marker){
   Node::node_id son, grand_son;
   std::deque<Node::node_id> waiters, grand_successors;

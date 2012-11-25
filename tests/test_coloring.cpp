@@ -34,7 +34,8 @@ int main(){
   std::cout << "Résultat de la coloration:" << std::endl;
   std::cout << exporte.toGraphviz(graph, color_mapper) << std::endl;
 
-  exporte.toGraphviz(graph, color_mapper, "test_coloring.dot");
+  exporte.toGraphviz(graph, color_mapper, "test_coloring.graph");
+  std::cout << "Le graphe a été exporté dans le fichier test_coloring.graph" << std::endl;
 
   return 0;
 }

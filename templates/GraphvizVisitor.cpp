@@ -1,5 +1,5 @@
 template<typename Type>
-GraphvizVisitor<Type>::GraphvizVisitor(GraphTypes::What what_to_display):_what(what_to_display), _buffer(""){}
+GraphvizVisitor<Type>::GraphvizVisitor(): _buffer(""){}
 
 template<typename Type>
 GraphvizVisitor<Type>::~GraphvizVisitor(){}
@@ -9,56 +9,31 @@ void GraphvizVisitor<Type>::treat(Graph<Type> graph, Node::node_id node){
   std::set<Node::node_id> successors;
   std::set<Node::node_id>::iterator it;
   std::ostringstream oss;
+  std::string linkSymbol;
 
   _visited.insert(node);
 
-  if(_what==GraphTypes::CONTENTS){
-    successors = graph.successors(node);
-    
-    if( graph.is_directed() )
-      oss << graph.get_node_content(node) << " -> {" ;
-    else
-      oss << graph.get_node_content(node) << " -- {" ;
-    
-    for(it = successors.begin(); it != successors.end(); it++){
-	if( !graph.is_directed() && !_visited.count(*it) ){
-	oss << graph.get_node_content(*it) << "; ";
-      }
-    }
 
-    oss << "}" << std::endl;
-
-    _buffer += oss.str();
-  }
-  
-  else{
+  successors = graph.successors(node);
     
-    if( graph.has_node(node) ){
-      successors = graph.successors(node);
-      if( graph.is_directed() )
-	oss << node << " -> {";
-      else
-	oss << node << " -- {";
-      
-      for(it = successors.begin(); it != successors.end(); it++){
-	if( !graph.is_directed() && !_visited.count(*it) ){
-	  oss << *it << "; ";
-	}
-      }
-      
-      oss << "}" << std::endl;
+  if( graph.is_directed() )
+    linkSymbol = " -> " ;
+  else
+    linkSymbol = " -- " ;
+    
+  for(it = successors.begin(); it != successors.end(); it++){
 
-      _buffer += oss.str();
-    }
-    else{
-      std::cout << "0 n" << node << std::endl;
+    if( graph.is_directed() || (!graph.is_directed() && !_visited.count(*it)) ){
+      oss << node << linkSymbol << *it;
+
+      if( graph.is_weighted() )
+	oss << " [label=\"" << graph.getCost(node, *it) << "\"]";
+
+      oss << std::endl;
     }
   }
-}
 
-template<typename Type>
-void GraphvizVisitor<Type>::display_what(GraphTypes::What what){
-  _what = what;
+  _buffer += oss.str();
 }
 
 template<typename Type>

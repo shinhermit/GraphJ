@@ -7,8 +7,9 @@
 #include "Coloring.hpp"
 
 int main(){
-  Graph<std::string> graph(GraphTypes::DIRECTED, GraphTypes::UNWEIGHTED);
+  Graph<std::string> graph(GraphTypes::DIRECTED, GraphTypes::UNWEIGHTED, GraphTypes::CONTAINER);
   Exporter<std::string> exporte;
+  std::map<Node::node_id, std::string> label_mapper;
   std::string nom, choix;
   Node::node_id id, id2;
 
@@ -20,6 +21,7 @@ int main(){
     std::cin >> nom >> id;
 
     graph.add_node(id, nom);
+    // label_mapper[id] = nom;
 
     std::cout << "Ajouter une autre entreprise? y/n ";
     std::cin >> choix;
@@ -40,12 +42,11 @@ int main(){
 
   std::cout << std::endl  << "Affichage du graphe:"<<std::endl;
 
-  std::cout << "Affichage compacte:"<<std::endl;
+  std::cout << "Affichage:"<<std::endl;
   exporte.toStream(graph, std::cout);
 
   std::cout << "Affichage par les noms:"<<std::endl;
-  exporte.what(GraphTypes::CONTENTS);
-  exporte.toStream(graph, std::cout);
+  std::cout << exporte.toString(graph) << std::endl;
 
   return 0;
 }

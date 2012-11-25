@@ -9,16 +9,15 @@
 template<typename Type>
 class DefaultVisitor : public Visitor<Type>{
 private:
-  GraphTypes::What _what;
   std::string _buffer;
+  std::set<Node::node_id> _visited;
 
 public:
-  DefaultVisitor(GraphTypes::What what_to_print=GraphTypes::NODES);
+  DefaultVisitor();
   virtual ~DefaultVisitor();
 
+  //Attention: cette méthode a été spécialisée pour les std::string
   virtual void treat(Graph<Type> graph, Node::node_id node);
-
-  void print_what(GraphTypes::What what);
 
   std::string nodes_representation()const;
 

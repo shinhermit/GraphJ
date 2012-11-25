@@ -10,6 +10,7 @@ Kruskal & Prim
 	*Donner les algorithmes de Kruskal et Prim
 	*nos algorithmes ne donnent qu'une des solutions possibles, lorsqu'il en existe plusieurs
 	*Amélioration possibles (non implémentées):
+		*D'une manière générale: remplacer les structures lourdes (arbres, map, set) en retours de fonctions par un passage de paramètre en mode résultat (par référence en pratique)
 		*Kruskal: lors du tri, garder les autres ordres possibles pour les valeurs égales
 		*Prim: lors du choix du sommet le plus proche, mettre en liste d'attente les autres choix possibles.
 	*Remarque: (voir fichier test_acm_directed.cpp

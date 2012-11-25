@@ -1,5 +1,1 @@
-prédicat is_container()
-et modification des manipulateur pour tenir compte des prédicats
-	is_directed()
-	is_weighted()
-	is_container()
+vérifier la condition d'arrêt de kruskal: condition sur le nombre d'arêtes, et non le nombre de sommets

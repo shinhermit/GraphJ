@@ -26,3 +26,6 @@ test_acm:
 test_coloring:
 	$(cmd)
 
+test_tp2:
+	$(cmd)
+

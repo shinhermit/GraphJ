@@ -1,5 +1,5 @@
-#ifndef GRAPHVIZDISPLAY
-#define GRAPHVIZDISPLAY
+#ifndef GRAPHVIZVISITOR
+#define GRAPHVIZVISITOR
 
 #include "Visitor.hpp"
 #include <fstream>
@@ -9,17 +9,14 @@
 template<typename Type>
 class GraphvizVisitor : public Visitor<Type>{
 private:
-  GraphTypes::What _what;
   std::string _buffer;
   std::set<Node::node_id> _visited;
 
 public:
-  GraphvizVisitor(GraphTypes::What what_to_display=GraphTypes::NODES);
+  GraphvizVisitor();
   virtual ~GraphvizVisitor();
 
   virtual void treat(Graph<Type> graph, Node::node_id node);
-
-  void display_what(GraphTypes::What what);
 
   std::string nodes_representation()const;
 

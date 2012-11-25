@@ -10,7 +10,7 @@ protected:
   std::map<Node::node_id, Type> _contents;
 
 public:
-  Graph(GraphTypes::EdgeType edgeType=GraphTypes::UNDIRECTED, GraphTypes::EdgeState state=GraphTypes::WEIGHTED, GraphTypes::NodeType nodeType=GraphTypes::CONTAINER);
+  Graph(GraphTypes::EdgeType edgeType=GraphTypes::UNDIRECTED, GraphTypes::EdgeState state=GraphTypes::WEIGHTED, GraphTypes::NodeType nodeType=GraphTypes::NOCONTENT);
   Graph(const Graph & source);
 
   Graph & operator=(const Graph & source);

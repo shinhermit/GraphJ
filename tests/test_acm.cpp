@@ -7,7 +7,7 @@ int main(){
   Graph<> graph(GraphTypes::UNDIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
   Graph<> min_tree( graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT );
   Acm<> acm;
-  Exporter<> exporte(GraphTypes::NODES);
+  Exporter<> exporte;
 
   /*
     Graphe de l'annale: contrôle continu Novembre 2008
@@ -28,17 +28,26 @@ int main(){
   graph.add_edge(7,8, 11);
 
   try{
-    std::cout << exporte.toGraphviz(graph) << std::endl << std::endl;
+    std::cout << exporte.toMathString(graph) << std::endl << std::endl;
+
+    exporte.toGraphviz(graph, "graph_res_route.graph");
+    std::cout << "Le graph a été exporté dans le fichier graph_res_route.graph" << std::endl << std::endl;
 
     min_tree = acm.prim(graph);
     std::cout << "Prim:" << std::endl;
     std::cout << exporte.toGraphviz(min_tree) << std::endl;
     std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
 
+    exporte.toGraphviz(min_tree, "acm_kruskal.graph");
+    std::cout << "L'arbre couvrant a été exporté dans le fichier acm_kruskal.graph" << std::endl << std::endl;
+
     min_tree = acm.kruskal(graph);
     std::cout << "Kruskal:" << std::endl;
     std::cout << exporte.toGraphviz(min_tree) << std::endl;
     std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
+
+    exporte.toGraphviz(min_tree, "acm_prim.graph");
+    std::cout << "L'arbre couvrant a été exporté dans le fichier acm_prim.graph" << std::endl << std::endl;
   }
   catch(std::invalid_argument & iv){
     std::cout << "Caught invalid_argument exception:" << std::endl << iv.what() << std::endl;

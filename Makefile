@@ -56,13 +56,16 @@ test_acm: all_classes
 test_coloring: all_classes
 	$(cmd_exe)
 
+test_tp2: all_classes
+	$(cmd_exe)
+
 #Cleanings
 
 cleantemp:
 	rm -f *~ $(inc)/*~ $(src)/*~ $(tst)/*~ $(tmp)/*~ $(algo)/*~
 
 cleanressources:
-	rm -f *.jpg *.dot
+	rm -f *.jpg *.png *.dot *.graph
 
 cleanobj:
 	rm -f $(obj)/*.o
