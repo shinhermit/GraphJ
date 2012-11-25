@@ -23,6 +23,8 @@ private:
 public:
   std::string toString(Graph<Type> & graph);
 
+  std::string toMathString(Graph<Type> & graph, std::map<Node::node_id, std::string> & label_mapper);
+
   std::string toMathString(Graph<Type> & graph);
 
   void toStream(Graph<Type> & graph, std::ostream & out);

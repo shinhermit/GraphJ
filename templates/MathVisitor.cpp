@@ -11,7 +11,6 @@ void MathVisitor<Type>::treat(Graph<Type> graph, Node::node_id node){
   std::ostringstream oss1;
   std::ostringstream oss2;
   std::ostringstream oss3;
-  Type content1, content2;
 
   _visited.insert(node);
 

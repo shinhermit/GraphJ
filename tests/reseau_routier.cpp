@@ -87,6 +87,7 @@ int main(){
 
   try{
     std::cout << exporte.toGraphviz(graph, label_mapper) << std::endl << std::endl;
+    // std::cout << exporte.toMathString(graph, label_mapper) << std::endl << std::endl;
 
     exporte.toGraphviz(graph, label_mapper, "reseau_routier.graph");
     std::cout << "Le graphe a été exporté dans le fichier reseau_routier.graph" << std::endl << std::endl;

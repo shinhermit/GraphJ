@@ -104,6 +104,20 @@ std::string Exporter<Type>::toMathString(Graph<Type> & graph)
 }
 
 template<typename Type>
+std::string Exporter<Type>::toMathString(Graph<Type> & graph, std::map<Node::node_id, std::string> & label_mapper)
+{
+  std::map<Node::node_id, std::string>::iterator it;
+  std::ostringstream oss;
+
+  for(it = label_mapper.begin(); it != label_mapper.end(); it++){
+    oss << "s" << it->first << " |--> " << it->second << std::endl;
+  }
+  oss << toMathString(graph);
+
+  return oss.str();
+}
+
+template<typename Type>
 void Exporter<Type>::toStream(Graph<Type> & graph, std::ostream & out)
 {
   out << toString(graph) << std::endl;
