@@ -17,7 +17,7 @@ public:
   virtual ~DefaultVisitor();
 
   //Attention: cette méthode a été spécialisée pour les std::string
-  virtual void treat(Graph<Type> graph, Node::node_id node);
+  virtual void treat(Graph<Type> & graph, Node::node_id node);
 
   std::string nodes_representation()const;
 

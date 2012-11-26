@@ -29,3 +29,5 @@ test_coloring:
 reseau_routier:
 	$(cmd)
 
+feux_tricolores:
+	$(cmd)

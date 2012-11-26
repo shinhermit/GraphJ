@@ -16,7 +16,7 @@ public:
   GraphvizVisitor();
   virtual ~GraphvizVisitor();
 
-  virtual void treat(Graph<Type> graph, Node::node_id node);
+  virtual void treat(Graph<Type> & graph, Node::node_id node);
 
   std::string nodes_representation()const;
 

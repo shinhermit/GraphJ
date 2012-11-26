@@ -19,7 +19,7 @@ public:
   MathVisitor();
   virtual ~MathVisitor();
 
-  virtual void treat(Graph<Type> graph, Node::node_id node);
+  virtual void treat(Graph<Type> & graph, Node::node_id node);
 
   std::string math_representation()const;
 

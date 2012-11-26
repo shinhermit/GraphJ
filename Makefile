@@ -59,6 +59,9 @@ test_coloring: all_classes
 reseau_routier: all_classes
 	$(cmd_exe)
 
+feux_tricolores: all_classes
+	$(cmd_exe)
+
 #Cleanings
 
 cleantemp:
