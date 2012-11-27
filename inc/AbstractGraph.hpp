@@ -9,6 +9,7 @@
 
 class AbstractGraph{
 public:
+
   // Prédicats
   virtual bool is_empty()=0;
   virtual bool has_node(Node::node_id id)=0;
@@ -16,7 +17,6 @@ public:
   virtual bool is_directed()=0;
   virtual bool is_weighted()=0;
   virtual bool is_container()=0;
-  virtual bool at_nodes_end()=0;
 
   //Constructeurs
   virtual void add_node(Node::node_id id)=0;
@@ -34,11 +34,6 @@ public:
   virtual std::set<Node::node_id> successors(Node::node_id node)=0;
   virtual std::set<Node::node_id> predecessors(Node::node_id node)=0;
   virtual std::set<Node::node_id> adjacents(Node::node_id node)=0;
-
-  virtual Node::node_id first_node()=0;
-  virtual Node::node_id next_node()=0;
-  virtual Node::node_id previous_node()=0;
-  virtual Node::node_id last_node()=0;
 
   virtual unsigned long in_degree(Node::node_id node)=0;
   virtual unsigned long out_degree(Node::node_id node)=0;

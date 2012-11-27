@@ -1,8 +1,42 @@
 #include "DiGraph.hpp"
 
-DiGraph::DiGraph():_nb_of_edges(0), _it(_nodes.begin()){}
+DiGraph::NodeIterator::NodeIterator(){
+}
 
-DiGraph::DiGraph(const DiGraph & source):_nodes(source._nodes), _nb_of_edges(source._nb_of_edges), _topology(source._topology), _it(_nodes.begin()){
+DiGraph::NodeIterator::NodeIterator(std::set<Node::node_id>::iterator it):_it(it){
+}
+
+DiGraph::NodeIterator::NodeIterator(const DiGraph::NodeIterator & source):_it(source._it){
+}
+
+DiGraph::NodeIterator & DiGraph::NodeIterator::operator=(const DiGraph::NodeIterator & source){
+  _it = source._it;
+  return *this;
+}
+
+Node::node_id DiGraph::NodeIterator::operator*()const{
+  return *_it;
+}
+
+void DiGraph::NodeIterator::operator++(int){
+  _it++;
+}
+
+void DiGraph::NodeIterator::operator--(int){
+  _it++;
+}
+
+bool DiGraph::NodeIterator::operator==(const DiGraph::NodeIterator & ref){
+  return _it == ref._it;
+}
+
+bool operator!=(const DiGraph::NodeIterator & it1, const DiGraph::NodeIterator & it2){
+  return it1._it != it2._it;
+}
+
+DiGraph::DiGraph():_nb_of_edges(0){}
+
+DiGraph::DiGraph(const DiGraph & source):_nodes(source._nodes), _nb_of_edges(source._nb_of_edges), _topology(source._topology){
 }
 
 DiGraph::~DiGraph(){
@@ -12,7 +46,6 @@ DiGraph & DiGraph::operator=(const DiGraph & source){
   _nodes = source._nodes;
   _nb_of_edges = source._nb_of_edges;
   _topology = source._topology;
-  _it = _nodes.begin();
   return *this;
 }
 
@@ -52,13 +85,8 @@ bool DiGraph::is_container(){
   return false;
 }
 
-bool DiGraph::at_nodes_end(){
-  return _it == _nodes.end();
-}
-
 void DiGraph::add_node(Node::node_id id){
   _nodes.insert(id);
-  _it = _nodes.begin();
 }
 
 void DiGraph::remove_node(Node::node_id id){
@@ -95,7 +123,6 @@ void DiGraph::remove_node(Node::node_id id){
 
     //erasing the node
     _nodes.erase(pos);
-    _it = _nodes.begin();
   }
 }
 
@@ -192,50 +219,12 @@ std::set<Node::node_id> DiGraph::adjacents(Node::node_id node) throw(std::invali
   return preds;
 }
 
-Node::node_id DiGraph::first_node() throw(std::out_of_range){
-  if( _nodes.size() > 0 ){
-    _it = _nodes.begin();
-    return *_it;
-  }
-  else{
-    throw std::out_of_range("DiGraph::first_node() : attemp to access empty graph");
-  }
+DiGraph::NodeIterator DiGraph::nodes_begin(){
+  return NodeIterator( _nodes.begin() );
 }
 
-Node::node_id DiGraph::next_node() throw(std::out_of_range){
-  if( _nodes.size() > 0 ){
-
-    if( _it != _nodes.end() )
-      _it++;
-
-    return *_it;
-  }
-  else{
-    throw std::out_of_range("DiGraph::next_node() : Attempt to access empty graph");
-  }
-}
-
-Node::node_id DiGraph::previous_node() throw(std::out_of_range){
-  if( _nodes.size() > 0 ){
-    if(_it != _nodes.begin() )
-      _it--;
-
-    return *_it;
-  }
-  else{
-    throw std::out_of_range("DiGraph::next_node() : Attempt to access empty graph");
-  }
-}
-
-Node::node_id DiGraph::last_node() throw(std::out_of_range){
-  if( _nodes.size() > 0 ){
-    _it = _nodes.end();
-    _it --;
-    return *_it;
-  }
-  else{
-    throw std::out_of_range("DiGraph::last_node() : Attempt to access empty graph");
-  }
+DiGraph::NodeIterator DiGraph::nodes_end(){
+  return NodeIterator( _nodes.end() );
 }
 
 unsigned long DiGraph::in_degree(Node::node_id node) throw(std::invalid_argument){

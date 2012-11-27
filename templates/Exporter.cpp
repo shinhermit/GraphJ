@@ -26,15 +26,15 @@ template<typename Type>
 std::string Exporter<Type>::_graphviz_color_mapping(Graph<Type> & graph, std::map<Node::node_id, NamedColor::ColorName> & color_mapper)
 {
   std::ostringstream oss;
-  Node::node_id node;
+  typename Graph<Type>::NodeIterator nodeIt;
   std::string stringColor;
 
-  node = graph.first_node();
-  while( !graph.at_nodes_end() ){
-    stringColor = NamedColor::ToString(color_mapper[node]);
-    oss << node <<" [color=" << stringColor << "]" << std::endl;
+  nodeIt = graph.nodes_begin();
+  while( nodeIt != graph.nodes_end() ){
+    stringColor = NamedColor::ToString(color_mapper[*nodeIt]);
+    oss << *nodeIt <<" [color=" << stringColor << "]" << std::endl;
 
-    node = graph.next_node();
+    nodeIt++;
   }
 
   return oss.str();
@@ -44,13 +44,13 @@ template<typename Type>
 std::string Exporter<Type>::_graphviz_label_mapping(Graph<Type> & graph, std::map<Node::node_id, std::string> & label_mapper)
 {
   std::ostringstream oss;
-  Node::node_id node;
+  typename Graph<Type>::NodeIterator nodeIt;
 
-  node = graph.first_node();
-  while( !graph.at_nodes_end() ){
-    oss << node <<" [label=\"" << label_mapper[node] << "\"]" << std::endl;
+  nodeIt = graph.nodes_begin();
+  while( nodeIt != graph.nodes_end() ){
+    oss << *nodeIt <<" [label=\"" << label_mapper[*nodeIt] << "\"]" << std::endl;
 
-    node = graph.next_node();
+    nodeIt++;
   }
 
   return oss.str();
@@ -60,16 +60,16 @@ template<typename Type>
 std::string Exporter<Type>::_graphviz_meta_mapping(Graph<Type> & graph, std::map<Node::node_id, std::string> & label_mapper, std::map<Node::node_id, NamedColor::ColorName> & color_mapper)
 {
   std::ostringstream oss;
-  Node::node_id node;
   std::string stringColor;
+  typename Graph<Type>::NodeIterator nodeIt;
 
-  node = graph.first_node();
-  while( !graph.at_nodes_end() ){
-    stringColor = NamedColor::ToString(color_mapper[node]);
+  nodeIt = graph.nodes_begin();
+  while( nodeIt != graph.nodes_end() ){
+    stringColor = NamedColor::ToString(color_mapper[*nodeIt]);
 
-    oss << node <<" [label=\"" << label_mapper[node] << "\", color=" << stringColor << "]" << std::endl;
+    oss << *nodeIt <<" [label=\"" << label_mapper[*nodeIt] << "\", color=" << stringColor << "]" << std::endl;
 
-    node = graph.next_node();
+    nodeIt++;
   }
 
   return oss.str();

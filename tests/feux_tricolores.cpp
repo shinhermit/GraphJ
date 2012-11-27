@@ -75,7 +75,7 @@ int main()
 
   //construction des arêtes du graphe d'incomatibilité
   // voir les commentaires dans TricolorBuilderVisitor.hpp
-  traverse.breadth(incompatibles, edgeBuilder);
+  traverse.nodes(incompatibles, edgeBuilder);
 
   std::cout << "Graphe des incompatibilités de franchissement" << std::endl;
   std::cout << exporte.toGraphviz(incompatibles, labels2);

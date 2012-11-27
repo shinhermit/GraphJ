@@ -1,19 +1,15 @@
 template<typename Type>
 std::set<WeightedNode> Coloring<Type>::_sort_nodes_by_degrees(Graph<Type> & graph){
   std::set<WeightedNode> sorted_nodes;
-  Node::node_id node;
-  unsigned long i, nodes_size;
+  typename Graph<Type>::NodeIterator node;
 
-  node = graph.first_node();
-  nodes_size = graph.nodes_size();
-  i = 0;
+  node = graph.nodes_begin();
 
-  while(i < nodes_size)
+  while( node != graph.nodes_end() )
     {
-      sorted_nodes.insert( WeightedNode(node, graph.degree(node)) );
+      sorted_nodes.insert( WeightedNode(*node, graph.degree(*node)) );
 
-      node = graph.next_node();
-      i++;
+      node++;
     }
 
   return sorted_nodes;

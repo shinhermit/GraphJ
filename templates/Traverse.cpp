@@ -1,13 +1,13 @@
 template<typename Type>
 void Traverse<Type>::nodes(Graph<Type> & graph, Visitor<Type> & visitor){
-  Node::node_id node;
+  typename Graph<Type>::NodeIterator nodeIt;
 
-  node = graph.first_node();
+  nodeIt = graph.nodes_begin();
 
-  while( !graph.at_nodes_end() ){
-    visitor.treat(graph, node);
+  while( nodeIt != graph.nodes_end() ){
+    visitor.treat(graph, *nodeIt);
 
-    node = graph.next_node();
+    nodeIt++;
   }
 }
 
@@ -43,17 +43,17 @@ void Traverse<Type>::breadth_once(Graph<Type> & graph, Node::node_id node, Visit
 
 template<typename Type>
 void Traverse<Type>::breadth(Graph<Type> & graph, Visitor<Type> & visitor){
-  Node::node_id node;
+  typename Graph<Type>::NodeIterator nodeIt;
   std::set<Node::node_id> marker;
 
   if( graph.nodes_size() > 0){
-    node = graph.first_node();
+    *nodeIt = graph.nodes_begin();
 
-    while( !graph.at_nodes_end() ){
-      if( !marker.count(node) )
-	breadth_once(graph, node, visitor, marker);
+    while( nodeIt != graph.at_nodes_end() ){
+      if( !marker.count(*nodeIt) )
+	breadth_once(graph, *nodeIt, visitor, marker);
 
-      node = graph.next_node();
+      *nodeIt++;
     }
   }
 
@@ -85,18 +85,18 @@ void Traverse<Type>::depth_once(Graph<Type> & graph, Node::node_id node, Visitor
 
 template<typename Type>
 void Traverse<Type>::depth(Graph<Type> & graph, Visitor<Type> & visitor){
-  Node::node_id node;
+  typename Graph<Type>::NodeIterator nodeIt;
   std::set<Node::node_id> marker;
 
   if( graph.nodes_size() > 0 ){
 
-    node = graph.first_node();
+    *nodeIt = graph.nodes_begin();
 
-    while( !graph.at_nodes_end() ){
-      if( !marker.count(node) )
-	depth_once(graph, node, visitor, marker);
+    while( nodeIt != graph.nodes_end() ){
+      if( !marker.count(*nodeIt) )
+	depth_once(graph, *nodeIt, visitor, marker);
 
-      node = graph.next_node();
+      *nodeIt++;
     }
   }
 

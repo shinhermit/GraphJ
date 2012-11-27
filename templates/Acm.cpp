@@ -1,18 +1,18 @@
 template<typename Type>
 std::map<Node::node_id, unsigned long> Acm<Type>::_color_each_node(Graph<Type> & graph){
   std::map<Node::node_id, unsigned long> colored;
-  Node::node_id node;
   unsigned long nodes_size, color;
+  typename Graph<Type>::NodeIterator nodeIt;
 
-  nodes_size = graph.nodes_size();
-  node = graph.first_node();
   color = 0;
+  nodes_size = graph.nodes_size();
 
+  nodeIt = graph.nodes_begin();
   while( color < nodes_size ){
 
-    colored.insert( std::pair<Node::node_id, unsigned long>(node, color) );
+    colored.insert( std::pair<Node::node_id, unsigned long>(*nodeIt, color) );
 
-    node = graph.next_node();
+    nodeIt++;
     color++;
   }
 
@@ -23,7 +23,7 @@ template<typename Type>
 void Acm<Type>::_update_colors(Graph<Type> & graph, Graph<> & acm, std::map<Node::node_id, unsigned long> & color_mapper, Node::node_id node1, Node::node_id node2){
   unsigned long col1, col2, master_col, slave_col;
   bool has1, has2;
-  Node::node_id node;
+  typename Graph<Type>::NodeIterator nIt;
   std::map<Node::node_id, unsigned long>::iterator it, it_col1, it_col2;
 
   has1 = acm.has_node(node1);
@@ -56,14 +56,14 @@ void Acm<Type>::_update_colors(Graph<Type> & graph, Graph<> & acm, std::map<Node
     master_col = col1;
     slave_col = col2;
 
-    node = acm.first_node();
-    while( !acm.at_nodes_end() ){
-      it = color_mapper.find(node);
+    nIt = acm.nodes_begin();
+    while( nIt != acm.nodes_end() ){
+      it = color_mapper.find(*nIt);
       if(it->second == slave_col){
 	it->second = master_col;
       }
 
-      node = acm.next_node();
+      nIt++;
     }
   }
 }
@@ -73,20 +73,20 @@ std::set<WeightedEdge> Acm<Type>::_sort_edges_by_weights(Graph<Type> & graph){
   std::set<WeightedEdge> sorted_edges;
   std::set<Node::node_id> successors;
   std::set<Node::node_id>::iterator it;
-  Node::node_id node;
+  typename Graph<Type>::NodeIterator node;
   GraphTypes::Cost cost;
 
-  node = graph.first_node();
+  node = graph.nodes_begin();
 
-  while( !graph.at_nodes_end() ){
+  while( node != graph.nodes_end() ){
 
-    successors = graph.successors(node);
+    successors = graph.successors(*node);
 
     for(it = successors.begin(); it != successors.end(); it++){
 
-      cost = graph.getCost(node, *it);
+      cost = graph.getCost(*node, *it);
 
-	sorted_edges.insert( WeightedEdge(node, *it, cost) );
+	sorted_edges.insert( WeightedEdge(*node, *it, cost) );
       // if( graph.is_directed() ){
       // 	sorted_edges.insert( WeightedEdge(node, *it, cost) );
       // }
@@ -97,7 +97,7 @@ std::set<WeightedEdge> Acm<Type>::_sort_edges_by_weights(Graph<Type> & graph){
       // }
 
     }
-    node = graph.next_node();
+    node++;
   }
 
   return sorted_edges;
@@ -175,7 +175,7 @@ Graph<> Acm<Type>::prim(Graph<Type> & graph){
 
   alterableCopy = graph;
 
-  first_node = alterableCopy.first_node();
+  first_node = *alterableCopy.nodes_begin();
   acm.add_node(first_node);
 
   fusion = _weightedNeighboursFromSuccessors(alterableCopy, first_node);

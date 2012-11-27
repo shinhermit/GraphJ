@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 #include "Graph.hpp"
 #include "Acm.hpp"
 #include "Exporter.hpp"
@@ -48,6 +49,11 @@ int main(){
 
     exporte.toGraphviz(min_tree, "acm_prim.graph");
     std::cout << "L'arbre couvrant a été exporté dans le fichier acm_prim.graph" << std::endl << std::endl;
+
+    system("dot -Tpng graph_res_route.graph -o graph_res_route.png");
+    system("dot -Tpng acm_prim.graph -o acm_kruskal.png");
+    system("dot -Tpng acm_prim.graph -o acm_prim.png");
+
   }
   catch(std::invalid_argument & iv){
     std::cout << "Caught invalid_argument exception:" << std::endl << iv.what() << std::endl;

@@ -66,26 +66,26 @@ bool TricolorBuilderVisitor::_intersect(Edge edge1, Edge edge2)
 
 void TricolorBuilderVisitor::treat(Graph<Edge> & graph, Node::node_id node)
 {
-  Node::node_id node2;
+  Graph<Edge>::NodeIterator node2;
   Edge current(0,0), candidate(0,0);
 
   current = graph.get_node_content(node);
 
-  node2 = graph.first_node();
-  while( !graph.at_nodes_end() ){
+  node2 = graph.nodes_begin();
+  while( node2 != graph.nodes_end() ){
 
-    if(node2 != node){
-      candidate = graph.get_node_content(node2);
+    if(*node2 != node){
+      candidate = graph.get_node_content(*node2);
 
       //arcs incompatibles si un sommet en commun ou se croisent
       if( _adjacent(current, candidate) ||
 	  _intersect(current, candidate)
 	  )
 	{
-	  graph.add_edge(node, node2);
+	  graph.add_edge(node, *node2);
 	}
     }
 
-    node2 = graph.next_node();
+    node2++;
   }
 }
