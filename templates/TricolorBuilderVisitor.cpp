@@ -9,7 +9,7 @@ long TricolorBuilderVisitor::_renumber(long asFirst, long oldNumber)
   delta = asFirst - 1;
 
   renum = oldNumber - delta;
-  if(renum < 0)
+  if(renum <= 0)
     renum += _nb_roads;
 
   return renum;
@@ -36,11 +36,12 @@ bool TricolorBuilderVisitor::_adjacent(Edge edge1, Edge edge2)
 
 bool TricolorBuilderVisitor::_intersect(Edge edge1, Edge edge2)
 {
-  long asFirst, reTarget1, reSource2, reTarget2, oldNumber;
+  long asFirst, reSource1, reTarget1, reSource2, reTarget2, oldNumber;
   bool intersect;
 
   //renumérotation des sommets (du graphe des franchissements)
   asFirst = (long)edge1.source();
+  reSource1 = _renumber(asFirst, asFirst);
 
   oldNumber = (long)edge1.target();
   reTarget1 = _renumber(asFirst, oldNumber);
@@ -48,14 +49,14 @@ bool TricolorBuilderVisitor::_intersect(Edge edge1, Edge edge2)
   oldNumber = (long)edge2.source();
   reSource2 = _renumber(asFirst, oldNumber);
 
-  oldNumber = (long)edge2.source();
+  oldNumber = (long)edge2.target();
   reTarget2 = _renumber(asFirst, oldNumber);
 
   intersect = false;
 
   if(
-     (reSource2 < reTarget1 && reTarget2 > reTarget1) ||
-     (reTarget2 < reTarget1 && reSource2 > reTarget1)
+     ( (reSource1 < reSource2 && reSource2 < reTarget1) && reTarget1 < reTarget2) ||
+     ( (reSource1 < reTarget2 && reTarget2 < reTarget1) && reTarget1 < reSource2)
      )
     {
       intersect = true;

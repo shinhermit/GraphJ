@@ -39,7 +39,7 @@ std::map<Node::node_id, NamedColor::ColorName> Coloring<Type>::welsh(Graph<Type>
   std::set<WeightedNode>::iterator it_sn;
   std::set<NamedColor::ColorName> allColors;
   std::set<NamedColor::ColorName>::iterator it_color;
-  std::map<NamedColor::ColorName, std::set<Node::node_id> > partites_list; //liste des stables
+  std::set<Node::node_id> partite; //the current partite (stable)
   std::map<Node::node_id, NamedColor::ColorName> color_mapper;
   Node::node_id node, current_node;
 
@@ -50,10 +50,10 @@ std::map<Node::node_id, NamedColor::ColorName> Coloring<Type>::welsh(Graph<Type>
   while( sorted_nodes.size() > 0 ) //should check for color lack
     {
       node = sorted_nodes.rbegin()->id();
+      partite.clear(); //possible issue: really empty ?
 
       color_mapper.insert( std::pair<Node::node_id, NamedColor::ColorName>(node, *it_color) );
-      partites_list.insert( std::pair<NamedColor::ColorName, std::set<Node::node_id> >( *it_color, std::set<Node::node_id>() ) );
-      partites_list[*it_color].insert(node);
+      partite.insert( node );
 
       sorted_nodes.erase( --sorted_nodes.end() ); //same as --rbegin().base()
 
@@ -62,10 +62,10 @@ std::map<Node::node_id, NamedColor::ColorName> Coloring<Type>::welsh(Graph<Type>
 	{
 	  current_node = it_sn->id();
 
-	  if( _partite_compatible(graph, current_node, partites_list[*it_color]) )
+	  if( _partite_compatible(graph, current_node, partite) )
 	    {
 	      color_mapper.insert( std::pair<Node::node_id, NamedColor::ColorName>(current_node, *it_color) );
-	      partites_list[*it_color].insert(current_node);
+	      partite.insert(current_node);
 	      sorted_nodes.erase(it_sn++);
 	    }
 	  else

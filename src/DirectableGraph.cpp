@@ -28,6 +28,14 @@ void DirectableGraph::add_edge(Node::node_id id1, Node::node_id id2){
   }
 }
 
+unsigned long DirectableGraph::edges_size()const{
+  unsigned long size;
+
+  size = (_edgeType == GraphTypes::UNDIRECTED) ? DiGraph::edges_size() / 2 : DiGraph::edges_size();
+
+  return size;
+}
+
 GraphTypes::EdgeType DirectableGraph::edgeType()const{
   return _edgeType;
 }

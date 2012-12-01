@@ -30,13 +30,16 @@ void MathVisitor<Type>::treat(Graph<Type> & graph, Node::node_id node){
     if( graph.is_directed() || (!graph.is_directed() && !_visited.count(*it)) ){
 
       oss2 << "(";
-      oss3 << "coût(";
 
       oss2 << node << ", " << *it;
-      oss3 << node << ", " << *it;
  
       oss2 << "), ";
-      oss3 << ")=" << graph.getCost(node, *it) << "; ";
+
+      if( graph.is_weighted() ){
+	oss3 << "coût(";
+	oss3 << node << ", " << *it;
+	oss3 << ")=" << graph.getCost(node, *it) << "; ";
+      }
     }
   }
 

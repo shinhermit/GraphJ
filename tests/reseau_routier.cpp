@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cstdlib>
 #include "Graph.hpp"
 #include "Acm.hpp"
 #include "Exporter.hpp"
@@ -91,8 +92,6 @@ int main(){
 
     exporte.toGraphviz(graph, label_mapper, "reseau_routier.graph");
     std::cout << "Le graphe a été exporté dans le fichier reseau_routier.graph" << std::endl << std::endl;
-
-    std::cout << "Le graphe a été exporté dans le fichier reseau_routier.graph. Compiler:" << std::endl;
     std::cout << "dot -Tpng reseau_routier.graph -o reseau_routier.png" << std::endl << std::endl;
 
     min_tree = acm.prim(graph);
@@ -101,7 +100,7 @@ int main(){
     std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
 
     exporte.toGraphviz(min_tree, label_mapper, "acm_prim.graph");
-    std::cout << "L'arbre a été exporté dans le fichier acm_prim.graph. Compiler:" << std::endl;
+    std::cout << "L'arbre a été exporté dans le fichier acm_prim.graph" << std::endl;
     std::cout << "dot -Tpng acm_prim.graph -o acm_prim.png" << std::endl << std::endl;
 
     min_tree = acm.kruskal(graph);
@@ -110,8 +109,12 @@ int main(){
     std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
 
     exporte.toGraphviz(min_tree, label_mapper, "acm_kruskal.graph");
-    std::cout << "L'arbre a été exporté dans le fichier acm_kruskal.graph. Compiler:" << std::endl;
+    std::cout << "L'arbre a été exporté dans le fichier acm_kruskal.graph" << std::endl;
     std::cout << "dot -Tpng acm_kruskal.graph -o acm_kruskal.png" << std::endl << std::endl;
+
+    system("dot -Tpng reseau_routier.graph -o reseau_routier.png");
+    system("dot -Tpng acm_prim.graph -o acm_prim.png");
+    system("dot -Tpng acm_kruskal.graph -o acm_kruskal.png");
 
   }
   catch(std::invalid_argument & iv){

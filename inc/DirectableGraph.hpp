@@ -21,6 +21,7 @@ public:
 
   // Adaptation des observateurs
   GraphTypes::EdgeType edgeType()const;
+  unsigned long edges_size()const;
 
   std::set<Node::node_id> predecessors(Node::node_id node) throw(std::invalid_argument);
   std::set<Node::node_id> adjacents(Node::node_id node) throw(std::invalid_argument);

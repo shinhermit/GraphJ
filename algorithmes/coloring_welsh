@@ -1,0 +1,40 @@
+procedure welsh(G: Graph, coloration:Map<Vertice,Color>, couleurs: Set<Couleur>)
+	variables:
+		sorted_vertices: Liste<Vertice>
+		partites: Set<Vertice> //j'ai un set de set dans dans le c++: à vérifier
+	début
+		récupérer la liste des sommets à trier: sorted_vertices = vertices_list(G)
+		trier sorted_node par ordre décroissant de dégré: sort(sorted_vertices)
+		tant que la liste des sommets n'est pas vide:
+			. considérer le 1er sommet de la liste: v = premier(sorted_vertices)
+				. colorer le sommet avec une nouvelle couleur: ajouter( coloration, v, choix(couleurs) )
+					//ne pas rechoisir le même couleur
+					retirer( couleurs, trouver(coloration, v) )
+				. créer un stable S à la liste des stables: S = créer_set();
+				. ajouter le sommet v au stable S: ajouter(S,v)
+			. retirer le sommet v de la liste des sommets: retirer(sorted_vertices, v)
+			. parcourir la liste des sommets sorted_vertices
+				. si le sommet courant u est compatible avec le stable S: _compatible(G,S,u) ?
+					. colorer le sommet courant u avec la couleur de v: ajouter( coloration, u, couleur(v) )
+					. ajouter le sommet u au stable S: ajouter(S,u)
+					. retirer le sommet u de la liste des sommets: retirer(sorted_vertices, u)
+	fin
+
+
+FONCTION _compatible(G: Graph, S: Set<Sommet>, u:Sommet) : Booléen
+	VARIABLES:
+		compatible : Booléen
+		v : Sommet
+		i : Entier
+	DEBUT
+		compatible = VRAI
+		i = 0
+		TANT QUE  v != dernier(S) ET compatible FAIRE
+			v = ieme(S,i)
+			SI est_arête_de(G, créer_arête(u,v))
+			ALORS
+				compatible = FAUX;
+			i = i + 1
+		RETOURNER compatible;
+	FIN
+

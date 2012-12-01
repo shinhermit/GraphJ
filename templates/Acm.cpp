@@ -144,7 +144,7 @@ Graph<> Acm<Type>::kruskal(Graph<Type> & graph){
   graph_size = graph.nodes_size();
   it = sorted_edges.begin();
 
-  while( it != sorted_edges.end() && acm.nodes_size() < graph_size ){
+  while( it != sorted_edges.end() && acm.edges_size() < graph_size - 1 ){
     node1 = it->source();
     node2 = it->target();
     cost = it->cost();

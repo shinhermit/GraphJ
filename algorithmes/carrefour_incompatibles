@@ -1,0 +1,78 @@
+PROCÉDURE incompatible_avec(incompatibles: Graph<Arc>, s: Sommet<Arc>)
+	VARIABLES:
+		s2 : Sommet<Arc>
+	DÉBUT
+		pour s2 = premier_sommet(incompatibles) à dernier_sommet(incompatibles) faire
+			si s2 != s alors
+				si _adjacents(s, s2) OU _intersect(s, s2) ALORS
+					ajouter(incompatibles, créer_arc(s,s2))
+	FIN
+
+
+FONCTION _adjacents(s, s2: Sommet<Arc>) : Booléen
+	VARIABLES:
+		a1, a2: Arc
+	DÉBUT
+		a1 = contenu(s)
+		a2 = contenu(s2)
+		SI
+		   source(a1) == target(a2)
+		   OU
+		   target(a1) == source(a2)
+		   OU
+		   target(a1) == target(a2)
+		ALORS
+			retouner VRAI
+		SINON
+			retourner FAUX
+	FIN
+
+
+FONCTION _intersect(s, s2: Sommet<Arc>) : Booléen
+	VARIABLES:
+		asFirst, reTarget1, reSource2, reTarget2, buffer, nb_roads : Entier
+		intersect : Booléen
+	DÉBUT
+		nb_roads = 5
+		
+		//renumérotation des points du carrefour
+		asFirst = numero(source(s));
+
+		buffer = numero(target(s));
+		reTarget1 = _renumeroter(asFirst, buffer, nb_roads);
+
+		buffer = numero(source(s2));
+		reSource2 = _renuméroter(asFirst, buffer, nb_roads);
+
+		buffer = numero(target(s2));
+		reTarget2 = _renuméroter(asFirst, buffer, nb_roads);
+
+		// tout se joue ici
+		intersect = FAUX
+		SI
+		  reSource2 < reTarget1 ET reTarget2 > reTarget1
+		  OU
+		  reTarget2 < reTarget1 ET reSource2 > reTarget1
+		ALORS
+			intersect = VRAI
+
+		retourner intersect
+	FIN
+
+
+FONCTION _renuméroter(asFirst, oldNumber, nombre_de_routes : Entier) : Entier
+	VARIABLES:
+		renum, delta : Entier
+	DÉBUT
+		delta = asFirst - 1;
+
+		renum = oldNumber - delta;
+		
+		//le "modulo"
+		SI renum < 0
+		ALORS
+			renum += nombre_de_route;
+
+		retourner renum;
+	FIN
+

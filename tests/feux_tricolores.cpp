@@ -41,7 +41,8 @@ int main()
   franchissements.add_edge(5,4);
 
   std::cout << "Graphe des franchissements" << std::endl;
-  std::cout << convert.toGraphviz(franchissements, labels1);
+  std::cout << convert.toGraphviz(franchissements, labels1) << std::endl;
+  // std::cout << convert.toMathString(franchissements, labels1);
 
   convert.toGraphviz(franchissements, labels1, "franchissements.graph");
   std::cout << "Le graphe a été exporté dans le fichier franchissements.graph" << std::endl << std::endl;
@@ -77,8 +78,15 @@ int main()
   // voir les commentaires dans TricolorBuilderVisitor.hpp
   traverse.nodes(incompatibles, edgeBuilder);
 
+  // afichage des degrés
+  // Graph<Edge>::NodeIterator it_n;
+  // for(it_n=incompatibles.nodes_begin(); it_n!=incompatibles.nodes_end(); it_n++){
+  //   std::cout << "d°(s" << *it_n << ") = " << incompatibles.degree(*it_n);
+  // }
+
   std::cout << "Graphe des incompatibilités de franchissement" << std::endl;
-  std::cout << exporte.toGraphviz(incompatibles, labels2);
+  std::cout << exporte.toGraphviz(incompatibles, labels2) << std::endl;
+  // std::cout << exporte.toMathString(incompatibles, labels2) << std::endl;
 
   exporte.toGraphviz(incompatibles, labels2, "incompatibles.graph");
   std::cout << "Le graphe a été exporté dans le fichier incompatibles.graph" << std::endl << std::endl;
@@ -86,7 +94,7 @@ int main()
 
   std::cout << "Coloration des franchissements compatibles" << std::endl;
   color_map = color.welsh(incompatibles);
-  std::cout << exporte.toGraphviz(incompatibles, labels2, color_map);
+  std::cout << exporte.toGraphviz(incompatibles, labels2, color_map) << std::endl;
 
   exporte.toGraphviz(incompatibles, labels2, color_map, "coloration.graph");
   std::cout << "Le graphe a été exporté dans le fichier coloration.graph" << std::endl << std::endl;
