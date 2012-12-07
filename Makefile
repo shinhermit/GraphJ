@@ -13,6 +13,9 @@ cmd_exe = cd $(tst); make $@
 
 #Les classes
 
+GraphTypes:
+	$(cmd_src)
+
 Node:
 	$(cmd_src)
 
@@ -37,7 +40,7 @@ PonderableGraph:
 NamedColor:
 	$(cmd_src)
 
-all_classes: Node WeightedNode Edge WeightedEdge DiGraph DirectableGraph PonderableGraph NamedColor
+all_classes: GraphTypes Node WeightedNode Edge WeightedEdge DiGraph DirectableGraph PonderableGraph NamedColor
 
 #les tests
 
@@ -54,6 +57,12 @@ test_acm: all_classes
 	$(cmd_exe)
 
 test_coloring: all_classes
+	$(cmd_exe)
+
+test_dijkstra: all_classes
+	$(cmd_exe)
+
+test_bellman: all_classes
 	$(cmd_exe)
 
 reseau_routier: all_classes

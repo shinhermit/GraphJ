@@ -1,2 +1,1 @@
-vérifier la condition d'arrêt de kruskal: condition sur le nombre d'arêtes, et non le nombre de sommets (car tous les sommets peuvent avoir été rajouté sans que toutes les arêtes aient été rajoutées) -> j'ai rajouté un redéfinition de edges_size() dans DirectableGraph (liaison en double dans les non orienté)
-vérifier la nécessité d'ensemle de stable (au lieu d'un simple stable comme dans le pseudo-code) -> en effet, pas nécessaire
+Dijkstra: algorithme: procédures auxilliaires

@@ -15,6 +15,8 @@ public:
   enum NodeType{CONTAINER, NOCONTENT};
 
   enum Default{DEFAULT};
+
+  static const int INFINITY;
 };
 
 #endif

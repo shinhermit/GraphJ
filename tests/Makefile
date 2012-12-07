@@ -26,6 +26,12 @@ test_acm:
 test_coloring:
 	$(cmd)
 
+test_dijkstra:
+	$(cmd)
+
+test_bellman:
+	$(cmd)
+
 reseau_routier:
 	$(cmd)
 

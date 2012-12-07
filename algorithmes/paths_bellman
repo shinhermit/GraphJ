@@ -1,0 +1,130 @@
+Problématique et hypothèses
+*forme P2: "..."
+* basée sur un RELAXATION: "tous les prédécesseurs ont déjà été visités"
+*minimisation ET optimisation
+*coût négatifs possibles
+*PAS de circuit
+
+principe:
+*recherche du meilleur prédécesseur: celui qui permet d'arriver à un sommet avec le moindre coût.
+	. utilise deux tables: table des meileurs prédécesseurs connus et tables des distances minimales cumulées au sommet d'origine
+	. Initialisation:
+		. le sommet source est ajouté au graphe des chemins (c'est point de départ)
+		. table des distances: toutes les distances à l'infini au départ
+
+	-Chaque étape comporte deux parties:
+		* le choix des sommets à rajouter: basé sur une propriété de relaxation
+			--> consiste à sélectionner les sommets pour lesquels
+				. on connait déjà (la distance cumulée de) tous les chemins permettant de les joindre à partir de la source.
+			--> Cela revient en pratique à rajouter:
+				. les sommets non encore visités dont tous les prédécesseurs ont déjà été visités (font déjà parti du graphe des chemins)
+		*la mise à jour des deux tables pour chaque sommet sélectionné:
+			--> On sélection le prédécesseur le plus proche
+			--> On et à jour la table des distance avec le coût de l'arc formé avec le prédécesseur sélectionné
+			--> On met à jour la table des prédécesseur avec le prédécesseur sélectionné
+
+//les algorithmes ci-dessous donnent des arbres (couvrants pour un graphe connexe),
+//il ne fournissent donc pas les chemins équivalent (chemin optimaux de coûts égaux)
+//nous implémenterons une deuxième version qui fournit les chemins équivalents (donc pas
+// forcément des arbres)
+
+FONCTION bellman(G : Graphe (S,A); source : Sommet) : Graphe
+	VARIABLES
+		chemins : Graphe (S', A')
+		distance_a_source : Map<Sommet, Entier>
+		meilleur_prédécesseur : Map<Sommet, Sommet>
+		candidats : Liste<Sommet>
+		en_attente_d_ajout : File<Sommet>
+		INFINITY = 30 000
+
+	DÉBUT
+		//initialisations
+		POUR i=1 à taille(S) FAIRE
+			s = ieme(S,i)
+			distance_a_source[s] = INFINITY
+			ajouter(candidats, s, i)
+		FINPOUR
+		
+		ajouter_sommet(chemins, source)
+		retirer(candidats, source)
+
+		//début de l'algorithme
+		en_attente_d_ajout = relaxation(G, G', candidats)
+		TANTQUE taille(en_attente_d_ajout) > 0 FAIRE
+			correction_des_tables(G, en_attente_d_ajout, distance_a_source, meilleur_prédécesseur)
+			ajouter_relaxés(G, chemins, en_attente_d_ajout, meilleur_prédécesseur)
+			en_attente_d_ajout = relaxation(G, G', candidats)
+		FIN TANTQUE
+
+		retourner chemins
+	FIN
+
+FONCTION relaxation(G, G' : Graphe; candidats : Liste<Sommet>) : File<Sommet>
+	VARIABLES
+		en_attente_d_ajout : File<Sommet>
+		prédécesseurs : Liste<Sommet>
+		s, pred : Sommet
+		i, j : Entier
+		relaxable : Booléen
+	DÉBUT
+		POUR i=1 à taille(candidats) FAIRE
+			s = ieme(candidats, i)
+			prédécesseurs = prédécesseurs(G, s)
+			relaxable = VRAI
+			j=0
+			TANTQUE j < taille(prédécesseurs) ET relaxable FAIRE
+				pred = ieme(prédécesseurs, j)
+				SI NON est_sommet_de(G', pred)
+					ALORS
+						relaxable = FAUX
+				FINSI
+				j = j + 1
+			FINTANTQUE
+			SI relaxable
+				ALORS
+					enfiler(en_attente_d_ajout, s)
+					retirer(candidats, i)
+			FINSI
+		FINPOUR
+
+		retourner en_attente_d_ajout
+	FIN
+
+PROCÉDURE correction_des_tables(G : Graphe; en_attente_d_ajout : File<Sommet>; distance_a_source : Map<Sommet, Entier>; meilleur_predecesseur : Map<Sommet, Sommet>)
+	VARIABLES
+		predecesseurs : Vecteur<Sommets>
+		s, plusProche, pred : Sommet
+		i, j, d_plusProche : Entier
+
+	DÉBUT
+		POUR i=1 à taille(en_attente_d_ajout) FAIRE
+			s = ieme(en_attente_d_ajout)
+			predecesseurs = predecesseurs(G, s)
+			
+			plusProche = ieme(predecesseur, 1)
+			d_plusProche = coût(G, plusProche, s)			
+			POUR j = 2 à taille(predecesseur) FAIRE
+				pred = ieme(predecesseur, j)
+				SI coût(G, pred, s) < d_plusProche
+					ALORS
+						plusProche = pred
+						d_plusProche = coût(G, pred, s)
+				FINSI
+			FINPOUR
+			
+			meilleur_predecesseur[s] = plusProche
+			distance_a_source[s] = d_plusProche
+		FINPOUR
+	FIN
+
+PROCÉDURE ajouter_relaxés(G, chemins : Graphe; en_attente_d_ajout : File<Sommet>; meilleur_prédécesseur : Map<Sommet, Sommet>)
+	VARIABLES
+		s, pred : Sommet
+	DÉBUT
+		TANTQUE taille(en_attente_d_ajout) > 0 FAIRE
+			s = premier(en_attente_d_ajout)
+			pred = meilleur_prédécesseur[s]
+			ajouter_arc( chemins, pred, s, coût(G, pred, s) )
+			retirer(en_attente_d_ajout)
+		FINTANTQUE
+	FIN

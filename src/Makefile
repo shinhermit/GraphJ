@@ -10,6 +10,9 @@ cmd = $(cc) -c $(flags) $(paths) $@.cpp -o $(obj)/$@.o
 ##CIBLES
 
 
+GraphTypes:
+	$(cmd)
+
 Node:
 	$(cmd)
 

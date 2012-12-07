@@ -1,1 +1,107 @@
-procedure dijkstra()
+Problématique & hypothèses
+*forme P2: "..."
+*uniquement minimisation (pas de maximisation)
+*pas de cycle absorbant (circuit dont le coût global est n&gatif) <= pas de coûts négatifs (on est sûr de na pas avoir de circuit absorbant)
+
+principe:
+*recherche du meilleur prédécesseur: celui qui permet d'arriver à un sommet avec le moindre coût.
+	. utilise deux tables: table des meileurs prédécesseurs connus et tables des distances minimales cumulées au sommet d'origine
+	. comporte une phase d'initialisation:
+		. table des distances: distance à la source si adjacents, infinie sinon
+		. table des meilleurs prédécesseurs connus: au départ, la source est le seul prédécesseur connu
+		. le sommet source est ajouté au graphe des chemins (c'est point de départ)
+
+	-chaque étape comporte deux parties:
+		* le choix des sommets à ajouter: ici le plus proche du sommet source (distances cumulées [longueur du chemin])
+		* correction des deux tables distances_minimales_cumulées/meilleur_prédécesseur
+
+
+//les algorithmes ci-dessous donnent des arbres (couvrants pour un graphe connexe),
+//il ne fournissent donc pas les chemins équivalent (chemin optimaux de coûts égaux)
+//nous implémenterons une deuxième version qui fournit les chemins équivalents (donc pas
+// forcément des arbres)
+
+FONCTION dijkstra( G(S,A): Graphe; source: Sommet ): Graphe
+	VARIABLES:
+		distance_a_source : Map<Sommet, Entier non signé>
+		meilleur_prédécesseur: Map<Sommet, Sommet>
+		chemins: Graphe (S',A')
+		s, plusProche, meilleurPred: Sommet
+		distance, i: Entier
+		toutInfini : Booléen
+		INFINITY = 30 000
+	
+	DÉBUT
+		//initialisations des tables
+		POUR i = 1 A taille(S) FAIRE
+			s = ieme(S,i)
+			meilleur_prédécesseur[s] = source
+
+			SI est_arc_de(G, source, s)
+				ALORS distance = coût(G, source, s)
+				SINON
+					distance = INFINITY
+			FINSI
+			distance_a_source[s] = distance
+		FINPOUR
+	
+		ajouter(chemins, source)
+		retirer(distance_a_source, source)
+	
+		//début de l'agorithme
+		toutInfini = FAUX
+		TANTQUE taille(distance_a_source) > 0 ET NON toutInfini FAIRE
+			plusProche = plus_proche(distance_a_source)
+			SI distance_a_source[plusProche] == INFINITY
+				ALORS toutInfini = VRAI
+				SINON
+					meilleurPred = meilleur_prédécesseur[plusProche]
+					ajouter_arc( chemins, meilleurPred, plusProche, coût(G, meilleurPred, plusProche) )
+					correction_des_tables(G, plusProche, distance_a_source, meilleur_prédécesseur)
+					retirer(distance_a_source, plusProche)
+			FINSI
+		FINTANTQUE
+	FIN
+
+FONCTION plus_proche(distance_a_source : Map<Sommet, distance>) : Sommet
+	VARIABLES
+		s, plusProche : Sommet
+		i, d, d_plusProche : Entier
+	DÉBUT
+		plusProche = tête( ieme(distance_a_source, 1) )
+		d_plusProche = queue( ieme(distance_a_source, 1) )
+		POUR i=2 à taille(distance_a_source) FAIRE
+			s = tête( ieme(distance_a_source, i) )
+			d = queue( ieme(distance_a_source, i) )
+			SI d < d_plusProche
+				ALORS
+					plusProche = s
+					d_plusProche = d
+			FINSI
+		FIN POUR
+		retourner plusProche
+	FIN
+
+PROCÉDURE correction_des_tables(G, chemins : Graphe; plusProche : Sommet; distance_a_source : Map<Sommet Entier non signé>; prédécesseur : Map<Sommet, Sommet>)
+	VARIABLES
+		successeurs : Liste<Sommets>
+		s : Sommet
+		i, nvlle_distance : Entier
+	DÉBUT
+		successeurs = successeurs(G, plusProche)
+		i = 0
+		TANT QUE i < taille(successeurs) FAIRE
+			s = ieme(successeur, i)
+			SI NON est_sommet_de(chemins, s)
+				ALORS
+					nvlle_distance = distance_a_source[plusProche] + coût(G, plusProche, s)
+					SI nvlle_distance < distance_a_source[s]
+						ALORS
+							distance_a_source[s] = nvlle_distance
+							prédécesseur[s] = plusProche
+					FINSI
+			FINSI
+			i = i+1
+		FINTANTQUE
+	FIN
+
