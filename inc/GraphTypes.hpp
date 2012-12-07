@@ -16,6 +16,8 @@ public:
 
   enum Default{DEFAULT};
 
+  enum SearchAlgorithm{DIJKSTRA, BELLMAN};
+
   static const int INFINITY;
 };
 

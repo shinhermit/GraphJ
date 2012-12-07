@@ -101,3 +101,51 @@ void Traverse<Type>::depth(Graph<Type> & graph, Visitor<Type> & visitor){
   }
 
 }
+
+template<typename Type>
+void Traverse<Type>::reverse_breadth_once(Graph<Type> & graph, Node::node_id node, Visitor<Type> & visitor, std::set<Node::node_id> & marker){
+  Node::node_id father, grand_father;
+  std::deque<Node::node_id> waiters, grand_predecessors;
+  std::set<Node::node_id> nodes_set;
+
+  waiters.push_back(node);
+
+  while( waiters.size() > 0 ){
+    father = waiters.front();
+    waiters.pop_front();
+    visitor.treat(graph, father);
+    marker.insert(father);
+
+    nodes_set = graph.predecessors(father);
+    grand_predecessors.assign(nodes_set.begin(), nodes_set.end());
+    nodes_set.clear();
+
+    while( grand_predecessors.size() > 0 ){
+      grand_father = grand_predecessors.front();
+      if( !marker.count(grand_father) ){
+	marker.insert(grand_father);
+	waiters.push_back(grand_father);
+      }
+
+      grand_predecessors.pop_front();
+    }
+  }
+}
+
+template<typename Type>
+void Traverse<Type>::reverse_breadth(Graph<Type> & graph, Visitor<Type> & visitor){
+  typename Graph<Type>::NodeIterator nodeIt;
+  std::set<Node::node_id> marker;
+
+  if( graph.nodes_size() > 0){
+    *nodeIt = graph.nodes_begin();
+
+    while( nodeIt != graph.at_nodes_end() ){
+      if( !marker.count(*nodeIt) )
+	reverse_breadth_once(graph, *nodeIt, visitor, marker);
+
+      *nodeIt++;
+    }
+  }
+
+}

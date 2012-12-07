@@ -4,6 +4,8 @@
 #include <list>
 #include <deque>
 #include "Graph.hpp"
+#include "PathBuilderVisitor.hpp"
+#include "Traverse.hpp"
 
 template <typename Type=GraphTypes::Default>
 class PathFinding
@@ -26,6 +28,7 @@ public:
 
   Graph<> bellman_dual(Graph<Type> & graph, Node::node_id targetNode);
 
+  Graph<> between(Graph<Type> & graph, Node::node_id source, Node::node_id target, GraphTypes::SearchAlgorithm algo=GraphTypes::DIJKSTRA);
 };
 
 #include "PathFinding.cpp"

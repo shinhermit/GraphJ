@@ -209,3 +209,18 @@ Graph<> PathFinding<Type>::bellman_dual(Graph<Type> & graph, Node::node_id targe
 
   return paths;
 }
+
+template <typename Type>
+Graph<> PathFinding<Type>::between(Graph<Type> & graph, Node::node_id source, Node::node_id target, GraphTypes::SearchAlgorithm algo)
+{
+  Traverse<> traverse;
+  PathBuilderVisitor<> pathBuilder;
+  std::set<Node::node_id> marker;
+  Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
+
+  paths = (algo == GraphTypes::DIJKSTRA) ? dijkstra(graph, source) : bellman(graph, source);
+
+  traverse.reverse_breadth_once(paths, target, pathBuilder, marker);
+
+  return pathBuilder.path();
+}
