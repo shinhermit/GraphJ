@@ -24,8 +24,8 @@ principe:
 			--> On met à jour la table des prédécesseur avec le prédécesseur sélectionné
 
 //les algorithmes ci-dessous donnent des arbres (couvrants pour un graphe connexe),
-//il ne fournissent donc pas les chemins équivalent (chemin optimaux de coûts égaux)
-//nous implémenterons une deuxième version qui fournit les chemins équivalents (donc pas
+//ils ne fournissent donc pas les chemins équivalents (chemins optimaux de coûts égaux)
+//nous implémenterons une deuxième version qui fournira les chemins équivalents (donc pas
 // forcément des arbres)
 
 FONCTION bellman(G : Graphe (S,A); source : Sommet) : Graphe
@@ -49,17 +49,17 @@ FONCTION bellman(G : Graphe (S,A); source : Sommet) : Graphe
 		retirer(candidats, source)
 
 		//début de l'algorithme
-		en_attente_d_ajout = relaxation(G, G', candidats)
+		en_attente_d_ajout = _relaxation(G, G', candidats)
 		TANTQUE taille(en_attente_d_ajout) > 0 FAIRE
-			correction_des_tables(G, en_attente_d_ajout, distance_a_source, meilleur_prédécesseur)
-			ajouter_relaxés(G, chemins, en_attente_d_ajout, meilleur_prédécesseur)
-			en_attente_d_ajout = relaxation(G, G', candidats)
+			_correction_des_tables(G, en_attente_d_ajout, distance_a_source, meilleur_prédécesseur)
+			_ajouter_relaxés(G, chemins, en_attente_d_ajout, meilleur_prédécesseur)
+			en_attente_d_ajout = _relaxation(G, G', candidats)
 		FIN TANTQUE
 
 		retourner chemins
 	FIN
 
-FONCTION relaxation(G, G' : Graphe; candidats : Liste<Sommet>) : File<Sommet>
+FONCTION _relaxation(G, G' : Graphe; candidats : Liste<Sommet>) : File<Sommet>
 	VARIABLES
 		en_attente_d_ajout : File<Sommet>
 		prédécesseurs : Liste<Sommet>
@@ -90,7 +90,7 @@ FONCTION relaxation(G, G' : Graphe; candidats : Liste<Sommet>) : File<Sommet>
 		retourner en_attente_d_ajout
 	FIN
 
-PROCÉDURE correction_des_tables(G : Graphe; en_attente_d_ajout : File<Sommet>; distance_a_source : Map<Sommet, Entier>; meilleur_predecesseur : Map<Sommet, Sommet>)
+PROCÉDURE _correction_des_tables(G : Graphe; en_attente_d_ajout : File<Sommet>; distance_a_source : Map<Sommet, Entier>; meilleur_predecesseur : Map<Sommet, Sommet>)
 	VARIABLES
 		predecesseurs : Vecteur<Sommets>
 		s, plusProche, pred : Sommet
@@ -117,7 +117,7 @@ PROCÉDURE correction_des_tables(G : Graphe; en_attente_d_ajout : File<Sommet>; 
 		FINPOUR
 	FIN
 
-PROCÉDURE ajouter_relaxés(G, chemins : Graphe; en_attente_d_ajout : File<Sommet>; meilleur_prédécesseur : Map<Sommet, Sommet>)
+PROCÉDURE _ajouter_relaxés(G, chemins : Graphe; en_attente_d_ajout : File<Sommet>; meilleur_prédécesseur : Map<Sommet, Sommet>)
 	VARIABLES
 		s, pred : Sommet
 	DÉBUT
@@ -125,6 +125,6 @@ PROCÉDURE ajouter_relaxés(G, chemins : Graphe; en_attente_d_ajout : File<Somme
 			s = premier(en_attente_d_ajout)
 			pred = meilleur_prédécesseur[s]
 			ajouter_arc( chemins, pred, s, coût(G, pred, s) )
-			retirer(en_attente_d_ajout)
+			défiler(en_attente_d_ajout)
 		FINTANTQUE
 	FIN

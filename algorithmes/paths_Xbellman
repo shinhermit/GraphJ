@@ -1,0 +1,115 @@
+//Xbellman : eXtended_bellman
+//les algorithmes ci-dessous donnent tous les chemin solution
+//ils fournissent les chemins équivalents (chemins optimaux de coûts égaux),
+//contrairement à la première version
+
+FONCTION bellman(G : Graphe (S,A); source : Sommet) : Graphe
+	VARIABLES
+		chemins : Graphe (S', A')
+		distance_a_source : Map<Sommet, Entier>
+		meilleurs_prédécesseurs : Map<Sommet, Liste<Sommet> >
+		candidats : Liste<Sommet>
+		en_attente_d_ajout : File<Sommet>
+		INFINITY = 30 000
+
+	DÉBUT
+		//initialisations
+		POUR i=1 à taille(S) FAIRE
+			s = ieme(S,i)
+			distance_a_source[s] = INFINITY
+			ajouter(candidats, s, i)
+		FINPOUR
+		
+		ajouter_sommet(chemins, source)
+		retirer(candidats, source)
+
+		//début de l'algorithme
+		en_attente_d_ajout = _relaxation(G, G', candidats)
+		TANTQUE taille(en_attente_d_ajout) > 0 FAIRE
+			_correction_des_tables(G, en_attente_d_ajout, distance_a_source, meilleurs_prédécesseurs)
+			_ajouter_relaxés(G, chemins, en_attente_d_ajout, meilleurs_prédécesseurs)
+			en_attente_d_ajout = _relaxation(G, G', candidats)
+		FINTANTQUE
+
+		retourner chemins
+	FIN
+
+FONCTION _relaxation(G, G' : Graphe; candidats : Liste<Sommet>) : File<Sommet>
+	VARIABLES
+		en_attente_d_ajout : File<Sommet>
+		prédécesseurs : Liste<Sommet>
+		s, pred : Sommet
+		i, j : Entier
+		relaxable : Booléen
+	DÉBUT
+		POUR i=1 à taille(candidats) FAIRE
+			s = ieme(candidats, i)
+			prédécesseurs = prédécesseurs(G, s)
+			relaxable = VRAI
+			j=0
+			TANTQUE j < taille(prédécesseurs) ET relaxable FAIRE
+				pred = ieme(prédécesseurs, j)
+				SI NON est_sommet_de(G', pred)
+					ALORS
+						relaxable = FAUX
+				FINSI
+				j = j + 1
+			FINTANTQUE
+			SI relaxable
+				ALORS
+					enfiler(en_attente_d_ajout, s)
+					retirer(candidats, i)
+			FINSI
+		FINPOUR
+
+		retourner en_attente_d_ajout
+	FIN
+
+PROCÉDURE _correction_des_tables(G : Graphe; en_attente_d_ajout : File<Sommet>; distance_a_source : Map<Sommet, Entier>; meilleurs_predecesseurs : Map<Sommet, Liste<Sommet> >)
+	VARIABLES
+		predecesseurs : Vecteur<Sommets>
+		s, plusProche, pred : Sommet
+		i, j, d_plusProche : Entier
+
+	DÉBUT
+		POUR i=1 à taille(en_attente_d_ajout) FAIRE
+			s = ieme(en_attente_d_ajout)
+			predecesseurs = predecesseurs(G, s)
+			
+			plusProche = ieme(predecesseurs, 1)
+			d_plusProche = coût(G, plusProche, s)
+			POUR j = 2 à taille(predecesseurs) FAIRE
+				pred = ieme(predecesseurs, j)
+				SI coût(G, pred, s) < d_plusProche
+					ALORS
+						plusProche = pred
+						d_plusProche = coût(G, pred, s)
+						distance_a_source[s] = d_plusProche
+						vider(meilleurs_prédécesseurs)
+						insérer(meilleurs_prédécesseurs, plusProche, 1)
+					SINON
+						SI coût(G, pred, s) == d_plusProche
+							ALORS
+								insérer(meilleurs_prédécesseurs, pred, taille(meilleurs_prédécesseurs)+1)
+						FINSI
+				FINSI
+			FINPOUR
+		FINPOUR
+	FIN
+
+PROCÉDURE _ajouter_relaxés(G, chemins : Graphe; en_attente_d_ajout : File<Sommet>; meilleurs_prédécesseurs : Map<Sommet, Liste<Sommet> >)
+	VARIABLES
+		s, pred : Sommet
+		predécesseurs : Liste<Sommet>
+		i : Entier
+	DÉBUT
+		TANTQUE taille(en_attente_d_ajout) > 0 FAIRE
+			s = premier(en_attente_d_ajout)
+			predécesseurs = meilleur_prédécesseur[s]
+			POUR i=1 à taille(prédécesseurs) FAIRE
+				pred = ieme(prédécesseur, i)
+				ajouter_arc( chemins, pred, s, coût(G, pred, s) )
+			FINPOUR
+			défiler(en_attente_d_ajout)
+		FINTANTQUE
+	FIN

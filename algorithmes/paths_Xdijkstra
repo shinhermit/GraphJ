@@ -1,0 +1,137 @@
+//Xdijkstra : eXtended_dijkstra
+//les algorithmes ci-dessous donnent tous les chemins solutions:
+//ils fournissent les chemins équivalents (chemins optimaux de coûts égaux),
+//contrairement à la première version
+
+FONCTION dijkstra( G(S,A): Graphe; source: Sommet ): Graphe
+	VARIABLES:
+		distance_a_source : Map<Sommet, Entier non signé>
+		meilleurs_prédécesseurs: Map<Sommet, Liste<Sommet> >
+		chemins: Graphe (S',A')
+		s : Sommet
+		plusProches, meilleursPreds : Liste<Sommet>
+		toutInfini : Booléen
+		INFINITY = 30 000
+	
+	DÉBUT
+		//initialisations des tables
+		POUR i = 1 A taille(S) FAIRE
+			s = ieme(S,i)
+			insérer(meilleurs_prédécesseur[s], source, 0)
+
+			SI est_arc_de(G, source, s)
+				ALORS
+					distance = coût(G, source, s)
+				SINON
+					distance = INFINITY
+			FINSI
+			distance_a_source[s] = distance
+		FINPOUR
+	
+		ajouter(chemins, source)
+		retirer(distance_a_source, source)
+	
+		//début de l'agorithme
+		toutInfini = FAUX
+		TANTQUE taille(distance_a_source) > 0 ET NON toutInfini FAIRE
+			plusProches = _minimaux(distance_a_source)
+			unPlusProche = ieme(plusProche, 1)
+			SI distance_a_source[unPlusProche] == INFINITY
+				ALORS
+					toutInfini = VRAI
+				SINON
+					_ajouter_arcs( G, chemins, meilleurs_predecesseurs, plusProches)
+					_correction_des_tables(G, chemins, plusProches, distance_a_source, meilleurs_prédécesseurs)
+					_retirer_sommets(distance_a_source, plusProches)
+			FINSI
+		FINTANTQUE
+	FIN
+
+FONCTION minimaux(distance_a_source : Map<Sommet, Entier non signé>) : Liste<Sommet>
+	VARIABLES
+		plusProches : Liste<Sommet>
+		s, unPlusProche : Sommet
+		i, d, d_plusProche : Entier
+	DÉBUT
+		unPlusProche = tête( ieme(distance_a_source, 1) )
+		d_plusProche = queue( ieme(distance_a_source, 1) )
+		insérer(plusProches, unPlusProche, 1)
+		POUR i=2 à taille(distance_a_source) FAIRE
+			s = tête( ieme(distance_a_source, i) )
+			d = queue( ieme(distance_a_source, i) )
+			SI d < d_plusProche
+				ALORS
+					unPlusProche = s
+					d_plusProche = d
+					vider(plusProches)
+					insérer(plusProches, unPlusProche, taille(plusProches)+1)
+				SINON
+					SI d == d_plusProche
+						ALORS
+							insérer(plusProches, s, taille(plusProches)+1)
+					FINSI
+			FINSI
+		FINPOUR
+		retourner plusProches
+	FIN
+
+PROCÉDURE _ajouter_arcs(G, chemins: Graphe; meilleurs_prédécesseurs : Map<Sommet, Liste<Sommet> >; plusProches : Liste<Sommet>)
+	VARIABLES
+		i, j : Entier
+		s, p : Sommet
+		preds : Liste<Sommet>
+
+	DÉBUT
+		POUR i=1 à taille(plusProches) FAIRE
+			s = ieme(plusProches, i)
+			preds = meilleurs_prédécesseurs[s]
+			POUR j=1 à taille(preds) FAIRE
+				p = ieme(preds, j)
+				ajouter_arc( chemins, p, s, coût(G, p,s) )
+			FINPOUR
+		FINPOUR
+	FIN
+
+PROCÉDURE _retirer_sommets(distance_a_source : Map<Sommet, Entier non signé>; plusProches : Liste<Sommet>)
+	VARIABLES
+		i : Entier
+		s : Sommet
+	DÉBUT
+		POUR i=1 à tailler(plusProche) FAIRE
+			s = ieme(plusProches, i)
+			retirer(distance_a_source, s)
+		FINPOUR
+	FIN
+
+PROCÉDURE _correction_des_tables(G, chemins : Graphe; plusProches : Liste<Sommet>; distance_a_source : Map<Sommet, Entier non signé>; meilleurs_prédécesseurs : Map<Sommet, Liste<Sommet> >)
+	VARIABLES
+		successeurs : Liste<Sommets>
+		s : Sommet
+		i, j, nvlle_distance : Entier
+	DÉBUT
+		POUR i=1 à taille(plusProches) FAIRE
+			unPlusProche = ieme(plusProches, i)
+			successeurs = successeurs(G, unPlusProche)
+			j = 0
+			TANT QUE j < taille(successeurs) FAIRE
+				s = ieme(successeur, j)
+				SI NON est_sommet_de(chemins, s)
+					ALORS
+						nvlle_distance = distance_a_source[unPlusProche] + coût(G, unPlusProche, s)
+						SI nvlle_distance < distance_a_source[s]
+							ALORS
+								distance_a_source[s] = nvlle_distance
+								vider(meilleurs_prédécesseurs[s])
+								insérer(meilleurs_prédécesseurs[s], unPlusProche, 1)
+							SINON
+								SI nvlle_distance == distance_a_source[s]
+									ALORS
+										insérer(meilleurs_prédécesseur[s], unPlusProche, taille(meilleurs_prédécesseurs[s])+1)
+								FINSI
+						FINSI
+				FINSI
+				j = j+1
+			FINTANTQUE
+		FINPOUR
+	FIN
+

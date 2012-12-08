@@ -1,4 +1,5 @@
 Dijkstra et bellman:
-	-solutions multiples (coûts équivalents)
+	-solutions multiples (coûts équivalents):
+		*algorithme paths_Xbetween()
 
 Bellman_dual
