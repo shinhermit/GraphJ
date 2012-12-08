@@ -1,0 +1,71 @@
+//Xbetween : eXtended_between
+//Les algorithmes ci-dessous sont des extensions des
+//algorithmes paths_between. Ils permetten d'obtenir tous
+//les plus courts chemins entre deux sommets d'un graphe,
+//en se basant sur un des algorithmes Dijkstra/Bellman.
+
+/*
+	L'idée de la procédure chemins_jusqua() est la suivante:
+		*Un chemin jusqu'à s est:
+			-un chemin jusqu'à un prédécesseur p de s
+			-prolongé de l'arc p->s
+*/
+
+RENOMMER Liste<Sommet> EN Chemin
+
+FONCTION chemin_entre(G : Graphe; source, cible : Sommet; algo_dijkstra : Booléen) : Liste<Chemin>
+	VARIABLES
+		lesChemins : Liste<Chemin>
+		chemins : Graphe
+
+	DÉBUT
+		chemins = SI algo_dijkstra ALORS dijkstra(G, source) SINON bellman(G, source)
+		lesChemins = chemins_jusqua(chemins, cible)
+		retourner lesChemins
+	FIN
+
+FONCTION chemins_jusqua(G, chemins : Graphe; cible : Sommet) : Liste<Chemin>
+	VARIABLES
+		i, j : Entier
+		prédécesseurs : Liste<Sommet>
+		lesChemins, jusqua_pred : Liste<Chemin>
+		unChemin : Chemin
+		pred : Sommet
+
+	DÉBUT
+		prédécesseurs = prédécesseurs(G, cible)
+		SI
+			taille(Prédécesseurs) > 0
+		ALORS
+			POUR i=1 à taille(prédécesseurs) FAIRE
+				pred = ieme(prédécesseur, i)
+				_jusqua_pred = chemins_jusqua(G, chemins, pred)
+				_ajouter_tous(lesChemins, jusqua_pred)
+			FINPOUR
+		FINSI
+
+		SI
+			taille(lesChemins) > 0
+		ALORS
+			POUR i=1 à taille(lesChemins) FAIRE
+				//n'est pas rigoureusement correct: on considèrera que ieme retourne une référence
+				unChemin = ieme(lesChemins, i)
+				insérer(unChemin, cible, taille(unChemin)+1)
+			FINPOUR
+		SINON
+			insérer(unChemin, cible, 1)
+			insérer(lesChemins, unChemin, 1)
+		FINSI
+	FIN
+
+PROCÉDURE _insérer_tous(lesChemins, jusqua_pred : Liste<Chemin>)
+	VARIABLES
+		i : Entier
+		unChemin : Chemin
+	DÉBUT
+		POUR i=taille(jusqua_pred)FAIRE
+			unChemin = ieme(jusqua_pred, i)
+			insérer(lesChemins, unChemin, taille(lesChemins)+1)
+		FINPOUR
+	FIN
+
