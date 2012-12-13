@@ -74,16 +74,18 @@ FONCTION _relaxation(G, G' : Graphe; candidats : Liste<Sommet>) : File<Sommet>
 			j=0
 			TANTQUE j < taille(prédécesseurs) ET relaxable FAIRE
 				pred = ieme(prédécesseurs, j)
-				SI NON est_sommet_de(G', pred)
-					ALORS
-						relaxable = FAUX
+				SI
+					NON est_sommet_de(G', pred)
+				ALORS
+					relaxable = FAUX
 				FINSI
 				j = j + 1
 			FINTANTQUE
-			SI relaxable
-				ALORS
-					enfiler(en_attente_d_ajout, s)
-					retirer(candidats, i)
+			SI
+				relaxable
+			ALORS
+				enfiler(en_attente_d_ajout, s)
+				retirer(candidats, i)
 			FINSI
 		FINPOUR
 
@@ -105,10 +107,11 @@ PROCÉDURE _correction_des_tables(G : Graphe; en_attente_d_ajout : File<Sommet>;
 			d_plusProche = coût(G, plusProche, s)			
 			POUR j = 2 à taille(predecesseur) FAIRE
 				pred = ieme(predecesseur, j)
-				SI coût(G, pred, s) < d_plusProche
-					ALORS
-						plusProche = pred
-						d_plusProche = coût(G, pred, s)
+				SI
+					coût(G, pred, s) < d_plusProche
+				ALORS
+					plusProche = pred
+					d_plusProche = coût(G, pred, s)
 				FINSI
 			FINPOUR
 			

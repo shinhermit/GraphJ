@@ -19,11 +19,12 @@ FONCTION dijkstra( G(S,A): Graphe; source: Sommet ): Graphe
 			s = ieme(S,i)
 			insérer(meilleurs_prédécesseur[s], source, 0)
 
-			SI est_arc_de(G, source, s)
-				ALORS
-					distance = coût(G, source, s)
-				SINON
-					distance = INFINITY
+			SI
+				est_arc_de(G, source, s)
+			ALORS
+				distance = coût(G, source, s)
+			SINON
+				distance = INFINITY
 			FINSI
 			distance_a_source[s] = distance
 		FINPOUR
@@ -36,18 +37,19 @@ FONCTION dijkstra( G(S,A): Graphe; source: Sommet ): Graphe
 		TANTQUE taille(distance_a_source) > 0 ET NON toutInfini FAIRE
 			plusProches = _minimaux(distance_a_source)
 			unPlusProche = ieme(plusProche, 1)
-			SI distance_a_source[unPlusProche] == INFINITY
-				ALORS
-					toutInfini = VRAI
-				SINON
-					_ajouter_arcs( G, chemins, meilleurs_predecesseurs, plusProches)
-					_correction_des_tables(G, chemins, plusProches, distance_a_source, meilleurs_prédécesseurs)
-					_retirer_sommets(distance_a_source, plusProches)
+			SI
+				distance_a_source[unPlusProche] == INFINITY
+			ALORS
+				toutInfini = VRAI
+			SINON
+				_ajouter_arcs( G, chemins, meilleurs_predecesseurs, plusProches)
+				_correction_des_tables(G, chemins, plusProches, distance_a_source, meilleurs_prédécesseurs)
+				_retirer_sommets(distance_a_source, plusProches)
 			FINSI
 		FINTANTQUE
 	FIN
 
-FONCTION minimaux(distance_a_source : Map<Sommet, Entier non signé>) : Liste<Sommet>
+FONCTION _minimaux(distance_a_source : Map<Sommet, Entier non signé>) : Liste<Sommet>
 	VARIABLES
 		plusProches : Liste<Sommet>
 		s, unPlusProche : Sommet
@@ -59,17 +61,19 @@ FONCTION minimaux(distance_a_source : Map<Sommet, Entier non signé>) : Liste<So
 		POUR i=2 à taille(distance_a_source) FAIRE
 			s = tête( ieme(distance_a_source, i) )
 			d = queue( ieme(distance_a_source, i) )
-			SI d < d_plusProche
+			SI
+				d < d_plusProche
+			ALORS
+				unPlusProche = s
+				d_plusProche = d
+				vider(plusProches)
+				insérer(plusProches, unPlusProche, taille(plusProches)+1)
+			SINON
+				SI
+					d == d_plusProche
 				ALORS
-					unPlusProche = s
-					d_plusProche = d
-					vider(plusProches)
-					insérer(plusProches, unPlusProche, taille(plusProches)+1)
-				SINON
-					SI d == d_plusProche
-						ALORS
-							insérer(plusProches, s, taille(plusProches)+1)
-					FINSI
+					insérer(plusProches, s, taille(plusProches)+1)
+				FINSI
 			FINSI
 		FINPOUR
 		retourner plusProches
@@ -97,7 +101,7 @@ PROCÉDURE _retirer_sommets(distance_a_source : Map<Sommet, Entier non signé>; 
 		i : Entier
 		s : Sommet
 	DÉBUT
-		POUR i=1 à tailler(plusProche) FAIRE
+		POUR i=1 à taille(plusProche) FAIRE
 			s = ieme(plusProches, i)
 			retirer(distance_a_source, s)
 		FINPOUR
@@ -106,7 +110,7 @@ PROCÉDURE _retirer_sommets(distance_a_source : Map<Sommet, Entier non signé>; 
 PROCÉDURE _correction_des_tables(G, chemins : Graphe; plusProches : Liste<Sommet>; distance_a_source : Map<Sommet, Entier non signé>; meilleurs_prédécesseurs : Map<Sommet, Liste<Sommet> >)
 	VARIABLES
 		successeurs : Liste<Sommets>
-		s : Sommet
+		s, unPlusProche : Sommet
 		i, j, nvlle_distance : Entier
 	DÉBUT
 		POUR i=1 à taille(plusProches) FAIRE
@@ -115,20 +119,23 @@ PROCÉDURE _correction_des_tables(G, chemins : Graphe; plusProches : Liste<Somme
 			j = 0
 			TANT QUE j < taille(successeurs) FAIRE
 				s = ieme(successeur, j)
-				SI NON est_sommet_de(chemins, s)
+				SI
+					NON est_sommet_de(chemins, s)
+				ALORS
+					nvlle_distance = distance_a_source[unPlusProche] + coût(G, unPlusProche, s)
+					SI
+						nvlle_distance < distance_a_source[s]
 					ALORS
-						nvlle_distance = distance_a_source[unPlusProche] + coût(G, unPlusProche, s)
-						SI nvlle_distance < distance_a_source[s]
-							ALORS
-								distance_a_source[s] = nvlle_distance
-								vider(meilleurs_prédécesseurs[s])
-								insérer(meilleurs_prédécesseurs[s], unPlusProche, 1)
-							SINON
-								SI nvlle_distance == distance_a_source[s]
-									ALORS
-										insérer(meilleurs_prédécesseur[s], unPlusProche, taille(meilleurs_prédécesseurs[s])+1)
-								FINSI
+						distance_a_source[s] = nvlle_distance
+						vider(meilleurs_prédécesseurs[s])
+						insérer(meilleurs_prédécesseurs[s], unPlusProche, 1)
+					SINON
+						SI
+							nvlle_distance == distance_a_source[s]
+						ALORS
+							insérer(meilleurs_prédécesseur[s], unPlusProche, taille(meilleurs_prédécesseurs[s])+1)
 						FINSI
+					FINSI
 				FINSI
 				j = j+1
 			FINTANTQUE

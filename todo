@@ -1,5 +1,4 @@
-Dijkstra et bellman:
-	-solutions multiples (coûts équivalents):
-		*algorithme paths_Xbetween()
+faire le test pour Xpaths (graph de test)
+débugger Xpaths
 
-Bellman_dual
+Bellman_dual (faire directement le Xbellman_dual)

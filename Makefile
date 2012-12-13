@@ -65,6 +65,12 @@ test_dijkstra: all_classes
 test_bellman: all_classes
 	$(cmd_exe)
 
+test_Xdijkstra: all_classes
+	$(cmd_exe)
+
+test_Xbellman: all_classes
+	$(cmd_exe)
+
 reseau_routier: all_classes
 	$(cmd_exe)
 

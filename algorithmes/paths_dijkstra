@@ -37,11 +37,12 @@ FONCTION dijkstra( G(S,A): Graphe; source: Sommet ): Graphe
 			s = ieme(S,i)
 			meilleur_prédécesseur[s] = source
 
-			SI est_arc_de(G, source, s)
-				ALORS
-					distance = coût(G, source, s)
-				SINON
-					distance = INFINITY
+			SI
+				est_arc_de(G, source, s)
+			ALORS
+				distance = coût(G, source, s)
+			SINON
+				distance = INFINITY
 			FINSI
 			distance_a_source[s] = distance
 		FINPOUR
@@ -53,14 +54,15 @@ FONCTION dijkstra( G(S,A): Graphe; source: Sommet ): Graphe
 		toutInfini = FAUX
 		TANTQUE taille(distance_a_source) > 0 ET NON toutInfini FAIRE
 			plusProche = _minimal(distance_a_source)
-			SI distance_a_source[plusProche] == INFINITY
-				ALORS
-					toutInfini = VRAI
-				SINON
-					meilleurPred = _meilleur_prédécesseur[plusProche]
-					ajouter_arc( chemins, meilleurPred, plusProche, coût(G, meilleurPred, plusProche) )
-					_correction_des_tables(G, chemins, plusProche, distance_a_source, meilleur_prédécesseur)
-					retirer(distance_a_source, plusProche)
+			SI
+				distance_a_source[plusProche] == INFINITY
+			ALORS
+				toutInfini = VRAI
+			SINON
+				meilleurPred = _meilleur_prédécesseur[plusProche]
+				ajouter_arc( chemins, meilleurPred, plusProche, coût(G, meilleurPred, plusProche) )
+				_correction_des_tables(G, chemins, plusProche, distance_a_source, meilleur_prédécesseur)
+				retirer(distance_a_source, plusProche)
 			FINSI
 		FINTANTQUE
 	FIN
@@ -75,10 +77,11 @@ FONCTION _minimal(distance_a_source : Map<Sommet, distance>) : Sommet
 		POUR i=2 à taille(distance_a_source) FAIRE
 			s = tête( ieme(distance_a_source, i) )
 			d = queue( ieme(distance_a_source, i) )
-			SI d < d_plusProche
-				ALORS
-					plusProche = s
-					d_plusProche = d
+			SI
+				d < d_plusProche
+			ALORS
+				plusProche = s
+				d_plusProche = d
 			FINSI
 		FINPOUR
 		retourner plusProche
@@ -94,14 +97,16 @@ PROCÉDURE _correction_des_tables(G, chemins : Graphe; plusProche : Sommet; dist
 		i = 0
 		TANT QUE i < taille(successeurs) FAIRE
 			s = ieme(successeur, i)
-			SI NON est_sommet_de(chemins, s)
+			SI
+				NON est_sommet_de(chemins, s)
+			ALORS
+				nvlle_distance = distance_a_source[plusProche] + coût(G, plusProche, s)
+				SI
+					nvlle_distance < distance_a_source[s]
 				ALORS
-					nvlle_distance = distance_a_source[plusProche] + coût(G, plusProche, s)
-					SI nvlle_distance < distance_a_source[s]
-						ALORS
-							distance_a_source[s] = nvlle_distance
-							meilleur_prédécesseur[s] = plusProche
-					FINSI
+					distance_a_source[s] = nvlle_distance
+					meilleur_prédécesseur[s] = plusProche
+				FINSI
 			FINSI
 			i = i+1
 		FINTANTQUE

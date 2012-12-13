@@ -32,6 +32,12 @@ test_dijkstra:
 test_bellman:
 	$(cmd)
 
+test_Xdijkstra:
+	$(cmd)
+
+test_Xbellman:
+	$(cmd)
+
 reseau_routier:
 	$(cmd)
 

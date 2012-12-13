@@ -7,6 +7,10 @@
 		*Le chemin jusqu'à s est:
 			-le chemin jusqu'au prédécesseur p de s
 			-prolongé de l'arc p->s
+
+ATTENTION: on suppose que le graphe "chemins" passé à la fonction a une racine (source).
+	On risque de boucler indéfiniment sinon (car aucun mécanisme de marquage mis en oeuvre)
+	--> il faudrait la mettre privée
 */
 
 FONCTION chemin_entre(G : Graphe; source, cible : Sommet; algo_dijkstra : Booléen) : Liste<Sommet>

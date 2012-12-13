@@ -7,7 +7,7 @@ int main()
 {
   Graph<> graph(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
   Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
-  PathFinding<> lookup;
+  XPathFinding<> lookup;
   Exporter<> exporte;
 
   /*
@@ -27,7 +27,7 @@ int main()
   graph.add_edge(6,2, 1);
   graph.add_edge(6,5, 1);
 
-  paths = lookup.bellman(graph, 1);
+  paths = lookup.Xbellman(graph, 1);
 
   //Exports
   exporte.toGraphviz(graph, "test_bellman.graph");

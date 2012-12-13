@@ -9,6 +9,10 @@
 		*Un chemin jusqu'à s est:
 			-un chemin jusqu'à un prédécesseur p de s
 			-prolongé de l'arc p->s
+
+ATTENTION: on suppose que le graphe "chemins" passé à la fonction a une racine (source).
+	On risque de boucler indéfiniment sinon (car aucun mécanisme de marquage mis en oeuvre)
+	--> il faudrait la mettre privée
 */
 
 RENOMMER Liste<Sommet> EN Chemin
@@ -20,13 +24,13 @@ FONCTION chemin_entre(G : Graphe; source, cible : Sommet; algo_dijkstra : Boolé
 
 	DÉBUT
 		chemins = SI algo_dijkstra ALORS dijkstra(G, source) SINON bellman(G, source)
-		lesChemins = chemins_jusqua(chemins, cible)
+		lesChemins = chemins_jusqua(G, chemins, cible)
 		retourner lesChemins
 	FIN
 
 FONCTION chemins_jusqua(G, chemins : Graphe; cible : Sommet) : Liste<Chemin>
 	VARIABLES
-		i, j : Entier
+		i : Entier
 		prédécesseurs : Liste<Sommet>
 		lesChemins, jusqua_pred : Liste<Chemin>
 		unChemin : Chemin
@@ -39,7 +43,7 @@ FONCTION chemins_jusqua(G, chemins : Graphe; cible : Sommet) : Liste<Chemin>
 		ALORS
 			POUR i=1 à taille(prédécesseurs) FAIRE
 				pred = ieme(prédécesseur, i)
-				_jusqua_pred = chemins_jusqua(G, chemins, pred)
+				jusqua_pred = chemins_jusqua(G, chemins, pred)
 				_ajouter_tous(lesChemins, jusqua_pred)
 			FINPOUR
 		FINSI
@@ -55,10 +59,12 @@ FONCTION chemins_jusqua(G, chemins : Graphe; cible : Sommet) : Liste<Chemin>
 		SINON
 			insérer(unChemin, cible, 1)
 			insérer(lesChemins, unChemin, 1)
+		
 		FINSI
+		retourner lesChemins
 	FIN
 
-PROCÉDURE _insérer_tous(lesChemins, jusqua_pred : Liste<Chemin>)
+PROCÉDURE _ajouter_tous(lesChemins, jusqua_pred : Liste<Chemin>)
 	VARIABLES
 		i : Entier
 		unChemin : Chemin
