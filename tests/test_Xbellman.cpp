@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include "PathFinding.hpp"
 #include "XPathFinding.hpp"
 #include "Exporter.hpp"
 
@@ -12,15 +11,18 @@ int main()
 
   /*
     exemple du cours, exemple n°1, page 83 (attention, celui la page 82 est différent)
+    AVEC MODIFICATIONS de coûts, pour avoir des chemins équivalents
+
    */
-  graph.add_edge(1,2, 10);
+
+  graph.add_edge(1,2, 3);//modifié: 10 en 3
   graph.add_edge(1,3, 3);
   graph.add_edge(1,5, 6);
   graph.add_edge(1,6, 2);
 
   graph.add_edge(3,2, 4);
   graph.add_edge(3,4, 1);
-  graph.add_edge(3,5, 2);
+  graph.add_edge(3,5, 0);//modifié: 4 en 0
 
   graph.add_edge(5,4, 3);
 
@@ -30,21 +32,21 @@ int main()
   paths = lookup.Xbellman(graph, 1);
 
   //Exports
-  exporte.toGraphviz(graph, "test_bellman.graph");
-  exporte.toGraphviz(paths, "paths_bellman.graph");
+  exporte.toGraphviz(graph, "test_Xbellman.graph");
+  exporte.toGraphviz(paths, "paths_Xbellman.graph");
 
   //compilation dot
-  system("dot -Tpng test_bellman.graph -o test_bellman.png");
-  system("dot -Tpng paths_bellman.graph -o paths_bellman.png");
+  system("dot -Tpng test_Xbellman.graph -o test_Xbellman.png");
+  system("dot -Tpng paths_Xbellman.graph -o paths_Xbellman.png");
 
   //affichages
-  std::cout << "Graph a été exporté dans le fichier test_bellman.graph" << std::endl;
-  std::cout << "Arbre des chemins a été exporté dans le fichier paths_bellman.graph" << std::endl;
+  std::cout << "Graph a été exporté dans le fichier test_Xbellman.graph" << std::endl;
+  std::cout << "Arbre des chemins a été exporté dans le fichier paths_Xbellman.graph" << std::endl;
 
-  std::cout << std::endl << "dot -Tpng test_bellman.graph -o test_bellman.png" << std::endl;
-  std::cout << "Graph a été compilé dans le fichier test_bellman.png" << std::endl;
-  std::cout << std::endl << "dot -Tpng paths_bellman.graph -o paths_bellman.png" << std::endl;
-  std::cout << "Arbre des chemins a été compilé dans le fichier paths_bellman.png" << std::endl;
+  std::cout << std::endl << "dot -Tpng test_Xbellman.graph -o test_Xbellman.png" << std::endl;
+  std::cout << "Graph a été compilé dans le fichier test_Xbellman.png" << std::endl;
+  std::cout << std::endl << "dot -Tpng paths_Xbellman.graph -o paths_Xbellman.png" << std::endl;
+  std::cout << "Arbre des chemins a été compilé dans le fichier paths_Xbellman.png" << std::endl;
 
   return 0;
 }

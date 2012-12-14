@@ -25,7 +25,7 @@ private:
   //Xbellman
   std::deque<Node::node_id> _relaxation(Graph<Type> & graph, Graph<> & paths, std::list<Node::node_id> & candidates);
 
-  void _update_tables(Graph<Type> & graph, std::deque<Node::node_id> & waiting_for_insertion, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source, std::map<Node::node_id, std::list<Node::node_id> > & best_predecessors);
+  void _update_tables(Graph<Type> & graph, Graph<> & paths, std::deque<Node::node_id> & waiting_for_insertion, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source, std::map<Node::node_id, std::list<Node::node_id> > & best_predecessors);
 
   void _add_relaxed_nodes(Graph<Type> & graph, Graph<> & paths, std::deque<Node::node_id> & waiting_for_insertion, std::map<Node::node_id, std::list<Node::node_id> > & best_predecessors);
 
@@ -33,8 +33,6 @@ public:
   Graph<> Xdijkstra(Graph<Type> & graph, Node::node_id sourceNode);
 
   Graph<> Xbellman(Graph<Type> & graph, Node::node_id sourceNode);
-
-  Graph<> Xbellman_dual(Graph<Type> & graph, Node::node_id targetNode);
 
   std::list<Path> paths_to(Graph<Type> & graph, Graph<> & allPaths, Node::node_id target);
 

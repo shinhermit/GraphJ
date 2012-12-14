@@ -128,8 +128,8 @@ Graph<> XPathFinding<Type>::Xdijkstra(Graph<Type> & graph, Node::node_id sourceN
       allInfinite = true;
     }
     else{
-      _add_edges(graph, paths, best_predecessors, allClosest);
       _update_tables(graph, paths, allClosest, distance_from_source, best_predecessors);
+      _add_edges(graph, paths, best_predecessors, allClosest);
       _remove_nodes(distance_from_source, allClosest);
     }
   }
@@ -174,34 +174,32 @@ std::deque<Node::node_id> XPathFinding<Type>::_relaxation(Graph<Type> & graph, G
 }
 
 template <typename Type>
-void XPathFinding<Type>::_update_tables(Graph<Type> & graph, std::deque<Node::node_id> & waiting_for_insertion, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source, std::map<Node::node_id, std::list<Node::node_id> > & best_predecessors)
+void XPathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, std::deque<Node::node_id> & waiting_for_insertion, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source, std::map<Node::node_id, std::list<Node::node_id> > & best_predecessors)
 {
   std::set<Node::node_id> predecessors;
-  std::set<Node::node_id>::iterator candidate;
+  std::set<Node::node_id>::iterator pred;
   std::deque<Node::node_id>::iterator s;
-  Node::node_id closest;
-  GraphTypes::Cost d_pred, d_closest;
+  GraphTypes::Cost new_distance;
 
   for(s = waiting_for_insertion.begin(); s != waiting_for_insertion.end(); s++){
     predecessors = graph.predecessors(*s);
     std::list<Node::node_id> & s_best_preds = best_predecessors[*s]; //possible issue
     GraphTypes::Cost & s_distance = distance_from_source[*s]; //possible issue
 
-    closest = *predecessors.begin();
-    d_closest = graph.getCost(closest, *s);
-    for(candidate = predecessors.begin(); candidate != predecessors.end(); candidate++){
+    for(pred = predecessors.begin(); pred != predecessors.end(); pred++){
 
-      d_pred = graph.getCost(*candidate, *s);
-      if(d_pred < d_closest){
-	closest = *candidate;
-	d_closest = d_pred;
+      if( paths.has_node(*pred) ){
 
-	s_distance = d_closest;
-	s_best_preds.clear();
-	s_best_preds.push_back(closest);
-      }
-      else if(d_pred == d_closest){
-	s_best_preds.push_back(closest);	
+	new_distance = distance_from_source[*pred] + graph.getCost(*pred, *s);
+	if(new_distance < s_distance){
+	  s_distance = new_distance;
+	  s_best_preds.clear();
+	  s_best_preds.push_back(*pred);
+	}
+	else if(new_distance == s_distance){
+	  s_best_preds.push_back(*pred);	
+	}
+
       }
     }
 
@@ -238,28 +236,25 @@ Graph<> XPathFinding<Type>::Xbellman(Graph<Type> & graph, Node::node_id sourceNo
   std::deque<Node::node_id> waiting_for_insertion;
 
   //initialisations
-  for(it = graph.nodes_begin(); it != graph.nodes_end(); it++){
-    distance_from_source[*it] = GraphTypes::INFINITY;
-    if(*it != sourceNode) candidates.push_back(*it);
-  }
-
+  distance_from_source[sourceNode] = 0;
   paths.add_node(sourceNode);
+
+  for(it = graph.nodes_begin(); it != graph.nodes_end(); it++){
+
+    if(*it != sourceNode){
+
+      distance_from_source[*it] = GraphTypes::INFINITY;
+      candidates.push_back(*it);
+    }
+  }
 
   //début de l'algorithme
   waiting_for_insertion = _relaxation(graph, paths, candidates);
   while( waiting_for_insertion.size() > 0 ){
-    _update_tables(graph, waiting_for_insertion, distance_from_source, best_predecessors);
+    _update_tables(graph, paths, waiting_for_insertion, distance_from_source, best_predecessors);
     _add_relaxed_nodes(graph, paths, waiting_for_insertion, best_predecessors);
     waiting_for_insertion = _relaxation(graph, paths, candidates);
   }
-
-  return paths;
-}
-
-template <typename Type>
-Graph<> XPathFinding<Type>::Xbellman_dual(Graph<Type> & graph, Node::node_id targetNode)
-{
-  Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
 
   return paths;
 }

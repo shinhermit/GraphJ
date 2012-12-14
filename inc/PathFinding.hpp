@@ -19,14 +19,12 @@ private:
 
   void _add_relaxed_nodes(Graph<Type> & graph, Graph<> & paths, std::deque<Node::node_id> & waiting_for_insertion, std::map<Node::node_id, Node::node_id> & best_predecessor);
 
-  void _update_tables(Graph<Type> & graph, std::deque<Node::node_id> & waiting_for_insertion, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source, std::map<Node::node_id, Node::node_id> & best_predecessor);
+  void _update_tables(Graph<Type> & graph, Graph<> & paths, std::deque<Node::node_id> & waiting_for_insertion, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source, std::map<Node::node_id, Node::node_id> & best_predecessor);
 
 public:
   Graph<> dijkstra(Graph<Type> & graph, Node::node_id sourceNode);
 
   Graph<> bellman(Graph<Type> & graph, Node::node_id sourceNode);
-
-  Graph<> bellman_dual(Graph<Type> & graph, Node::node_id targetNode);
 
   Graph<> between(Graph<Type> & graph, Node::node_id source, Node::node_id target, GraphTypes::SearchAlgorithm algo=GraphTypes::DIJKSTRA);
 };
