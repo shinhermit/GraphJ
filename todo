@@ -1,4 +1,2 @@
-faire le test pour Xpaths (graph de test)
-débugger Xpaths
-
+dijsktra: ne pas détériorer le tableau des distances (utiliser une liste candidtats = S-S', comme dans bellman)
 Bellman_dual (faire directement le Xbellman_dual)

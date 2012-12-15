@@ -1,32 +1,59 @@
 template <typename Type>
-std::list<Node::node_id> XPathFinding<Type>::_minimals(std::map<Node::node_id, GraphTypes::Cost> & distances)
+void XPathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, Node::node_id sourceNode, std::list<Node::node_id> & candidates, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source, std::map<Node::node_id, std::list<Node::node_id> > & best_predecessors)
 {
-  Node::node_id s, closest;
-  GraphTypes::Cost d, d_closest;
-  std::map<Node::node_id, GraphTypes::Cost>::iterator it;
+  typename Graph<Type>::NodeIterator it;
+  GraphTypes::Cost distance;
+
+  distance_from_source[sourceNode] = 0;
+  paths.add_node(sourceNode);
+
+  for(it = graph.nodes_begin(); it != graph.nodes_end(); it++){
+    best_predecessors[*it] = std::list<Node::node_id>();
+    best_predecessors[*it].push_back(sourceNode);
+
+    if(*it != sourceNode){
+      candidates.push_back(*it);
+
+      if( graph.has_edge(sourceNode, *it) ){
+	distance = graph.getCost(sourceNode, *it);
+      }
+      else{
+	distance = GraphTypes::INFINITY;
+      }
+
+      distance_from_source[*it] = distance;
+    }
+
+  }
+}
+
+template <typename Type>
+std::list<Node::node_id> XPathFinding<Type>::_minimals(std::list<Node::node_id> & candidates, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source)
+{
+  Node::node_id closest;
+  GraphTypes::Cost d_closest, new_distance;
+  std::list<Node::node_id>::iterator node;
   std::list<Node::node_id> allClosest;
 
-  it = distances.begin();
-  closest = it->first;
-  d_closest = it->second;
+  node = candidates.begin();
+
+  closest = *node;
+  d_closest = distance_from_source[closest];
   allClosest.push_back(closest);
 
-  it++;
-
-  while( it != distances.end() ){
-    s = it->first;
-    d = it->second;
-
-    if(d < d_closest){
-      closest = s;
-      d_closest = d;
+  node++;
+  while( node != candidates.end() ){
+    new_distance = distance_from_source[*node];
+    if( new_distance < d_closest ){
+      d_closest = new_distance;
+      closest = *node;
       allClosest.clear();
       allClosest.push_back(closest);
     }
-    else if(d == d_closest){
-      allClosest.push_back(closest);
+    else if(new_distance == d_closest){
+      allClosest.push_back(*node);
     }
-    it++;
+    node++;
   }
 
   return allClosest;
@@ -48,12 +75,12 @@ void XPathFinding<Type>::_add_edges(Graph<Type> & graph, Graph<> & paths, std::m
 }
 
 template <typename Type>
-void XPathFinding<Type>::_remove_nodes(std::map<Node::node_id, GraphTypes::Cost> & distances, std::list<Node::node_id> allClosest)
+void XPathFinding<Type>::_remove_nodes(std::list<Node::node_id> & candidates, std::list<Node::node_id> allClosest)
 {
   std::list<Node::node_id>::iterator closest;
 
   for(closest = allClosest.begin(); closest != allClosest.end(); closest++){
-    distances.erase(*closest);
+    candidates.remove(*closest);
   }
 }
 
@@ -94,43 +121,27 @@ Graph<> XPathFinding<Type>::Xdijkstra(Graph<Type> & graph, Node::node_id sourceN
 {
   std::map<Node::node_id, GraphTypes::Cost> distance_from_source;
   std::map<Node::node_id, std::list<Node::node_id> > best_predecessors;
-  std::list<Node::node_id> allClosest;
-  typename Graph<Type>::NodeIterator it;
+  std::list<Node::node_id> candidates, allClosest;
   Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
   Node::node_id closest;
-  GraphTypes::Cost distance;
   bool allInfinite;
 
-  //initialisations
-  for(it = graph.nodes_begin(); it != graph.nodes_end(); it++){
-    best_predecessors[*it] = std::list<Node::node_id>();
-    best_predecessors[*it].push_back(sourceNode);
-
-    if( graph.has_edge(sourceNode, *it) ){
-      distance = graph.getCost(sourceNode, *it);
-    }
-    else{
-      distance = GraphTypes::INFINITY;
-    }
-    distance_from_source[*it] = distance;
-  }
-
-  distance_from_source.erase(sourceNode);
-  paths.add_node(sourceNode);
+  //initialisation des tables
+  _init(graph, paths, sourceNode, candidates, distance_from_source, best_predecessors);
 
   //début de l'algorithme
   allInfinite = false;
-  while( distance_from_source.size() > 0 && !allInfinite ){
-    allClosest = _minimals(distance_from_source);
+  while( paths.nodes_size() < graph.nodes_size() && !allInfinite ){
+    allClosest = _minimals(candidates, distance_from_source);
 
-    closest = *(allClosest.begin());
+    closest = *allClosest.begin();
     if(distance_from_source[closest] == GraphTypes::INFINITY){
       allInfinite = true;
     }
     else{
       _update_tables(graph, paths, allClosest, distance_from_source, best_predecessors);
       _add_edges(graph, paths, best_predecessors, allClosest);
-      _remove_nodes(distance_from_source, allClosest);
+      _remove_nodes(candidates, allClosest);
     }
   }
 

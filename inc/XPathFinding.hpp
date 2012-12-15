@@ -14,11 +14,13 @@ class XPathFinding
 {
 private:
   //Xdijkstra
-  std::list<Node::node_id> _minimals(std::map<Node::node_id, GraphTypes::Cost> & distances);
+  void _init(Graph<Type> & graph, Graph<> & paths, Node::node_id sourceNode, std::list<Node::node_id> & candidates, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source, std::map<Node::node_id, std::list<Node::node_id> > & best_predecessors);
+
+  std::list<Node::node_id> _minimals(std::list<Node::node_id> & candidates, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source);
 
   void _add_edges(Graph<Type> & graph, Graph<> & paths, std::map<Node::node_id, std::list<Node::node_id> > & best_predecessors, std::list<Node::node_id> allClosest);
 
-  void _remove_nodes(std::map<Node::node_id, GraphTypes::Cost> & distances, std::list<Node::node_id> allClosest);
+  void _remove_nodes(std::list<Node::node_id> & candidates, std::list<Node::node_id> allClosest);
 
   void _update_tables(Graph<Type> & graph, Graph<> & paths, std::list<Node::node_id> allClosest, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source, std::map<Node::node_id, std::list<Node::node_id> > & best_predecessors);
 
