@@ -5,9 +5,9 @@ template<typename Type>
 GraphvizVisitor<Type>::~GraphvizVisitor(){}
 
 template<typename Type>
-void GraphvizVisitor<Type>::treat(Graph<Type> & graph, Node::node_id node){
-  std::set<Node::node_id> successors;
-  std::set<Node::node_id>::iterator it;
+void GraphvizVisitor<Type>::treat(Graph<Type> & graph, GraphTypes::node_id node){
+  std::set<GraphTypes::node_id> successors;
+  std::set<GraphTypes::node_id>::iterator it;
   std::ostringstream oss;
   std::string linkSymbol;
 

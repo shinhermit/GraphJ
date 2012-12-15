@@ -12,10 +12,10 @@ void Traverse<Type>::nodes(Graph<Type> & graph, Visitor<Type> & visitor){
 }
 
 template<typename Type>
-void Traverse<Type>::breadth_once(Graph<Type> & graph, Node::node_id node, Visitor<Type> & visitor, std::set<Node::node_id> & marker){
-  Node::node_id son, grand_son;
-  std::deque<Node::node_id> waiters, grand_successors;
-  std::set<Node::node_id> nodes_set;
+void Traverse<Type>::breadth_once(Graph<Type> & graph, GraphTypes::node_id node, Visitor<Type> & visitor, std::set<GraphTypes::node_id> & marker){
+  GraphTypes::node_id son, grand_son;
+  std::deque<GraphTypes::node_id> waiters, grand_successors;
+  std::set<GraphTypes::node_id> nodes_set;
 
   waiters.push_back(node);
 
@@ -44,7 +44,7 @@ void Traverse<Type>::breadth_once(Graph<Type> & graph, Node::node_id node, Visit
 template<typename Type>
 void Traverse<Type>::breadth(Graph<Type> & graph, Visitor<Type> & visitor){
   typename Graph<Type>::NodeIterator nodeIt;
-  std::set<Node::node_id> marker;
+  std::set<GraphTypes::node_id> marker;
 
   if( graph.nodes_size() > 0){
     *nodeIt = graph.nodes_begin();
@@ -60,10 +60,10 @@ void Traverse<Type>::breadth(Graph<Type> & graph, Visitor<Type> & visitor){
 }
 
 template<typename Type>
-void Traverse<Type>::depth_once(Graph<Type> & graph, Node::node_id node, Visitor<Type> & visitor, std::set<Node::node_id> & marker){
-  Node::node_id curr_node;
-  std::deque<Node::node_id> successors;
-  std::set<Node::node_id> nodes_set;
+void Traverse<Type>::depth_once(Graph<Type> & graph, GraphTypes::node_id node, Visitor<Type> & visitor, std::set<GraphTypes::node_id> & marker){
+  GraphTypes::node_id curr_node;
+  std::deque<GraphTypes::node_id> successors;
+  std::set<GraphTypes::node_id> nodes_set;
 
   visitor.treat(graph, node);
   marker.insert(node);
@@ -86,7 +86,7 @@ void Traverse<Type>::depth_once(Graph<Type> & graph, Node::node_id node, Visitor
 template<typename Type>
 void Traverse<Type>::depth(Graph<Type> & graph, Visitor<Type> & visitor){
   typename Graph<Type>::NodeIterator nodeIt;
-  std::set<Node::node_id> marker;
+  std::set<GraphTypes::node_id> marker;
 
   if( graph.nodes_size() > 0 ){
 
@@ -103,10 +103,10 @@ void Traverse<Type>::depth(Graph<Type> & graph, Visitor<Type> & visitor){
 }
 
 template<typename Type>
-void Traverse<Type>::reverse_breadth_once(Graph<Type> & graph, Node::node_id node, Visitor<Type> & visitor, std::set<Node::node_id> & marker){
-  Node::node_id father, grand_father;
-  std::deque<Node::node_id> waiters, grand_predecessors;
-  std::set<Node::node_id> nodes_set;
+void Traverse<Type>::reverse_breadth_once(Graph<Type> & graph, GraphTypes::node_id node, Visitor<Type> & visitor, std::set<GraphTypes::node_id> & marker){
+  GraphTypes::node_id father, grand_father;
+  std::deque<GraphTypes::node_id> waiters, grand_predecessors;
+  std::set<GraphTypes::node_id> nodes_set;
 
   waiters.push_back(node);
 
@@ -135,7 +135,7 @@ void Traverse<Type>::reverse_breadth_once(Graph<Type> & graph, Node::node_id nod
 template<typename Type>
 void Traverse<Type>::reverse_breadth(Graph<Type> & graph, Visitor<Type> & visitor){
   typename Graph<Type>::NodeIterator nodeIt;
-  std::set<Node::node_id> marker;
+  std::set<GraphTypes::node_id> marker;
 
   if( graph.nodes_size() > 0){
     *nodeIt = graph.nodes_begin();

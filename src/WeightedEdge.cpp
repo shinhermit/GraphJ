@@ -1,6 +1,6 @@
 #include "WeightedEdge.hpp"
 
-WeightedEdge::WeightedEdge(Node::node_id node1, Node::node_id node2, GraphTypes::Cost cost):Edge(node1, node2), _cost(cost){}
+WeightedEdge::WeightedEdge(GraphTypes::node_id node1, GraphTypes::node_id node2, GraphTypes::Cost cost):Edge(node1, node2), _cost(cost){}
 
 WeightedEdge::WeightedEdge(const WeightedEdge & source):Edge(source), _cost(source._cost){}
 

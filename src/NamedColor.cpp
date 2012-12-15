@@ -4,7 +4,7 @@ std::map<NamedColor::ColorName, std::string> NamedColor::_toString = CreateMap<N
 
 std::map<NamedColor::ColorName, int> NamedColor::_hexaValue = CreateMap<NamedColor::ColorName, int>(NamedColor::Red, 0xff0000)(NamedColor::Green, 0x00ff00)(NamedColor::Blue, 0x0000ff)(NamedColor::Yellow, 0xfff000)(NamedColor::Brown, 0x683100)(NamedColor::Purple,0x68005d)(NamedColor::Black,0x000000)(NamedColor::White,0xffffff)(NamedColor::Orange,0xffa00b)(NamedColor::Gray,0x727272)(NamedColor::Pink,0xff82a5)(NamedColor::Bordeaux, 0x6d0701);
 
-std::set<NamedColor::ColorName> NamedColor::allNames()
+std::set<NamedColor::ColorName> NamedColor::AllNames()
 {  
   return CreateSet<ColorName>(Red)(Green)(Blue)(Yellow)(Brown)(Purple)(Black)(White)(Orange)(Gray)(Pink)(Bordeaux);
 }

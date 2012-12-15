@@ -3,7 +3,7 @@
 DiGraph::NodeIterator::NodeIterator(){
 }
 
-DiGraph::NodeIterator::NodeIterator(std::set<Node::node_id>::iterator it):_it(it){
+DiGraph::NodeIterator::NodeIterator(std::set<GraphTypes::node_id>::iterator it):_it(it){
 }
 
 DiGraph::NodeIterator::NodeIterator(const DiGraph::NodeIterator & source):_it(source._it){
@@ -14,7 +14,7 @@ DiGraph::NodeIterator & DiGraph::NodeIterator::operator=(const DiGraph::NodeIter
   return *this;
 }
 
-Node::node_id DiGraph::NodeIterator::operator*()const{
+GraphTypes::node_id DiGraph::NodeIterator::operator*()const{
   return *_it;
 }
 
@@ -53,14 +53,14 @@ bool DiGraph::is_empty(){
   return ( _nodes.size() == 0 );
 }
 
-bool DiGraph::has_node(Node::node_id id){
+bool DiGraph::has_node(GraphTypes::node_id id){
   
   return ( _nodes.count(id) > 0 );
 }
 
-bool DiGraph::has_edge(Node::node_id id1, Node::node_id id2){
+bool DiGraph::has_edge(GraphTypes::node_id id1, GraphTypes::node_id id2){
   bool has;
-  std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
+  std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::iterator it;
 
   has = false;
   if( has_node(id1) && has_node(id2) ){
@@ -85,13 +85,13 @@ bool DiGraph::is_container(){
   return false;
 }
 
-void DiGraph::add_node(Node::node_id id){
+void DiGraph::add_node(GraphTypes::node_id id){
   _nodes.insert(id);
 }
 
-void DiGraph::remove_node(Node::node_id id){
-  std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
-  std::set<Node::node_id>::iterator pos, pos_as_succ;
+void DiGraph::remove_node(GraphTypes::node_id id){
+  std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::iterator it;
+  std::set<GraphTypes::node_id>::iterator pos, pos_as_succ;
 
   pos = _nodes.find(id);
   if( pos != _nodes.end() ){
@@ -126,23 +126,23 @@ void DiGraph::remove_node(Node::node_id id){
   }
 }
 
-void DiGraph::add_edge(Node::node_id id1, Node::node_id id2){
-  std::pair<std::set<Node::node_id>::iterator, bool> status;
+void DiGraph::add_edge(GraphTypes::node_id id1, GraphTypes::node_id id2){
+  std::pair<std::set<GraphTypes::node_id>::iterator, bool> status;
 
   _nodes.insert(id1);
   _nodes.insert(id2);
 
   if( !_topology.count(id1) ){
-    _topology.insert( std::pair<Node::node_id, std::set<Node::node_id> >(id1, std::set<Node::node_id>()) );
+    _topology.insert( std::pair<GraphTypes::node_id, std::set<GraphTypes::node_id> >(id1, std::set<GraphTypes::node_id>()) );
   }
 
   status = _topology[id1].insert(id2);
   if(status.second) _nb_of_edges++;
 }
 
-void DiGraph::remove_edge(Node::node_id id1, Node::node_id id2){
-  std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
-  std::set<Node::node_id>::size_type t;
+void DiGraph::remove_edge(GraphTypes::node_id id1, GraphTypes::node_id id2){
+  std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::iterator it;
+  std::set<GraphTypes::node_id>::size_type t;
 
   it = _topology.find(id1);
   if( it != _topology.end() ){
@@ -171,8 +171,8 @@ GraphTypes::EdgeState DiGraph::edgeState()const{
   return GraphTypes::UNWEIGHTED;
 }
 
-std::set<Node::node_id> DiGraph::successors(Node::node_id node) throw(std::invalid_argument){
-  std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
+std::set<GraphTypes::node_id> DiGraph::successors(GraphTypes::node_id node) throw(std::invalid_argument){
+  std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::iterator it;
 
   if( _nodes.count(node) ){
 
@@ -181,18 +181,18 @@ std::set<Node::node_id> DiGraph::successors(Node::node_id node) throw(std::inval
       return _topology[node];
     }
     else{
-      return std::set<Node::node_id>();
+      return std::set<GraphTypes::node_id>();
     }
 
   }
   else{
-    throw std::invalid_argument("DiGraph::successors(Node::node_id) : given id not in the graph");
+    throw std::invalid_argument("DiGraph::successors(GraphTypes::node_id) : given id not in the graph");
   }
 }
 
-std::set<Node::node_id> DiGraph::predecessors(Node::node_id node) throw(std::invalid_argument){
-  std::set<Node::node_id> preds;
-  std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
+std::set<GraphTypes::node_id> DiGraph::predecessors(GraphTypes::node_id node) throw(std::invalid_argument){
+  std::set<GraphTypes::node_id> preds;
+  std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::iterator it;
 
   if( _nodes.count(node) ){
 
@@ -205,14 +205,14 @@ std::set<Node::node_id> DiGraph::predecessors(Node::node_id node) throw(std::inv
 
   }
   else{
-    throw std::invalid_argument("DiGraph::predecessors(Node::node_id) : given id not in the graph");
+    throw std::invalid_argument("DiGraph::predecessors(GraphTypes::node_id) : given id not in the graph");
   }
 }
 
-std::set<Node::node_id> DiGraph::adjacents(Node::node_id node) throw(std::invalid_argument){
+std::set<GraphTypes::node_id> DiGraph::adjacents(GraphTypes::node_id node) throw(std::invalid_argument){
 
-  std::set<Node::node_id> preds = predecessors(node);
-  std::set<Node::node_id> succs = successors(node);
+  std::set<GraphTypes::node_id> preds = predecessors(node);
+  std::set<GraphTypes::node_id> succs = successors(node);
 
   preds.insert( succs.begin(), succs.end() );
 
@@ -227,8 +227,8 @@ DiGraph::NodeIterator DiGraph::nodes_end(){
   return NodeIterator( _nodes.end() );
 }
 
-unsigned long DiGraph::in_degree(Node::node_id node) throw(std::invalid_argument){
-  std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
+unsigned long DiGraph::in_degree(GraphTypes::node_id node) throw(std::invalid_argument){
+  std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::iterator it;
   unsigned long count;
 
   if( _nodes.count(node) ){
@@ -243,12 +243,12 @@ unsigned long DiGraph::in_degree(Node::node_id node) throw(std::invalid_argument
 
   }
   else{
-    throw std::invalid_argument("DiGraph::in_degree(Node::node_id) : given id not in the graph");
+    throw std::invalid_argument("DiGraph::in_degree(GraphTypes::node_id) : given id not in the graph");
   }
 }
 
-unsigned long DiGraph::out_degree(Node::node_id node) throw(std::invalid_argument){
-  std::map<Node::node_id, std::set<Node::node_id> >::iterator it;
+unsigned long DiGraph::out_degree(GraphTypes::node_id node) throw(std::invalid_argument){
+  std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::iterator it;
 
   if( _nodes.count(node) > 0){
 
@@ -262,10 +262,10 @@ unsigned long DiGraph::out_degree(Node::node_id node) throw(std::invalid_argumen
 
   }
   else{
-    throw std::invalid_argument("DiGraph::out_degree(Node::node_id) : given id not in the graph");
+    throw std::invalid_argument("DiGraph::out_degree(GraphTypes::node_id) : given id not in the graph");
   }
 }
 
-unsigned long DiGraph::degree(Node::node_id node) throw(std::invalid_argument){
+unsigned long DiGraph::degree(GraphTypes::node_id node) throw(std::invalid_argument){
   return out_degree(node) + in_degree(node);
 }

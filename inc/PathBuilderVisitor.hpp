@@ -14,7 +14,7 @@ public:
   PathBuilderVisitor();
   virtual ~PathBuilderVisitor();
 
-  virtual void treat(Graph<> & graph, Node::node_id node);
+  virtual void treat(Graph<> & graph, GraphTypes::node_id node);
 
   Graph<> path()const;
 };

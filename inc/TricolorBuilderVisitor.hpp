@@ -38,7 +38,7 @@ public:
   TricolorBuilderVisitor(long nb_roads);
   virtual ~TricolorBuilderVisitor();
 
-  virtual void treat(Graph<Edge> & graph, Node::node_id node);
+  virtual void treat(Graph<Edge> & graph, GraphTypes::node_id node);
 };
 
 #include "TricolorBuilderVisitor.cpp"

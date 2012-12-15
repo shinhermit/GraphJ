@@ -11,7 +11,7 @@ public:
   Visitor();
   virtual ~Visitor();
 
-  virtual void treat(Graph<Type> & graph, Node::node_id node)=0;
+  virtual void treat(Graph<Type> & graph, GraphTypes::node_id node)=0;
 };
 
 #include "Visitor.cpp"

@@ -6,9 +6,9 @@ DefaultVisitor<Type>::~DefaultVisitor(){}
 
 //Attention: cette méthode a été spécialisée pour les std::string
 template<typename Type>
-void DefaultVisitor<Type>::treat(Graph<Type> & graph, Node::node_id node){
-  std::set<Node::node_id> successors;
-  std::set<Node::node_id>::iterator it;
+void DefaultVisitor<Type>::treat(Graph<Type> & graph, GraphTypes::node_id node){
+  std::set<GraphTypes::node_id> successors;
+  std::set<GraphTypes::node_id>::iterator it;
   std::ostringstream oss;
 
   successors = graph.successors(node);
@@ -29,9 +29,9 @@ void DefaultVisitor<Type>::treat(Graph<Type> & graph, Node::node_id node){
 
 //Spécialisation pour les std::string
 template<>
-void DefaultVisitor<std::string>::treat(Graph<std::string> & graph, Node::node_id node){
-  std::set<Node::node_id> successors;
-  std::set<Node::node_id>::iterator it;
+void DefaultVisitor<std::string>::treat(Graph<std::string> & graph, GraphTypes::node_id node){
+  std::set<GraphTypes::node_id> successors;
+  std::set<GraphTypes::node_id>::iterator it;
   std::ostringstream oss;
   std::string linkSymbol;
 

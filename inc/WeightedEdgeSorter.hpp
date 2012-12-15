@@ -16,7 +16,7 @@ public:
   WeightedEdgeSorter();
   ~WeightedEdgeSorter();
 
-  void treat(Graph<Type> graph, Node::node_id node);
+  void treat(Graph<Type> graph, GraphTypes::node_id node);
 
   std::set<WeightedEdge> getEdgeSet();
 };

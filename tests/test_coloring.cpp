@@ -8,7 +8,7 @@ int main(){
   Graph<> graph(GraphTypes::UNDIRECTED, GraphTypes::UNWEIGHTED, GraphTypes::NOCONTENT);
   Coloring<> coloring;
   Exporter<> exporte;
-  std::map<Node::node_id, NamedColor::ColorName> color_mapper;
+  std::map<GraphTypes::node_id, NamedColor::ColorName> color_mapper;
 
   /*
     Graphe de l'exemple du cours (section 6-Algorithme de Welsh-Powell)

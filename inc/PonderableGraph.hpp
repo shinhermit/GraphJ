@@ -19,16 +19,16 @@ public:
   bool is_weighted();
 
   // Adaptation des constructeurs
-  void remove_node(Node::node_id id);
-  void add_edge(Node::node_id id1, Node::node_id id2, GraphTypes::Cost cost=1.F);
-  void remove_edge(Node::node_id id1, Node::node_id id2);
+  void remove_node(GraphTypes::node_id id);
+  void add_edge(GraphTypes::node_id id1, GraphTypes::node_id id2, GraphTypes::Cost cost=1.F);
+  void remove_edge(GraphTypes::node_id id1, GraphTypes::node_id id2);
 
   // Adaptation des observateurs
   GraphTypes::EdgeState edgeState()const;
 
   // Nouvelles opérations
-  void setCost(Node::node_id node1, Node::node_id node2, GraphTypes::Cost cost) throw(std::invalid_argument, std::logic_error);
-  GraphTypes::Cost getCost(Node::node_id node1, Node::node_id node2) throw(std::invalid_argument, std::logic_error);
+  void setCost(GraphTypes::node_id node1, GraphTypes::node_id node2, GraphTypes::Cost cost) throw(std::invalid_argument, std::logic_error);
+  GraphTypes::Cost getCost(GraphTypes::node_id node1, GraphTypes::node_id node2) throw(std::invalid_argument, std::logic_error);
   GraphTypes::Cost cost() throw(std::logic_error);
 
 };

@@ -9,9 +9,9 @@
 int main(){
   Graph<std::string> graph(GraphTypes::DIRECTED, GraphTypes::UNWEIGHTED, GraphTypes::CONTAINER);
   Exporter<std::string> exporte;
-  std::map<Node::node_id, std::string> label_mapper;
+  std::map<GraphTypes::node_id, std::string> label_mapper;
   std::string nom, choix;
-  Node::node_id id, id2;
+  GraphTypes::node_id id, id2;
 
   std::cout << std::endl << "------ Simulation de la relation \"fourni\" (ou \"vend à\") entre des entreprises ------" << std::endl << "Saisie du graphe: Entrez le nom d'une entreprise et son identifiant unique:" << std::endl;
 

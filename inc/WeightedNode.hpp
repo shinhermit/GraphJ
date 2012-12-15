@@ -9,7 +9,7 @@ protected:
   GraphTypes::Cost _cost;
 
 public:
-  WeightedNode(node_id id, GraphTypes::Cost cost);
+  WeightedNode(GraphTypes::node_id id, GraphTypes::Cost cost);
   WeightedNode(const WeightedNode & source);
 
   bool operator==(const WeightedNode & ref)const;

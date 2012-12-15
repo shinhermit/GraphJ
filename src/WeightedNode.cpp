@@ -1,6 +1,6 @@
 #include "WeightedNode.hpp"
 
-WeightedNode::WeightedNode(Node::node_id id, GraphTypes::Cost cost):Node(id), _cost(cost){}
+WeightedNode::WeightedNode(GraphTypes::node_id id, GraphTypes::Cost cost):Node(id), _cost(cost){}
 
 WeightedNode::WeightedNode(const WeightedNode & source):Node(source), _cost(source._cost){}
 

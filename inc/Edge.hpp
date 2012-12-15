@@ -5,12 +5,12 @@
 
 class Edge{
 protected:
-  Node::node_id _source;
-  Node::node_id _target;
+  GraphTypes::node_id _source;
+  GraphTypes::node_id _target;
 
 public:
   Edge();
-  Edge(Node::node_id node1, Node::node_id node2);
+  Edge(GraphTypes::node_id node1, GraphTypes::node_id node2);
   Edge(const Edge & source);
 
   bool operator==(const Edge & ref)const;
@@ -20,8 +20,8 @@ public:
   bool operator>=(const Edge & ref)const;
   bool operator!=(const Edge & ref)const;
 
-  Node::node_id source()const;
-  Node::node_id target()const;
+  GraphTypes::node_id source()const;
+  GraphTypes::node_id target()const;
 };
 
 #endif

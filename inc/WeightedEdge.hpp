@@ -9,7 +9,7 @@ protected:
   GraphTypes::Cost _cost;
 
 public:
-  WeightedEdge(Node::node_id node1, Node::node_id node2, GraphTypes::Cost cost);
+  WeightedEdge(GraphTypes::node_id node1, GraphTypes::node_id node2, GraphTypes::Cost cost);
   WeightedEdge(const WeightedEdge & source);
 
   bool operator==(const WeightedEdge & ref)const;

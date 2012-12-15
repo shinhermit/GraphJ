@@ -7,25 +7,25 @@
 
 int main(){
   Graph<> graph(GraphTypes::UNDIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
-  std::map<Node::node_id, std::string> label_mapper;
+  std::map<GraphTypes::node_id, std::string> label_mapper;
   Graph<> min_tree( graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
   Acm<> acm;
   Exporter<> exporte;
 
   //On ajoute les villes (noeuds)
-  label_mapper.insert( std::pair<Node::node_id, std::string>(1,"Artigueloutan") );
-  label_mapper.insert( std::pair<Node::node_id, std::string>(2,"Billère") );
-  label_mapper.insert( std::pair<Node::node_id, std::string>(3,"Bizanos") );
-  label_mapper.insert( std::pair<Node::node_id, std::string>(4,"Gan") );
-  label_mapper.insert( std::pair<Node::node_id, std::string>(5,"Gelos") );
-  label_mapper.insert( std::pair<Node::node_id, std::string>(6,"Idron") );
-  label_mapper.insert( std::pair<Node::node_id, std::string>(7,"Jurançon") );
-  label_mapper.insert( std::pair<Node::node_id, std::string>(8,"Lescar") );
-  label_mapper.insert( std::pair<Node::node_id, std::string>(9,"Lons") );
-  label_mapper.insert( std::pair<Node::node_id, std::string>(10,"Mazères-Lezons") );
-  label_mapper.insert( std::pair<Node::node_id, std::string>(11,"Ousse") );
-  label_mapper.insert( std::pair<Node::node_id, std::string>(12,"Pau") );
-  label_mapper.insert( std::pair<Node::node_id, std::string>(13,"Sendets") );
+  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(1,"Artigueloutan") );
+  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(2,"Billère") );
+  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(3,"Bizanos") );
+  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(4,"Gan") );
+  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(5,"Gelos") );
+  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(6,"Idron") );
+  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(7,"Jurançon") );
+  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(8,"Lescar") );
+  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(9,"Lons") );
+  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(10,"Mazères-Lezons") );
+  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(11,"Ousse") );
+  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(12,"Pau") );
+  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(13,"Sendets") );
 
   //On ajoute maintenant les arcs
   //La syntaxe est la suivante:

@@ -15,8 +15,8 @@ int main()
   Exporter<> convert;
   Exporter<Edge> exporte;
 
-  std::map<Node::node_id, std::string> labels1, labels2;
-  std::map<Node::node_id, NamedColor::ColorName> color_map;
+  std::map<GraphTypes::node_id, std::string> labels1, labels2;
+  std::map<GraphTypes::node_id, NamedColor::ColorName> color_map;
 
   //graphe de la relations "il existe un franchissement"
   // Nous faisons coïncider l'ordre lexico-graphique et l'ordre numérique

@@ -1,10 +1,16 @@
 #ifndef GRAPHTYPES
 #define GRAPHTYPES
 
+#include <list>
+
 class GraphTypes{
 public:
 
+  typedef unsigned long node_id;
+
   typedef float Cost;
+
+  typedef std::list<node_id> Path;
 
   enum EdgeType{DIRECTED, UNDIRECTED};
 

@@ -1,6 +1,6 @@
 template<typename Type>
-std::map<Node::node_id, unsigned long> Acm<Type>::_color_each_node(Graph<Type> & graph){
-  std::map<Node::node_id, unsigned long> colored;
+std::map<GraphTypes::node_id, unsigned long> Acm<Type>::_color_each_node(Graph<Type> & graph){
+  std::map<GraphTypes::node_id, unsigned long> colored;
   unsigned long nodes_size, color;
   typename Graph<Type>::NodeIterator nodeIt;
 
@@ -10,7 +10,7 @@ std::map<Node::node_id, unsigned long> Acm<Type>::_color_each_node(Graph<Type> &
   nodeIt = graph.nodes_begin();
   while( color < nodes_size ){
 
-    colored.insert( std::pair<Node::node_id, unsigned long>(*nodeIt, color) );
+    colored.insert( std::pair<GraphTypes::node_id, unsigned long>(*nodeIt, color) );
 
     nodeIt++;
     color++;
@@ -20,11 +20,11 @@ std::map<Node::node_id, unsigned long> Acm<Type>::_color_each_node(Graph<Type> &
 }
 
 template<typename Type>
-void Acm<Type>::_update_colors(Graph<Type> & graph, Graph<> & acm, std::map<Node::node_id, unsigned long> & color_mapper, Node::node_id node1, Node::node_id node2){
+void Acm<Type>::_update_colors(Graph<Type> & graph, Graph<> & acm, std::map<GraphTypes::node_id, unsigned long> & color_mapper, GraphTypes::node_id node1, GraphTypes::node_id node2){
   unsigned long col1, col2, master_col, slave_col;
   bool has1, has2;
   typename Graph<Type>::NodeIterator nIt;
-  std::map<Node::node_id, unsigned long>::iterator it, it_col1, it_col2;
+  std::map<GraphTypes::node_id, unsigned long>::iterator it, it_col1, it_col2;
 
   has1 = acm.has_node(node1);
   has2 = acm.has_node(node2);
@@ -71,8 +71,8 @@ void Acm<Type>::_update_colors(Graph<Type> & graph, Graph<> & acm, std::map<Node
 template<typename Type>
 std::set<WeightedEdge> Acm<Type>::_sort_edges_by_weights(Graph<Type> & graph){
   std::set<WeightedEdge> sorted_edges;
-  std::set<Node::node_id> successors;
-  std::set<Node::node_id>::iterator it;
+  std::set<GraphTypes::node_id> successors;
+  std::set<GraphTypes::node_id>::iterator it;
   typename Graph<Type>::NodeIterator node;
   GraphTypes::Cost cost;
 
@@ -104,10 +104,10 @@ std::set<WeightedEdge> Acm<Type>::_sort_edges_by_weights(Graph<Type> & graph){
 }
 
 template<typename Type>
-std::set<WeightedEdge> Acm<Type>::_weightedNeighboursFromSuccessors(Graph<Type> graph, Node::node_id node){
+std::set<WeightedEdge> Acm<Type>::_weightedNeighboursFromSuccessors(Graph<Type> graph, GraphTypes::node_id node){
   std::set<WeightedEdge> weightedNeighbours;
-  std::set<Node::node_id> successors, predecessors;
-  std::set<Node::node_id>::iterator it ;
+  std::set<GraphTypes::node_id> successors, predecessors;
+  std::set<GraphTypes::node_id>::iterator it ;
 
   successors = graph.successors(node);
 
@@ -129,11 +129,11 @@ std::set<WeightedEdge> Acm<Type>::_weightedNeighboursFromSuccessors(Graph<Type> 
 
 template<typename Type>
 Graph<> Acm<Type>::kruskal(Graph<Type> & graph){
-  std::map<Node::node_id, unsigned long> color_mapper;
+  std::map<GraphTypes::node_id, unsigned long> color_mapper;
   std::set<WeightedEdge> sorted_edges;
   std::set<WeightedEdge>::iterator it;
   Graph<> acm(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
-  Node::node_id node1, node2;
+  GraphTypes::node_id node1, node2;
   unsigned long graph_size, node1_color, node2_color;
   GraphTypes::Cost cost;
 
@@ -170,7 +170,7 @@ Graph<> Acm<Type>::prim(Graph<Type> & graph){
   Graph<Type> alterableCopy;
   Graph<> acm( graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT );
   WeightedEdge min_edge(0,0,0);
-  Node::node_id first_node, source_node, target_node;
+  GraphTypes::node_id first_node, source_node, target_node;
   GraphTypes::Cost cost;
 
   alterableCopy = graph;

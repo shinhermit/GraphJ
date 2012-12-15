@@ -10,13 +10,13 @@ public:
   class NodeIterator
   {
   private:
-    std::set<Node::node_id>::iterator _it;
+    std::set<GraphTypes::node_id>::iterator _it;
   public:
     NodeIterator();
-    NodeIterator(std::set<Node::node_id>::iterator it);
+    NodeIterator(std::set<GraphTypes::node_id>::iterator it);
     NodeIterator(const NodeIterator & source);
     NodeIterator & operator=(const NodeIterator & source);
-    Node::node_id operator*()const;
+    GraphTypes::node_id operator*()const;
     void operator++(int);
     void operator--(int);
     bool operator==(const NodeIterator & ref);
@@ -24,11 +24,11 @@ public:
   };
 
 protected:
-  std::set<Node::node_id> _nodes; /*!< id-sorted vector of all Nodes IDs*/
+  std::set<GraphTypes::node_id> _nodes; /*!< id-sorted vector of all Nodes IDs*/
 
   unsigned long _nb_of_edges; /*!< makes it easier to get graph metrics*/
 
-  std::map<Node::node_id, std::set<Node::node_id> > _topology; /*!< adjacence list, reduces algorithms complexity*/
+  std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > _topology; /*!< adjacence list, reduces algorithms complexity*/
 
 public:
   DiGraph();
@@ -39,17 +39,17 @@ public:
 
   // Prédicats
   bool is_empty();
-  bool has_node(Node::node_id id);
-  bool has_edge(Node::node_id id1, Node::node_id id2);
+  bool has_node(GraphTypes::node_id id);
+  bool has_edge(GraphTypes::node_id id1, GraphTypes::node_id id2);
   bool is_directed();
   bool is_weighted();
   bool is_container();
 
   //Constructeurs
-  void add_node(Node::node_id id);
-  void remove_node(Node::node_id id);
-  void add_edge(Node::node_id id1, Node::node_id id2);
-  void remove_edge(Node::node_id id1, Node::node_id id2);
+  void add_node(GraphTypes::node_id id);
+  void remove_node(GraphTypes::node_id id);
+  void add_edge(GraphTypes::node_id id1, GraphTypes::node_id id2);
+  void remove_edge(GraphTypes::node_id id1, GraphTypes::node_id id2);
 
   //observateurs
   unsigned long nodes_size()const;
@@ -58,16 +58,16 @@ public:
   GraphTypes::EdgeType edgeType()const;
   GraphTypes::EdgeState edgeState()const;
 
-  std::set<Node::node_id> successors(Node::node_id node) throw(std::invalid_argument);
-  std::set<Node::node_id> predecessors(Node::node_id node) throw(std::invalid_argument);
-  std::set<Node::node_id> adjacents(Node::node_id node) throw(std::invalid_argument);
+  std::set<GraphTypes::node_id> successors(GraphTypes::node_id node) throw(std::invalid_argument);
+  std::set<GraphTypes::node_id> predecessors(GraphTypes::node_id node) throw(std::invalid_argument);
+  std::set<GraphTypes::node_id> adjacents(GraphTypes::node_id node) throw(std::invalid_argument);
 
   NodeIterator nodes_begin();
   NodeIterator nodes_end();
 
-  unsigned long in_degree(Node::node_id node) throw(std::invalid_argument);
-  unsigned long out_degree(Node::node_id node) throw(std::invalid_argument);
-  unsigned long degree(Node::node_id node) throw(std::invalid_argument);
+  unsigned long in_degree(GraphTypes::node_id node) throw(std::invalid_argument);
+  unsigned long out_degree(GraphTypes::node_id node) throw(std::invalid_argument);
+  unsigned long degree(GraphTypes::node_id node) throw(std::invalid_argument);
 };
 
 #endif

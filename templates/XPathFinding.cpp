@@ -1,5 +1,5 @@
 template <typename Type>
-void XPathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, Node::node_id sourceNode, std::list<Node::node_id> & candidates, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source, std::map<Node::node_id, std::list<Node::node_id> > & best_predecessors)
+void XPathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::list<GraphTypes::node_id> & candidates, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors)
 {
   typename Graph<Type>::NodeIterator it;
   GraphTypes::Cost distance;
@@ -8,7 +8,7 @@ void XPathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, Node::node_
   paths.add_node(sourceNode);
 
   for(it = graph.nodes_begin(); it != graph.nodes_end(); it++){
-    best_predecessors[*it] = std::list<Node::node_id>();
+    best_predecessors[*it] = std::list<GraphTypes::node_id>();
     best_predecessors[*it].push_back(sourceNode);
 
     if(*it != sourceNode){
@@ -28,12 +28,12 @@ void XPathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, Node::node_
 }
 
 template <typename Type>
-std::list<Node::node_id> XPathFinding<Type>::_minimals(std::list<Node::node_id> & candidates, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source)
+std::list<GraphTypes::node_id> XPathFinding<Type>::_minimals(std::list<GraphTypes::node_id> & candidates, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source)
 {
-  Node::node_id closest;
+  GraphTypes::node_id closest;
   GraphTypes::Cost d_closest, new_distance;
-  std::list<Node::node_id>::iterator node;
-  std::list<Node::node_id> allClosest;
+  std::list<GraphTypes::node_id>::iterator node;
+  std::list<GraphTypes::node_id> allClosest;
 
   node = candidates.begin();
 
@@ -60,10 +60,10 @@ std::list<Node::node_id> XPathFinding<Type>::_minimals(std::list<Node::node_id> 
 }
 
 template <typename Type>
-void XPathFinding<Type>::_add_edges(Graph<Type> & graph, Graph<> & paths, std::map<Node::node_id, std::list<Node::node_id> > & best_predecessors, std::list<Node::node_id> allClosest)
+void XPathFinding<Type>::_add_edges(Graph<Type> & graph, Graph<> & paths, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors, std::list<GraphTypes::node_id> allClosest)
 {
-  std::list<Node::node_id> best_preds;
-  std::list<Node::node_id>::iterator closest, pred;
+  std::list<GraphTypes::node_id> best_preds;
+  std::list<GraphTypes::node_id>::iterator closest, pred;
 
   for(closest = allClosest.begin(); closest != allClosest.end(); closest++){
     best_preds = best_predecessors[*closest];
@@ -75,9 +75,9 @@ void XPathFinding<Type>::_add_edges(Graph<Type> & graph, Graph<> & paths, std::m
 }
 
 template <typename Type>
-void XPathFinding<Type>::_remove_nodes(std::list<Node::node_id> & candidates, std::list<Node::node_id> allClosest)
+void XPathFinding<Type>::_remove_nodes(std::list<GraphTypes::node_id> & candidates, std::list<GraphTypes::node_id> allClosest)
 {
-  std::list<Node::node_id>::iterator closest;
+  std::list<GraphTypes::node_id>::iterator closest;
 
   for(closest = allClosest.begin(); closest != allClosest.end(); closest++){
     candidates.remove(*closest);
@@ -85,11 +85,11 @@ void XPathFinding<Type>::_remove_nodes(std::list<Node::node_id> & candidates, st
 }
 
 template <typename Type>
-void XPathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, std::list<Node::node_id> allClosest, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source, std::map<Node::node_id, std::list<Node::node_id> > & best_predecessors)
+void XPathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, std::list<GraphTypes::node_id> allClosest, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors)
 {
-  std::set<Node::node_id> successors;
-  std::set<Node::node_id>::iterator succ;
-  std::list<Node::node_id>::iterator closest;
+  std::set<GraphTypes::node_id> successors;
+  std::set<GraphTypes::node_id>::iterator succ;
+  std::list<GraphTypes::node_id>::iterator closest;
   GraphTypes::Cost distance, new_distance;
 
   for(closest = allClosest.begin(); closest != allClosest.end(); closest++){
@@ -117,13 +117,13 @@ void XPathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, st
 }
 
 template <typename Type>
-Graph<> XPathFinding<Type>::Xdijkstra(Graph<Type> & graph, Node::node_id sourceNode)
+Graph<> XPathFinding<Type>::Xdijkstra(Graph<Type> & graph, GraphTypes::node_id sourceNode)
 {
-  std::map<Node::node_id, GraphTypes::Cost> distance_from_source;
-  std::map<Node::node_id, std::list<Node::node_id> > best_predecessors;
-  std::list<Node::node_id> candidates, allClosest;
+  std::map<GraphTypes::node_id, GraphTypes::Cost> distance_from_source;
+  std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > best_predecessors;
+  std::list<GraphTypes::node_id> candidates, allClosest;
   Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
-  Node::node_id closest;
+  GraphTypes::node_id closest;
   bool allInfinite;
 
   //initialisation des tables
@@ -149,12 +149,12 @@ Graph<> XPathFinding<Type>::Xdijkstra(Graph<Type> & graph, Node::node_id sourceN
 }
 
 template <typename Type>
-std::deque<Node::node_id> XPathFinding<Type>::_relaxation(Graph<Type> & graph, Graph<> & paths, std::list<Node::node_id> & candidates)
+std::deque<GraphTypes::node_id> XPathFinding<Type>::_relaxation(Graph<Type> & graph, Graph<> & paths, std::list<GraphTypes::node_id> & candidates)
 {
-  std::list<Node::node_id>::iterator s;
-  std::deque<Node::node_id> relaxed;
-  std::set<Node::node_id> predecessors;
-  std::set<Node::node_id>::iterator pred;
+  std::list<GraphTypes::node_id>::iterator s;
+  std::deque<GraphTypes::node_id> relaxed;
+  std::set<GraphTypes::node_id> predecessors;
+  std::set<GraphTypes::node_id>::iterator pred;
   bool relaxable;
 
   s = candidates.begin();
@@ -173,28 +173,25 @@ std::deque<Node::node_id> XPathFinding<Type>::_relaxation(Graph<Type> & graph, G
 
     if(relaxable){
       relaxed.push_back(*s);
-      candidates.erase(s++);
-    }
-    else{
-      s++;
     }
 
+    s++;
   }
 
   return relaxed;
 }
 
 template <typename Type>
-void XPathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, std::deque<Node::node_id> & waiting_for_insertion, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source, std::map<Node::node_id, std::list<Node::node_id> > & best_predecessors)
+void XPathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, std::deque<GraphTypes::node_id> & waiting_for_insertion, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors)
 {
-  std::set<Node::node_id> predecessors;
-  std::set<Node::node_id>::iterator pred;
-  std::deque<Node::node_id>::iterator s;
+  std::set<GraphTypes::node_id> predecessors;
+  std::set<GraphTypes::node_id>::iterator pred;
+  std::deque<GraphTypes::node_id>::iterator s;
   GraphTypes::Cost new_distance;
 
   for(s = waiting_for_insertion.begin(); s != waiting_for_insertion.end(); s++){
     predecessors = graph.predecessors(*s);
-    std::list<Node::node_id> & s_best_preds = best_predecessors[*s]; //possible issue
+    std::list<GraphTypes::node_id> & s_best_preds = best_predecessors[*s]; //possible issue
     GraphTypes::Cost & s_distance = distance_from_source[*s]; //possible issue
 
     for(pred = predecessors.begin(); pred != predecessors.end(); pred++){
@@ -218,15 +215,15 @@ void XPathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, st
 }
 
 template <typename Type>
-void XPathFinding<Type>::_add_relaxed_nodes(Graph<Type> & graph, Graph<> & paths, std::deque<Node::node_id> & waiting_for_insertion, std::map<Node::node_id, std::list<Node::node_id> > & best_predecessors)
+void XPathFinding<Type>::_insert_waiting_nodes(Graph<Type> & graph, Graph<> & paths, std::deque<GraphTypes::node_id> & waiting_for_insertion, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors)
 {
-  std::list<Node::node_id>::iterator pred;
-  Node::node_id s;
+  std::list<GraphTypes::node_id>::iterator pred;
+  GraphTypes::node_id s;
 
   while( waiting_for_insertion.size() > 0 ){
     s  = waiting_for_insertion.front();
 
-    std::list<Node::node_id> & predecessors = best_predecessors[s];
+    std::list<GraphTypes::node_id> & predecessors = best_predecessors[s];
 
     for(pred = predecessors.begin(); pred != predecessors.end(); pred++){
       paths.add_edge( *pred, s, graph.getCost(*pred, s) );
@@ -237,14 +234,24 @@ void XPathFinding<Type>::_add_relaxed_nodes(Graph<Type> & graph, Graph<> & paths
 }
 
 template <typename Type>
-Graph<> XPathFinding<Type>::Xbellman(Graph<Type> & graph, Node::node_id sourceNode)
+void XPathFinding<Type>::_remove_nodes(std::list<GraphTypes::node_id> & candidates, std::deque<GraphTypes::node_id> & waiting_for_insertion)
+{
+  std::deque<GraphTypes::node_id>::iterator node;
+
+  for(node = waiting_for_insertion.begin(); node != waiting_for_insertion.end(); node++){
+    candidates.remove(*node);
+  }
+}
+
+template <typename Type>
+Graph<> XPathFinding<Type>::Xbellman(Graph<Type> & graph, GraphTypes::node_id sourceNode)
 {
   Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
   typename Graph<Type>::NodeIterator it;
-  std::map<Node::node_id, GraphTypes::Cost> distance_from_source;
-  std::map<Node::node_id, std::list<Node::node_id> > best_predecessors;
-  std::list<Node::node_id> candidates;
-  std::deque<Node::node_id> waiting_for_insertion;
+  std::map<GraphTypes::node_id, GraphTypes::Cost> distance_from_source;
+  std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > best_predecessors;
+  std::list<GraphTypes::node_id> candidates;
+  std::deque<GraphTypes::node_id> waiting_for_insertion;
 
   //initialisations
   distance_from_source[sourceNode] = 0;
@@ -263,7 +270,8 @@ Graph<> XPathFinding<Type>::Xbellman(Graph<Type> & graph, Node::node_id sourceNo
   waiting_for_insertion = _relaxation(graph, paths, candidates);
   while( waiting_for_insertion.size() > 0 ){
     _update_tables(graph, paths, waiting_for_insertion, distance_from_source, best_predecessors);
-    _add_relaxed_nodes(graph, paths, waiting_for_insertion, best_predecessors);
+    _remove_nodes(candidates, waiting_for_insertion);
+    _insert_waiting_nodes(graph, paths, waiting_for_insertion, best_predecessors);
     waiting_for_insertion = _relaxation(graph, paths, candidates);
   }
 
@@ -271,19 +279,19 @@ Graph<> XPathFinding<Type>::Xbellman(Graph<Type> & graph, Node::node_id sourceNo
 }
 
 template <typename Type>
-std::list<Path> XPathFinding<Type>::paths_to(Graph<Type> & graph, Graph<> & allPaths, Node::node_id target)
+std::list<GraphTypes::Path> XPathFinding<Type>::paths_to(Graph<> & allPaths, GraphTypes::node_id target)
 {
-  std::list<Path> paths, until_pred;
-  std::set<Node::node_id> predecessors;
-  std::set<Node::node_id>::iterator pred;
-  std::list<Path>::iterator onePath;
+  std::list<GraphTypes::Path> paths, until_pred;
+  std::set<GraphTypes::node_id> predecessors;
+  std::set<GraphTypes::node_id>::iterator pred;
+  std::list<GraphTypes::Path>::iterator onePath;
 
-  predecessors = graph.predecessors(target);
+  predecessors = allPaths.predecessors(target);
   if( predecessors.size() > 0 ){
 
     for(pred = predecessors.begin(); pred != predecessors.end(); pred++){
-      until_pred = paths_to(graph, allPaths, *pred);
-      paths.insert(paths.end(), until_pred.begin(), until_pred.end() );
+      until_pred = paths_to(allPaths, *pred);
+      paths.insert(paths.begin(), until_pred.begin(), until_pred.end() );
     }
   }
 
@@ -295,7 +303,7 @@ std::list<Path> XPathFinding<Type>::paths_to(Graph<Type> & graph, Graph<> & allP
   }
   else{
 
-    paths.push_back( std::list<Node::node_id>() );
+    paths.push_back( std::list<GraphTypes::node_id>() );
     onePath = paths.begin();
     onePath->push_back(target);
   }
@@ -304,14 +312,14 @@ std::list<Path> XPathFinding<Type>::paths_to(Graph<Type> & graph, Graph<> & allP
 }
 
 template <typename Type>
-std::list<Path> XPathFinding<Type>::Xbetween(Graph<Type> & graph, Node::node_id source, Node::node_id target, GraphTypes::SearchAlgorithm algo)
+std::list<GraphTypes::Path> XPathFinding<Type>::Xbetween(Graph<Type> & graph, GraphTypes::node_id source, GraphTypes::node_id target, GraphTypes::SearchAlgorithm algo)
 {
-  std::list<Path> to_target;
+  std::list<GraphTypes::Path> to_target;
   Graph<> allPaths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
 
   allPaths = (algo == GraphTypes::DIJKSTRA) ? dijkstra(graph, source) : bellman(graph, source);
 
-  to_target = paths_to(graph, allPaths, target);
+  to_target = paths_to(allPaths, target);
 
   return to_target;
 }

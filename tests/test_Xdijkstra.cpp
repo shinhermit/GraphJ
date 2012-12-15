@@ -6,6 +6,7 @@ int main()
 {
   Graph<> graph(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
   Graph<> allPaths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
+  std::list<GraphTypes::Path> paths_between;
   XPathFinding<> lookup;
   Exporter<> exporte;
 
@@ -19,8 +20,9 @@ int main()
        pour avoir 2 chemins équivalents arrivant en S5 (marche)
 
       -graph.add_edge(1,2, 5);//coût modifié: 10 en 5
-       pour avoir 2 chemins équivalents arrivant en S2 (ne marche pas)
+       pour avoir 2 chemins équivalents arrivant en S2
    */
+
   graph.add_edge(1,2, 5);//coût modifié: 10 en 5
   graph.add_edge(1,3, 3);
   graph.add_edge(1,5, 5);//coût modifié: 6 en 5
@@ -41,9 +43,10 @@ int main()
 
   //Recherche des chemins
   allPaths = lookup.Xdijkstra(graph, 1);
+  paths_between = lookup.paths_to(allPaths, 5);
 
   //Exports
-  exporte.toGraphviz(graph, "test_Xdijkstra.graph");
+  exporte.toGraphviz(graph, paths_between, "test_Xdijkstra.graph");
   exporte.toGraphviz(allPaths, "paths_Xdijkstra.graph");
 
   //compilation dot

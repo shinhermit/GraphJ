@@ -5,9 +5,9 @@ template<typename Type>
 MathVisitor<Type>::~MathVisitor(){}
 
 template<typename Type>
-void MathVisitor<Type>::treat(Graph<Type> & graph, Node::node_id node){
-  std::set<Node::node_id> successors;
-  std::set<Node::node_id>::iterator it;
+void MathVisitor<Type>::treat(Graph<Type> & graph, GraphTypes::node_id node){
+  std::set<GraphTypes::node_id> successors;
+  std::set<GraphTypes::node_id>::iterator it;
   std::ostringstream oss1;
   std::ostringstream oss2;
   std::ostringstream oss3;

@@ -65,7 +65,7 @@ bool TricolorBuilderVisitor::_intersect(Edge edge1, Edge edge2)
   return intersect;
 }
 
-void TricolorBuilderVisitor::treat(Graph<Edge> & graph, Node::node_id node)
+void TricolorBuilderVisitor::treat(Graph<Edge> & graph, GraphTypes::node_id node)
 {
   Graph<Edge>::NodeIterator node2;
   Edge current(0,0), candidate(0,0);

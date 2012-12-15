@@ -5,10 +5,10 @@ template<typename Type>
 PathBuilderVisitor<Type>::~PathBuilderVisitor(){}
 
 template<typename Type>
-void PathBuilderVisitor<Type>::treat(Graph<> & graph, Node::node_id node)
+void PathBuilderVisitor<Type>::treat(Graph<> & graph, GraphTypes::node_id node)
 {
-  std::set<Node::node_id> predecessors;
-  std::set<Node::node_id>::iterator it;
+  std::set<GraphTypes::node_id> predecessors;
+  std::set<GraphTypes::node_id>::iterator it;
 
   predecessors = graph.predecessors(node);
 

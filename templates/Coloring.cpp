@@ -16,8 +16,8 @@ std::set<WeightedNode> Coloring<Type>::_sort_nodes_by_degrees(Graph<Type> & grap
 }
 
 template<typename Type>
-bool Coloring<Type>::_partite_compatible(Graph<Type> graph, Node::node_id node, std::set<Node::node_id> partite){
-  std::set<Node::node_id>::iterator it;
+bool Coloring<Type>::_partite_compatible(Graph<Type> graph, GraphTypes::node_id node, std::set<GraphTypes::node_id> partite){
+  std::set<GraphTypes::node_id>::iterator it;
   bool compatible;
 
   compatible = true;
@@ -34,14 +34,14 @@ bool Coloring<Type>::_partite_compatible(Graph<Type> graph, Node::node_id node, 
 }
 
 template<typename Type>
-std::map<Node::node_id, NamedColor::ColorName> Coloring<Type>::welsh(Graph<Type> & graph){
+std::map<GraphTypes::node_id, NamedColor::ColorName> Coloring<Type>::welsh(Graph<Type> & graph){
   std::set<WeightedNode> sorted_nodes;
   std::set<WeightedNode>::iterator it_sn;
   std::set<NamedColor::ColorName> allColors;
   std::set<NamedColor::ColorName>::iterator it_color;
-  std::set<Node::node_id> partite; //the current partite (stable)
-  std::map<Node::node_id, NamedColor::ColorName> color_mapper;
-  Node::node_id node, current_node;
+  std::set<GraphTypes::node_id> partite; //the current partite (stable)
+  std::map<GraphTypes::node_id, NamedColor::ColorName> color_mapper;
+  GraphTypes::node_id node, current_node;
 
   sorted_nodes = _sort_nodes_by_degrees(graph);
   allColors = NamedColor::allNames();
@@ -52,7 +52,7 @@ std::map<Node::node_id, NamedColor::ColorName> Coloring<Type>::welsh(Graph<Type>
       node = sorted_nodes.rbegin()->id();
       partite.clear(); //possible issue: really empty ?
 
-      color_mapper.insert( std::pair<Node::node_id, NamedColor::ColorName>(node, *it_color) );
+      color_mapper.insert( std::pair<GraphTypes::node_id, NamedColor::ColorName>(node, *it_color) );
       partite.insert( node );
 
       sorted_nodes.erase( --sorted_nodes.end() ); //same as --rbegin().base()
@@ -64,7 +64,7 @@ std::map<Node::node_id, NamedColor::ColorName> Coloring<Type>::welsh(Graph<Type>
 
 	  if( _partite_compatible(graph, current_node, partite) )
 	    {
-	      color_mapper.insert( std::pair<Node::node_id, NamedColor::ColorName>(current_node, *it_color) );
+	      color_mapper.insert( std::pair<GraphTypes::node_id, NamedColor::ColorName>(current_node, *it_color) );
 	      partite.insert(current_node);
 	      sorted_nodes.erase(it_sn++);
 	    }

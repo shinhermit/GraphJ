@@ -1,9 +1,9 @@
 template <typename Type>
-Node::node_id PathFinding<Type>::_closest(std::map<Node::node_id, GraphTypes::Cost> & distances)
+GraphTypes::node_id PathFinding<Type>::_closest(std::map<GraphTypes::node_id, GraphTypes::Cost> & distances)
 {
-  Node::node_id s, closest;
+  GraphTypes::node_id s, closest;
   GraphTypes::Cost d, d_closest;
-  std::map<Node::node_id, GraphTypes::Cost>::iterator it;
+  std::map<GraphTypes::node_id, GraphTypes::Cost>::iterator it;
 
   it = distances.begin();
   closest = it->first;
@@ -26,10 +26,10 @@ Node::node_id PathFinding<Type>::_closest(std::map<Node::node_id, GraphTypes::Co
 }
 
 template <typename Type>
-void PathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, Node::node_id closest, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source, std::map<Node::node_id, Node::node_id> & best_predecessor)
+void PathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id closest, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor)
 {
-  std::set<Node::node_id> successors;
-  std::set<Node::node_id>::iterator it;
+  std::set<GraphTypes::node_id> successors;
+  std::set<GraphTypes::node_id>::iterator it;
   GraphTypes::Cost new_distance;
 
   successors = graph.successors(closest);
@@ -49,13 +49,13 @@ void PathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, Nod
 }
 
 template <typename Type>
-Graph<> PathFinding<Type>::dijkstra(Graph<Type> & graph, Node::node_id sourceNode)
+Graph<> PathFinding<Type>::dijkstra(Graph<Type> & graph, GraphTypes::node_id sourceNode)
 {
-  std::map<Node::node_id, GraphTypes::Cost> distance_from_source;
-  std::map<Node::node_id, Node::node_id> best_predecessor;
+  std::map<GraphTypes::node_id, GraphTypes::Cost> distance_from_source;
+  std::map<GraphTypes::node_id, GraphTypes::node_id> best_predecessor;
   typename Graph<Type>::NodeIterator it;
   Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
-  Node::node_id closest, bestPred;
+  GraphTypes::node_id closest, bestPred;
   GraphTypes::Cost distance;
   bool allInfinite;
 
@@ -95,12 +95,12 @@ Graph<> PathFinding<Type>::dijkstra(Graph<Type> & graph, Node::node_id sourceNod
 }
 
 template <typename Type>
-std::deque<Node::node_id> PathFinding<Type>::_relaxation(Graph<Type> & graph, Graph<> & paths, std::list<Node::node_id> & candidates)
+std::deque<GraphTypes::node_id> PathFinding<Type>::_relaxation(Graph<Type> & graph, Graph<> & paths, std::list<GraphTypes::node_id> & candidates)
 {
-  std::list<Node::node_id>::iterator s;
-  std::deque<Node::node_id> relaxed;
-  std::set<Node::node_id> predecessors;
-  std::set<Node::node_id>::iterator pred;
+  std::list<GraphTypes::node_id>::iterator s;
+  std::deque<GraphTypes::node_id> relaxed;
+  std::set<GraphTypes::node_id> predecessors;
+  std::set<GraphTypes::node_id>::iterator pred;
   bool relaxable;
 
   s = candidates.begin();
@@ -131,9 +131,9 @@ std::deque<Node::node_id> PathFinding<Type>::_relaxation(Graph<Type> & graph, Gr
 }
 
 template <typename Type>
-void PathFinding<Type>::_add_relaxed_nodes(Graph<Type> & graph, Graph<> & paths, std::deque<Node::node_id> & waiting_for_insertion, std::map<Node::node_id, Node::node_id> & best_predecessor)
+void PathFinding<Type>::_add_relaxed_nodes(Graph<Type> & graph, Graph<> & paths, std::deque<GraphTypes::node_id> & waiting_for_insertion, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor)
 {
-  Node::node_id s, pred;
+  GraphTypes::node_id s, pred;
 
   while( waiting_for_insertion.size() > 0 ){
     s  = waiting_for_insertion.front();
@@ -144,17 +144,17 @@ void PathFinding<Type>::_add_relaxed_nodes(Graph<Type> & graph, Graph<> & paths,
 }
 
 template <typename Type>
-void PathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, std::deque<Node::node_id> & waiting_for_insertion, std::map<Node::node_id, GraphTypes::Cost> & distance_from_source, std::map<Node::node_id, Node::node_id> & best_predecessor)
+void PathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, std::deque<GraphTypes::node_id> & waiting_for_insertion, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor)
 {
-  std::set<Node::node_id> predecessors;
-  std::set<Node::node_id>::iterator pred;
-  std::deque<Node::node_id>::iterator s;
+  std::set<GraphTypes::node_id> predecessors;
+  std::set<GraphTypes::node_id>::iterator pred;
+  std::deque<GraphTypes::node_id>::iterator s;
   GraphTypes::Cost new_distance;
 
   for(s = waiting_for_insertion.begin(); s != waiting_for_insertion.end(); s++){
     predecessors = graph.predecessors(*s);
     GraphTypes::Cost & s_distance = distance_from_source[*s];
-    Node::node_id & s_best_pred = best_predecessor[*s];
+    GraphTypes::node_id & s_best_pred = best_predecessor[*s];
 
     for(pred = predecessors.begin(); pred != predecessors.end(); pred++){
 
@@ -173,14 +173,14 @@ void PathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, std
 }
 
 template <typename Type>
-Graph<> PathFinding<Type>::bellman(Graph<Type> & graph, Node::node_id sourceNode)
+Graph<> PathFinding<Type>::bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode)
 {
   Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
   typename Graph<Type>::NodeIterator it;
-  std::map<Node::node_id, GraphTypes::Cost> distance_from_source;
-  std::map<Node::node_id, Node::node_id> best_predecessor;
-  std::list<Node::node_id> candidates;
-  std::deque<Node::node_id> waiting_for_insertion;
+  std::map<GraphTypes::node_id, GraphTypes::Cost> distance_from_source;
+  std::map<GraphTypes::node_id, GraphTypes::node_id> best_predecessor;
+  std::list<GraphTypes::node_id> candidates;
+  std::deque<GraphTypes::node_id> waiting_for_insertion;
 
   //initialisations
   distance_from_source[sourceNode] = 0;
@@ -208,11 +208,11 @@ Graph<> PathFinding<Type>::bellman(Graph<Type> & graph, Node::node_id sourceNode
 }
 
 template <typename Type>
-Graph<> PathFinding<Type>::between(Graph<Type> & graph, Node::node_id source, Node::node_id target, GraphTypes::SearchAlgorithm algo)
+Graph<> PathFinding<Type>::between(Graph<Type> & graph, GraphTypes::node_id source, GraphTypes::node_id target, GraphTypes::SearchAlgorithm algo)
 {
   Traverse<> traverse;
   PathBuilderVisitor<> pathBuilder;
-  std::set<Node::node_id> marker;
+  std::set<GraphTypes::node_id> marker;
   Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
 
   paths = (algo == GraphTypes::DIJKSTRA) ? dijkstra(graph, source) : bellman(graph, source);

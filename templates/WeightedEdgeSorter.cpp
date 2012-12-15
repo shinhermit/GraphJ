@@ -6,9 +6,9 @@ template<typename Type>
 WeightedEdgeSorter<Type>::~WeightedEdgeSorter(){}
 
 template<typename Type>
-void WeightedEdgeSorter<Type>::treat(Graph<Type> graph, Node::node_id node){
-  std::set<Node::node_id> successors;
-  std::set<Node::node_id>::iterator it;
+void WeightedEdgeSorter<Type>::treat(Graph<Type> graph, GraphTypes::node_id node){
+  std::set<GraphTypes::node_id> successors;
+  std::set<GraphTypes::node_id>::iterator it;
   GraphTypes::Cost cost;
 
   successors = graph.successors(node);

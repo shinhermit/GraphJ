@@ -1,2 +1,5 @@
-dijsktra: ne pas détériorer le tableau des distances (utiliser une liste candidtats = S-S', comme dans bellman)
-Bellman_dual (faire directement le Xbellman_dual)
+tester Xbetween
+--> répercuter les modif de Xpaths dans paths
+
+changer Node::node_id en GraphTypes::node_id
+changer PathFinding::Path en GraphTypes::Path

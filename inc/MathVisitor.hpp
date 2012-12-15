@@ -13,13 +13,13 @@ private:
   std::string _A_buffer; //edges
   std::string _C_buffer; //weights
 
-  std::set<Node::node_id> _visited;
+  std::set<GraphTypes::node_id> _visited;
 
 public:
   MathVisitor();
   virtual ~MathVisitor();
 
-  virtual void treat(Graph<Type> & graph, Node::node_id node);
+  virtual void treat(Graph<Type> & graph, GraphTypes::node_id node);
 
   std::string math_representation()const;
 

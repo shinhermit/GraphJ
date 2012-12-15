@@ -29,7 +29,7 @@ public:
 
   int hexaValue();
 
-  static std::set<ColorName> allNames();
+  static std::set<ColorName> AllNames();
 };
 
 #endif
