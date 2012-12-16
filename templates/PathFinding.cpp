@@ -1,25 +1,54 @@
 template <typename Type>
-GraphTypes::node_id PathFinding<Type>::_closest(std::map<GraphTypes::node_id, GraphTypes::Cost> & distances)
+void PathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::list<GraphTypes::node_id> & candidates, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor)
 {
-  GraphTypes::node_id s, closest;
-  GraphTypes::Cost d, d_closest;
-  std::map<GraphTypes::node_id, GraphTypes::Cost>::iterator it;
+  typename Graph<Type>::NodeIterator it;
+  GraphTypes::Cost distance;
 
-  it = distances.begin();
-  closest = it->first;
-  d_closest = it->second;
+  distance_from_source[sourceNode] = 0;
+  paths.add_node(sourceNode);
 
-  it++;
-  while( it != distances.end() ){
-    s = it->first;
-    d = it->second;
+  for(it = graph.nodes_begin(); it != graph.nodes_end(); it++){
+    best_predecessor[*it] = sourceNode;
 
-    if(d < d_closest){
-      closest = s;
-      d_closest = d;
+    if(*it != sourceNode){
+      candidates.push_back(*it);
+
+      if( graph.has_edge(sourceNode, *it) ){
+	distance = graph.getCost(sourceNode, *it);
+      }
+      else{
+	distance = GraphTypes::INFINITY;
+      }
+
+      distance_from_source[*it] = distance;
     }
 
-    it++;
+  }
+}
+
+template <typename Type>
+GraphTypes::node_id PathFinding<Type>::_closest(std::list<GraphTypes::node_id> & candidates, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source)
+{
+  GraphTypes::node_id closest;
+  GraphTypes::Cost d_closest, new_distance;
+  std::list<GraphTypes::node_id>::iterator node;
+
+  node = candidates.begin();
+
+  closest = *node;
+  d_closest = distance_from_source[closest];
+
+  node++;
+  while( node != candidates.end() ){
+
+    new_distance = distance_from_source[*node];
+    if( new_distance < d_closest ){
+
+      d_closest = new_distance;
+      closest = *node;
+    }
+
+    node++;
   }
 
   return closest;
@@ -29,23 +58,25 @@ template <typename Type>
 void PathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id closest, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor)
 {
   std::set<GraphTypes::node_id> successors;
-  std::set<GraphTypes::node_id>::iterator it;
-  GraphTypes::Cost new_distance;
+  std::set<GraphTypes::node_id>::iterator succ;
+  GraphTypes::Cost distance, new_distance;
 
   successors = graph.successors(closest);
 
-  for(it = successors.begin(); it != successors.end(); it++){
-    if( !paths.has_node(*it) ){
+  for(succ = successors.begin(); succ != successors.end(); succ++){
 
-      new_distance = distance_from_source[closest] + graph.getCost(closest, *it);
+    if( !paths.has_node(*succ) ){
+      distance = distance_from_source[*succ];
+      new_distance = distance_from_source[closest] + graph.getCost(closest, *succ);
 
-      if(new_distance < distance_from_source[*it]){
-	distance_from_source[*it] = new_distance;
-	best_predecessor[*it] = closest;
+      if(new_distance < distance){
+	distance_from_source[*succ] = new_distance;
+	best_predecessor[*succ] = closest;
       }
     }
 
   }
+
 }
 
 template <typename Type>
@@ -53,41 +84,30 @@ Graph<> PathFinding<Type>::dijkstra(Graph<Type> & graph, GraphTypes::node_id sou
 {
   std::map<GraphTypes::node_id, GraphTypes::Cost> distance_from_source;
   std::map<GraphTypes::node_id, GraphTypes::node_id> best_predecessor;
+  std::list<GraphTypes::node_id> candidates;
   typename Graph<Type>::NodeIterator it;
-  Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
+  Graph<> paths(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
   GraphTypes::node_id closest, bestPred;
-  GraphTypes::Cost distance;
   bool allInfinite;
 
-  //initialisations
-  for(it = graph.nodes_begin(); it != graph.nodes_end(); it++){
-    best_predecessor[*it] = sourceNode;
-
-    if( graph.has_edge(sourceNode, *it) ){
-      distance = graph.getCost(sourceNode, *it);
-    }
-    else{
-      distance = GraphTypes::INFINITY;
-    }
-    distance_from_source[*it] = distance;
-  }
-
-  distance_from_source.erase(sourceNode);
-  paths.add_node(sourceNode);
+  //initialisation des tables
+  _init(graph, paths, sourceNode, candidates, distance_from_source, best_predecessor);
 
   //début de l'algorithme
   allInfinite = false;
-  while( distance_from_source.size() > 0 && !allInfinite ){
-    closest = _closest(distance_from_source);
+  while( paths.nodes_size() < graph.nodes_size() && !allInfinite ){
+    closest = _closest(candidates, distance_from_source);
 
     if(distance_from_source[closest] == GraphTypes::INFINITY){
       allInfinite = true;
     }
     else{
+      _update_tables(graph, paths, closest, distance_from_source, best_predecessor);
+
       bestPred = best_predecessor[closest];
       paths.add_edge( bestPred, closest, graph.getCost(bestPred, closest) );
-      _update_tables(graph, paths, closest, distance_from_source, best_predecessor);
-      distance_from_source.erase(closest);
+
+      candidates.remove(closest);
     }
   }
 
@@ -119,28 +139,12 @@ std::deque<GraphTypes::node_id> PathFinding<Type>::_relaxation(Graph<Type> & gra
 
     if(relaxable){
       relaxed.push_back(*s);
-      candidates.erase(s++);
-    }
-    else{
-      s++;
     }
 
+    s++;
   }
 
   return relaxed;
-}
-
-template <typename Type>
-void PathFinding<Type>::_add_relaxed_nodes(Graph<Type> & graph, Graph<> & paths, std::deque<GraphTypes::node_id> & waiting_for_insertion, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor)
-{
-  GraphTypes::node_id s, pred;
-
-  while( waiting_for_insertion.size() > 0 ){
-    s  = waiting_for_insertion.front();
-    pred = best_predecessor[s];
-    paths.add_edge( pred, s, graph.getCost(pred,s) );
-    waiting_for_insertion.pop_front();
-  }
 }
 
 template <typename Type>
@@ -153,8 +157,8 @@ void PathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, std
 
   for(s = waiting_for_insertion.begin(); s != waiting_for_insertion.end(); s++){
     predecessors = graph.predecessors(*s);
-    GraphTypes::Cost & s_distance = distance_from_source[*s];
     GraphTypes::node_id & s_best_pred = best_predecessor[*s];
+    GraphTypes::Cost & s_distance = distance_from_source[*s];
 
     for(pred = predecessors.begin(); pred != predecessors.end(); pred++){
 
@@ -169,6 +173,29 @@ void PathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, std
       }
     }
 
+  }
+}
+
+template <typename Type>
+void PathFinding<Type>::_insert_waiting_nodes(Graph<Type> & graph, Graph<> & paths, std::deque<GraphTypes::node_id> & waiting_for_insertion, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor)
+{
+  GraphTypes::node_id s, pred;
+
+  while( waiting_for_insertion.size() > 0 ){
+    s  = waiting_for_insertion.front();
+    pred = best_predecessor[s];
+    paths.add_edge( pred, s, graph.getCost(pred,s) );
+    waiting_for_insertion.pop_front();
+  }
+}
+
+template <typename Type>
+void XPathFinding<Type>::_remove_nodes(std::list<GraphTypes::node_id> & candidates, std::deque<GraphTypes::node_id> & waiting_for_insertion)
+{
+  std::deque<GraphTypes::node_id>::iterator node;
+
+  for(node = waiting_for_insertion.begin(); node != waiting_for_insertion.end(); node++){
+    candidates.remove(*node);
   }
 }
 
@@ -195,12 +222,12 @@ Graph<> PathFinding<Type>::bellman(Graph<Type> & graph, GraphTypes::node_id sour
     }
   }
 
-
   //début de l'algorithme
   waiting_for_insertion = _relaxation(graph, paths, candidates);
   while( waiting_for_insertion.size() > 0 ){
     _update_tables(graph, paths, waiting_for_insertion, distance_from_source, best_predecessor);
-    _add_relaxed_nodes(graph, paths, waiting_for_insertion, best_predecessor);
+    _remove_nodes(candidates, waiting_for_insertion);
+    _insert_waiting_nodes(graph, paths, waiting_for_insertion, best_predecessor);
     waiting_for_insertion = _relaxation(graph, paths, candidates);
   }
 

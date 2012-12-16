@@ -5,7 +5,8 @@
 #include <deque>
 #include "Graph.hpp"
 #include "PathBuilderVisitor.hpp"
-#include "Traverse.hpp"
+#include "GraphConverter.hpp"
+
 
 template <typename Type=GraphTypes::Default>
 class XPathFinding
@@ -14,7 +15,7 @@ private:
   //Xdijkstra
   void _init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::list<GraphTypes::node_id> & candidates, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors);
 
-  std::list<GraphTypes::node_id> _minimals(std::list<GraphTypes::node_id> & candidates, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source);
+  std::list<GraphTypes::node_id> _allClosest(std::list<GraphTypes::node_id> & candidates, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source);
 
   void _add_edges(Graph<Type> & graph, Graph<> & paths, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors, std::list<GraphTypes::node_id> allClosest);
 
@@ -36,11 +37,9 @@ public:
 
   Graph<> Xbellman(Graph<Type> & graph, GraphTypes::node_id sourceNode);
 
-  //Attention: Ne surtout pas utiliser avec des graphes non orientés
-  //(Pour cela, il faudrait rajouter un marquage)
-  std::list<GraphTypes::Path> paths_to(Graph<> & allPaths, GraphTypes::node_id target);
+  std::list<GraphTypes::Path> paths_to(Graph<> & allPaths, GraphTypes::node_id target) throw(std::logic_error);
 
-  std::list<GraphTypes::Path> Xbetween(Graph<Type> & graph, GraphTypes::node_id source, GraphTypes::node_id target, GraphTypes::SearchAlgorithm algo=GraphTypes::DIJKSTRA);
+  std::list<GraphTypes::Path> Xbetween(Graph<Type> & graph, GraphTypes::node_id source, GraphTypes::node_id target, GraphTypes::SearchAlgorithm algo=GraphTypes::DIJKSTRA) throw(std::logic_error);
 };
 
 #include "XPathFinding.cpp"

@@ -80,6 +80,9 @@ feux_tricolores: all_classes
 gps: all_classes
 	$(cmd_exe)
 
+gps_multichemin: all_classes
+	$(cmd_exe)
+
 #Cleanings
 
 cleantemp:

@@ -46,3 +46,6 @@ feux_tricolores:
 
 gps:
 	$(cmd)
+
+gps_multichemin:
+	$(cmd)
