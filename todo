@@ -1,5 +1,3 @@
 tester Xbetween
 --> répercuter les modif de Xpaths dans paths
 
-changer Node::node_id en GraphTypes::node_id
-changer PathFinding::Path en GraphTypes::Path

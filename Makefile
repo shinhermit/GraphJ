@@ -77,6 +77,9 @@ reseau_routier: all_classes
 feux_tricolores: all_classes
 	$(cmd_exe)
 
+gps: all_classes
+	$(cmd_exe)
+
 #Cleanings
 
 cleantemp:

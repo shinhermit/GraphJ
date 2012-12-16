@@ -23,15 +23,84 @@ void DiGraph::NodeIterator::operator++(int){
 }
 
 void DiGraph::NodeIterator::operator--(int){
-  _it++;
+  _it--;
 }
 
 bool DiGraph::NodeIterator::operator==(const DiGraph::NodeIterator & ref){
   return _it == ref._it;
 }
 
-bool operator!=(const DiGraph::NodeIterator & it1, const DiGraph::NodeIterator & it2){
-  return it1._it != it2._it;
+bool DiGraph::NodeIterator::operator!=(const DiGraph::NodeIterator & ref){
+  return _it != ref._it;
+}
+
+DiGraph::EdgeIterator::EdgeIterator(){
+}
+
+DiGraph::EdgeIterator::EdgeIterator(const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::iterator & begin, const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::iterator & end):_current(begin), _end(end){
+
+  if( _current != _end )
+    _targetNode = _current->second.begin();
+}
+
+DiGraph::EdgeIterator::EdgeIterator(const DiGraph::EdgeIterator & source):_current(source._current), _end(source._end), _targetNode(source._targetNode){
+}
+
+DiGraph::EdgeIterator & DiGraph::EdgeIterator::operator=(const DiGraph::EdgeIterator & source){
+
+  _current = source._current;
+  _end = source._end;
+  _targetNode = source._targetNode;
+
+  return *this;
+}
+
+Edge DiGraph::EdgeIterator::operator*()const{
+  return Edge(_current->first, *_targetNode);
+}
+
+void DiGraph::EdgeIterator::operator++(int){
+
+  if( _targetNode != _current->second.end() ){
+    _targetNode++;
+
+    if( _targetNode == _current->second.end() ){
+      _current++;
+
+      if(_current != _end)
+	_targetNode = _current->second.begin();
+    }
+  }
+  else{
+    _current++;
+
+    if(_current != _end)
+      _targetNode = _current->second.begin();
+  }
+}
+
+void DiGraph::EdgeIterator::operator--(int){
+
+  if( _targetNode != _current->second.begin() ){
+
+    _targetNode--;
+  }
+  else{
+
+    _current--;
+    _targetNode = _current->second.end();
+    _targetNode--;
+  }
+}
+
+bool DiGraph::EdgeIterator::operator==(const DiGraph::EdgeIterator & ref){
+
+  return (_current == ref._current && _targetNode == ref._targetNode);
+}
+
+bool DiGraph::EdgeIterator::operator!=(const DiGraph::EdgeIterator & ref){
+
+  return !(_current == ref._current && _targetNode == ref._targetNode);
 }
 
 DiGraph::DiGraph():_nb_of_edges(0){}
@@ -225,6 +294,14 @@ DiGraph::NodeIterator DiGraph::nodes_begin(){
 
 DiGraph::NodeIterator DiGraph::nodes_end(){
   return NodeIterator( _nodes.end() );
+}
+
+DiGraph::EdgeIterator DiGraph::edges_begin(){
+  return EdgeIterator( _topology.begin(), _topology.end() );
+}
+
+DiGraph::EdgeIterator DiGraph::edges_end(){
+  return EdgeIterator( _topology.end(), _topology.end() );
 }
 
 unsigned long DiGraph::in_degree(GraphTypes::node_id node) throw(std::invalid_argument){

@@ -43,3 +43,6 @@ reseau_routier:
 
 feux_tricolores:
 	$(cmd)
+
+gps:
+	$(cmd)

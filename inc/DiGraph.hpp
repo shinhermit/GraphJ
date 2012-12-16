@@ -4,6 +4,7 @@
 #include <map>
 #include <stdexcept>
 #include "AbstractGraph.hpp"
+#include "Edge.hpp"
 
 class DiGraph : public AbstractGraph{
 public:
@@ -20,7 +21,24 @@ public:
     void operator++(int);
     void operator--(int);
     bool operator==(const NodeIterator & ref);
-    friend bool operator!=(const NodeIterator & it1, const NodeIterator & it2);
+    bool operator!=(const NodeIterator & ref);
+  };
+
+  class EdgeIterator
+  {
+  private:
+    std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::iterator _current, _end;
+    std::set<GraphTypes::node_id>::iterator _targetNode;
+  public:
+    EdgeIterator();
+    EdgeIterator(const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::iterator & begin, const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::iterator & end);
+    EdgeIterator(const EdgeIterator & source);
+    EdgeIterator & operator=(const EdgeIterator & source);
+    Edge operator*()const;
+    void operator++(int);
+    void operator--(int);
+    bool operator==(const EdgeIterator & ref);
+    bool operator!=(const EdgeIterator & ref);
   };
 
 protected:
@@ -64,6 +82,8 @@ public:
 
   NodeIterator nodes_begin();
   NodeIterator nodes_end();
+  EdgeIterator edges_begin();
+  EdgeIterator edges_end();
 
   unsigned long in_degree(GraphTypes::node_id node) throw(std::invalid_argument);
   unsigned long out_degree(GraphTypes::node_id node) throw(std::invalid_argument);

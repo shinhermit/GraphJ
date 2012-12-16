@@ -15,10 +15,10 @@ class Exporter{
 private:
   std::string _graphviz_headers(Graph<Type> & graph);
   std::string _graphviz_relations(Graph<Type> & graph);
-  std::string _graphviz_label_mapping(std::map<GraphTypes::node_id, std::string> & label_mapper);
-  std::string _graphviz_color_mapping(std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper);
-  std::string _graphviz_paths_highlighting(std::list<GraphTypes::Path> & paths_highlight);
-  std::string _graphviz_meta_mapping(Graph<Type> & graph, std::map<GraphTypes::node_id, std::string> & label_mapper, std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper);
+  std::string _graphviz_node_label_mapping(Graph<Type> & graph, std::map<GraphTypes::node_id, std::string> & label_mapper);
+  std::string _graphviz_node_color_mapping(Graph<Type> & graph, std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper);
+  std::string _graphviz_paths_highlighting(Graph<Type> & graph, std::list<GraphTypes::Path> & paths_highlight);
+  std::string _graphviz_node_meta_mapping(Graph<Type> & graph, std::map<GraphTypes::node_id, std::string> & label_mapper, std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper);
   std::string _graphviz_footers();
 
 public:
@@ -40,6 +40,8 @@ public:
 
   std::string toGraphviz(Graph<Type> & graph, std::map<GraphTypes::node_id, std::string> & label_mapper, std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper);
 
+  std::string toGraphviz(Graph<Type> & graph, std::map<GraphTypes::node_id, std::string> & label_mapper, std::list<GraphTypes::Path> & paths_highlight);
+
   void toGraphviz(Graph<Type> & graph, std::string filename);
 
   void toGraphviz(Graph<Type> & graph, std::map<GraphTypes::node_id, std::string> & label_mapper, std::string filename);
@@ -49,6 +51,8 @@ public:
   void toGraphviz(Graph<Type> & graph, std::list<GraphTypes::Path> & paths_highlight, std::string filename);
 
   void toGraphviz(Graph<Type> & graph, std::map<GraphTypes::node_id, std::string> & label_mapper, std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper, std::string filename);
+
+  void toGraphviz(Graph<Type> & graph, std::map<GraphTypes::node_id, std::string> & label_mapper, std::list<GraphTypes::Path> & paths_highlight, std::string filename);
 };
 
 #include "Exporter.cpp"

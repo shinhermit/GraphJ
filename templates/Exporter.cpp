@@ -23,44 +23,55 @@ std::string Exporter<Type>::_graphviz_relations(Graph<Type> & graph)
 }
 
 template<typename Type>
-std::string Exporter<Type>::_graphviz_label_mapping(std::map<GraphTypes::node_id, std::string> & label_mapper)
+std::string Exporter<Type>::_graphviz_node_label_mapping(Graph<Type> & graph, std::map<GraphTypes::node_id, std::string> & label_mapper)
 {
-  std::map<GraphTypes::node_id, std::string>::iterator it;
+  typename Graph<Type>::NodeIterator node;
+  std::map<GraphTypes::node_id, std::string>::iterator label_it;
   std::ostringstream oss;
 
-  it = label_mapper.begin();
-  while( it != label_mapper.end() ){
-    oss << it->first <<" [label=\"" << it->second << "\"]" << std::endl;
+  node = graph.nodes_begin();
+  while( node != graph.nodes_end() ){
 
-    it++;
+    label_it = label_mapper.find(*node);
+    if( label_it != label_mapper.end() ){
+      oss << *node <<" [label=\"" << label_it->second << "\"]" << std::endl;
+    }
+
+    node++;
   }
 
   return oss.str();
 }
 
 template<typename Type>
-std::string Exporter<Type>::_graphviz_color_mapping(std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper)
+std::string Exporter<Type>::_graphviz_node_color_mapping(Graph<Type> & graph, std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper)
 {
-  std::map<GraphTypes::node_id, NamedColor::ColorName>::iterator it;
+  typename Graph<Type>::NodeIterator node;
+  std::map<GraphTypes::node_id, NamedColor::ColorName>::iterator color_it;
   std::ostringstream oss;
 
-  it = color_mapper.begin();
-  while( it != color_mapper.end() ){
-    oss << it->first <<" [color=" << NamedColor::ToString(it->second) << "]" << std::endl;
+  node = graph.nodes_begin();
+  while( node != graph.nodes_end() ){
 
-    it++;
+    color_it = color_mapper.find(*node);
+    if( color_it != color_mapper.end() ){
+      oss << *node <<" [color=" << NamedColor::ToString(color_it->second) << "]" << std::endl;
+    }
+
+    node++;
   }
 
   return oss.str();
 }
 
 template<typename Type>
-std::string Exporter<Type>::_graphviz_paths_highlighting(std::list<GraphTypes::Path> & paths_highlight)
+std::string Exporter<Type>::_graphviz_paths_highlighting(Graph<Type> & graph, std::list<GraphTypes::Path> & paths_highlight)
 {
   std::set<NamedColor::ColorName> colors;
   std::set<NamedColor::ColorName>::iterator col;
   std::list<GraphTypes::Path>::iterator path;
   std::list<GraphTypes::node_id>::iterator node;
+  GraphTypes::node_id sourceNode;
   std::ostringstream oss;
 
   colors = NamedColor::AllNames();
@@ -72,14 +83,21 @@ std::string Exporter<Type>::_graphviz_paths_highlighting(std::list<GraphTypes::P
 
     node = path->begin();
     while( node!= path->end() ){
-      oss << *node;
+      sourceNode = *node;
       node++;
 
       if( node != path->end() ){
-	oss << "->";
+	oss << sourceNode << "->" << *node;
+
+	if( graph.is_weighted() ){
+	  oss << "[label=\"" << graph.getCost(sourceNode, *node) << "\", fontcolor=" << NamedColor::ToString(*col)<< "]";
+	}
+
+	oss << std::endl;
       }
     }
-    oss << std::endl << "}" << std::endl;
+
+    oss << "}" << std::endl;
 
     col++; if(col == colors.end()) col=colors.begin();
   }
@@ -88,7 +106,7 @@ std::string Exporter<Type>::_graphviz_paths_highlighting(std::list<GraphTypes::P
 }
 
 template<typename Type>
-std::string Exporter<Type>::_graphviz_meta_mapping(Graph<Type> & graph, std::map<GraphTypes::node_id, std::string> & label_mapper, std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper)
+std::string Exporter<Type>::_graphviz_node_meta_mapping(Graph<Type> & graph, std::map<GraphTypes::node_id, std::string> & label_mapper, std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper)
 {
   std::ostringstream oss;
   std::string stringColor;
@@ -174,7 +192,7 @@ std::string Exporter<Type>::toGraphviz(Graph<Type> & graph, std::map<GraphTypes:
 
   oss117 << _graphviz_relations(graph);
 
-  oss117 << _graphviz_label_mapping(label_mapper);
+  oss117 << _graphviz_node_label_mapping(graph, label_mapper);
 
   oss117 << _graphviz_footers();
 
@@ -193,7 +211,7 @@ std::string Exporter<Type>::toGraphviz(Graph<Type> & graph, std::map<GraphTypes:
 
   oss117 << _graphviz_relations(graph);
 
-  oss117 << _graphviz_color_mapping(color_mapper);
+  oss117 << _graphviz_node_color_mapping(graph, color_mapper);
 
   oss117 << _graphviz_footers();
 
@@ -208,7 +226,7 @@ std::string Exporter<Type>::toGraphviz(Graph<Type> & graph, std::list<GraphTypes
 
   oss117 << _graphviz_headers(graph);
 
-  oss117 << _graphviz_paths_highlighting(paths_highlight);
+  oss117 << _graphviz_paths_highlighting(graph, paths_highlight);
 
   oss117 << _graphviz_relations(graph);
 
@@ -228,12 +246,30 @@ std::string Exporter<Type>::toGraphviz(Graph<Type> & graph, std::map<GraphTypes:
 
   oss117 << _graphviz_relations(graph);
 
-  oss117 << _graphviz_meta_mapping(graph, label_mapper, color_mapper);
+  oss117 << _graphviz_node_meta_mapping(graph, label_mapper, color_mapper);
 
   oss117 << _graphviz_footers();
 
   return oss117.str();
   
+}
+
+template<typename Type>
+std::string Exporter<Type>::toGraphviz(Graph<Type> & graph, std::map<GraphTypes::node_id, std::string> & label_mapper, std::list<GraphTypes::Path> & paths_highlight)
+{
+  std::ostringstream oss117;
+
+  oss117 << _graphviz_headers(graph);
+
+  oss117 << _graphviz_paths_highlighting(graph, paths_highlight);
+
+  oss117 << _graphviz_node_label_mapping(graph, label_mapper);
+
+  oss117 << _graphviz_relations(graph);
+
+  oss117 << _graphviz_footers();
+
+  return oss117.str();
 }
 
 template<typename Type>
@@ -287,6 +323,17 @@ void Exporter<Type>::toGraphviz(Graph<Type> & graph, std::map<GraphTypes::node_i
   file.open(filename.c_str(), std::ios::out | std::ios::trunc);
 
   file << toGraphviz(graph, label_mapper, color_mapper);
+
+  file.close();
+}
+
+template<typename Type>
+void Exporter<Type>::toGraphviz(Graph<Type> & graph, std::map<GraphTypes::node_id, std::string> & label_mapper, std::list<GraphTypes::Path> & paths_highlight, std::string filename)
+{
+  std::ofstream file;
+  file.open(filename.c_str(), std::ios::out | std::ios::trunc);
+
+  file << toGraphviz(graph, label_mapper, paths_highlight);
 
   file.close();
 }

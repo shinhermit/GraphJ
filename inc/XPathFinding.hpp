@@ -36,6 +36,8 @@ public:
 
   Graph<> Xbellman(Graph<Type> & graph, GraphTypes::node_id sourceNode);
 
+  //Attention: Ne surtout pas utiliser avec des graphes non orientés
+  //(Pour cela, il faudrait rajouter un marquage)
   std::list<GraphTypes::Path> paths_to(Graph<> & allPaths, GraphTypes::node_id target);
 
   std::list<GraphTypes::Path> Xbetween(Graph<Type> & graph, GraphTypes::node_id source, GraphTypes::node_id target, GraphTypes::SearchAlgorithm algo=GraphTypes::DIJKSTRA);
