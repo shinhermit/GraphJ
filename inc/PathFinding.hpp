@@ -23,6 +23,8 @@ private:
 
   void _insert_waiting_nodes(Graph<Type> & graph, Graph<> & paths, std::deque<GraphTypes::node_id> & waiting_for_insertion, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor);
 
+  void _remove_nodes(std::list<GraphTypes::node_id> & candidates, std::deque<GraphTypes::node_id> & waiting_for_insertion);
+
 public:
   Graph<> dijkstra(Graph<Type> & graph, GraphTypes::node_id sourceNode);
 

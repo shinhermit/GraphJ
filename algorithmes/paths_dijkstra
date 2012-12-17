@@ -5,7 +5,7 @@ Problématique & hypothèses
 
 principe:
 *recherche du meilleur prédécesseur: celui qui permet d'arriver à un sommet avec le moindre coût.
-	. utilise deux tables: table des meileurs prédécesseurs connus et tables des distances minimales cumulées au sommet d'origine
+	. utilise deux tables: table des meileurs prédécesseurs connus et tables des distances cumulées minimales au sommet origine
 	. comporte une phase d'initialisation:
 		. table des distances: distance à la source si adjacents, infinie sinon
 		. table des meilleurs prédécesseurs connus: au départ, la source est le seul prédécesseur connu
@@ -13,7 +13,8 @@ principe:
 
 	-chaque étape comporte deux parties:
 		* le choix des sommets à ajouter: ici le plus proche du sommet source (distances cumulées [longueur du chemin])
-		* correction des deux tables distances_minimales_cumulées/meilleur_prédécesseur
+		* correction des deux tables distances_minimales_cumulées/meilleur_prédécesseur:
+			. Le sommet sélectionné est-il un meilleur prédécesseur (pour ses successeurs à lui) que le meilleur prédécesseur connu jusque là? ->On compare la longueur du prolongement des chemins jusqu'au successeur courant.
 
 
 //les algorithmes ci-dessous donnent des arbres (couvrants pour un graphe connexe),
@@ -21,94 +22,107 @@ principe:
 //nous implémenterons une deuxième version qui fournira les chemins équivalents (donc pas
 // forcément des arbres)
 
-FONCTION dijkstra( G(S,A): Graphe; source: Sommet ): Graphe
-	VARIABLES:
-		distance_a_source : Map<Sommet, Entier non signé>
-		meilleur_prédécesseur: Map<Sommet, Sommet>
-		chemins: Graphe (S',A')
-		s, plusProche, meilleurPred: Sommet
-		distance, i: Entier
+FONCTION dijkstra(G : Graphe; source : Sommet) : Graphe
+	VARIABLES
+		distance_a_source : Map<Sommet, Entier>
+		meilleur_predecesseur : Map<Sommet, Sommet>
+		candidats : Liste<Sommet>
+		chemins : Graphe
+		plusProche, meilPred : Sommet
 		toutInfini : Booléen
-		INFINITY = 30 000
-	
-	DÉBUT
-		//initialisations des tables
-		POUR i = 1 A taille(S) FAIRE
-			s = ieme(S,i)
-			meilleur_prédécesseur[s] = source
+		INFINI := 20000
 
+	DÉBUT
+		_initialiser(G, chemins, source, candidats, distance_a_source, meilleur_predecesseur)
+		toutInfini := FAUX
+		TANTQUE taille(chemins) < taille(G) ET NON toutInfini FAIRE
+			plusProche := _plusProche(candidats, distance_a_source)
 			SI
-				est_arc_de(G, source, s)
+				distance_a_source[plusProche] = INFINI
 			ALORS
-				distance = coût(G, source, s)
+				toutInfini := VRAI
 			SINON
-				distance = INFINITY
-			FINSI
-			distance_a_source[s] = distance
-		FINPOUR
-	
-		ajouter(chemins, source)
-		retirer(distance_a_source, source)
-	
-		//début de l'agorithme
-		toutInfini = FAUX
-		TANTQUE taille(distance_a_source) > 0 ET NON toutInfini FAIRE
-			plusProche = _minimal(distance_a_source)
-			SI
-				distance_a_source[plusProche] == INFINITY
-			ALORS
-				toutInfini = VRAI
-			SINON
-				meilleurPred = _meilleur_prédécesseur[plusProche]
-				ajouter_arc( chemins, meilleurPred, plusProche, coût(G, meilleurPred, plusProche) )
-				_correction_des_tables(G, chemins, plusProche, distance_a_source, meilleur_prédécesseur)
-				retirer(distance_a_source, plusProche)
+				_correction_des_tables(G, chemins, plusProche, distance_a_source, meilleur_predecesseur)
+				meilPred := meilleur_predecesseur[plusProche]
+				ajouter_arc( chemins, meilPred, plusProche, coût(G, meilPred, plusProche) )
+				retirer(candidats, plusProche)
 			FINSI
 		FINTANTQUE
+		retourner chemins
 	FIN
 
-FONCTION _minimal(distance_a_source : Map<Sommet, distance>) : Sommet
+PROCÉDURE _initialiser(G(S,A), chemin(S', A') : Graphe; source : Sommet; candidats : Liste<Sommet>; distance_a_source : Map<Sommet, Entier>; meilleur_predecesseur : Map<Sommet, Sommet>)
+	VARIABLES
+		s : Sommet
+		i, distance : Entier
+
+	DÉBUT
+		distance_a_source[source] := 0
+		ajouter_sommet(chemins, source)
+		POUR i:=1 à taille(S) FAIRE
+			s := ième(S)
+			meilleur_predécesseur[s] := source
+			
+			SI
+				s != source
+			ALORS
+				ajouter(candidats, s, taille(candidats)+1)
+				SI
+					est_arc_de(G, source, s)
+				ALORS
+					distance := coût(G, source, s)
+				SINON
+					distance := INFINI
+				FINSI
+				distance_a_source[s] := distance
+			FINSI			
+		FINPOUR
+	FIN
+
+FONCTION _plusProche(candidats : Liste<Sommet>; distance_a_source : Map<Sommet, Entier>) : Sommet
 	VARIABLES
 		s, plusProche : Sommet
-		i, d, d_plusProche : Entier
+		i, nvlle_distance, d_plusProche : Entier
+
 	DÉBUT
-		plusProche = tête( ieme(distance_a_source, 1) )
-		d_plusProche = queue( ieme(distance_a_source, 1) )
-		POUR i=2 à taille(distance_a_source) FAIRE
-			s = tête( ieme(distance_a_source, i) )
-			d = queue( ieme(distance_a_source, i) )
+		plusProche := ieme(candidats, 1)
+		d_plusProche := distance_a_source[plusProche]
+		
+		POUR i := 2 à taille(candidats) FAIRE
+			s := ieme(candidats, i)
+			nvlle_distance := distance_a_source[s]
 			SI
-				d < d_plusProche
+				nvlle_distance < d_plusProche
 			ALORS
-				plusProche = s
-				d_plusProche = d
+				d_plusProche := nvlle_distance
+				plusProche := s
 			FINSI
 		FINPOUR
+
 		retourner plusProche
 	FIN
 
-PROCÉDURE _correction_des_tables(G, chemins : Graphe; plusProche : Sommet; distance_a_source : Map<Sommet Entier non signé>; meilleur_prédécesseur : Map<Sommet, Sommet>)
+PROCÉDURE _correction_des_tables(G, chemins : Graphe; plusProche : Sommet; distance_a_source : Map<Sommet, Entier>; meilleur_predecesseur : Map<Sommet, Sommet>)
 	VARIABLES
-		successeurs : Liste<Sommets>
-		s : Sommet
-		i, nvlle_distance : Entier
+		successeurs : Set<Sommet>
+		succ : Sommet
+		i, distance, nvlle_distance : Entier
 	DÉBUT
-		successeurs = successeurs(G, plusProche)
-		i = 0
-		TANT QUE i < taille(successeurs) FAIRE
-			s = ieme(successeur, i)
+		successeurs := successeurs(G, plusProche)
+		POUR i := 1 à taille(successeurs) FAIRE
+			succ := ieme(successeurs, i)
 			SI
-				NON est_sommet_de(chemins, s)
+				NON est_sommet_de(chemins, succ)
 			ALORS
-				nvlle_distance = distance_a_source[plusProche] + coût(G, plusProche, s)
+				distance := distance_a_source[succ]
+				nvlle_distance := distance_a_source[plusProche] + coût(G, plusProche, succ)
 				SI
-					nvlle_distance < distance_a_source[s]
+					nvlle_distance < distance
 				ALORS
-					distance_a_source[s] = nvlle_distance
-					meilleur_prédécesseur[s] = plusProche
+					distance_a_source[succ] := nvlle_distance
+					meilleur_predecesseur[succ] := plusProche
 				FINSI
 			FINSI
-			i = i+1
-		FINTANTQUE
+		FINPOUR
 	FIN
 

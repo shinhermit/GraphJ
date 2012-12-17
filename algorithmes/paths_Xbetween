@@ -1,6 +1,6 @@
 //Xbetween : eXtended_between
 //Les algorithmes ci-dessous sont des extensions des
-//algorithmes paths_between. Ils permetten d'obtenir tous
+//algorithmes paths_between. Ils permettent d'obtenir tous
 //les plus courts chemins entre deux sommets d'un graphe,
 //en se basant sur un des algorithmes Dijkstra/Bellman.
 
@@ -23,12 +23,12 @@ FONCTION chemin_entre(G : Graphe; source, cible : Sommet; algo_dijkstra : Boolé
 		chemins : Graphe
 
 	DÉBUT
-		chemins = SI algo_dijkstra ALORS dijkstra(G, source) SINON bellman(G, source)
-		lesChemins = chemins_jusqua(G, chemins, cible)
+		chemins := SI algo_dijkstra ALORS dijkstra(G, source) SINON bellman(G, source)
+		lesChemins := chemins_jusqua(chemins, cible)
 		retourner lesChemins
 	FIN
 
-FONCTION chemins_jusqua(G, chemins : Graphe; cible : Sommet) : Liste<Chemin>
+FONCTION chemins_jusqua(chemins : Graphe; cible : Sommet) : Liste<Chemin>
 	VARIABLES
 		i : Entier
 		prédécesseurs : Liste<Sommet>
@@ -37,13 +37,13 @@ FONCTION chemins_jusqua(G, chemins : Graphe; cible : Sommet) : Liste<Chemin>
 		pred : Sommet
 
 	DÉBUT
-		prédécesseurs = prédécesseurs(G, cible)
+		prédécesseurs := prédécesseurs(chemins, cible)
 		SI
-			taille(Prédécesseurs) > 0
+			taille(prédécesseurs) > 0
 		ALORS
-			POUR i=1 à taille(prédécesseurs) FAIRE
-				pred = ieme(prédécesseur, i)
-				jusqua_pred = chemins_jusqua(G, chemins, pred)
+			POUR i:=1 à taille(prédécesseurs) FAIRE
+				pred := ieme(prédécesseur, i)
+				jusqua_pred := chemins_jusqua(chemins, pred)
 				_ajouter_tous(lesChemins, jusqua_pred)
 			FINPOUR
 		FINSI
@@ -51,7 +51,7 @@ FONCTION chemins_jusqua(G, chemins : Graphe; cible : Sommet) : Liste<Chemin>
 		SI
 			taille(lesChemins) > 0
 		ALORS
-			POUR i=1 à taille(lesChemins) FAIRE
+			POUR i:=1 à taille(lesChemins) FAIRE
 				//n'est pas rigoureusement correct: on considèrera que ieme retourne une référence
 				unChemin = ieme(lesChemins, i)
 				insérer(unChemin, cible, taille(unChemin)+1)
@@ -69,8 +69,8 @@ PROCÉDURE _ajouter_tous(lesChemins, jusqua_pred : Liste<Chemin>)
 		i : Entier
 		unChemin : Chemin
 	DÉBUT
-		POUR i=taille(jusqua_pred)FAIRE
-			unChemin = ieme(jusqua_pred, i)
+		POUR i:=1 à taille(jusqua_pred) FAIRE
+			unChemin := ieme(jusqua_pred, i)
 			insérer(lesChemins, unChemin, taille(lesChemins)+1)
 		FINPOUR
 	FIN

@@ -85,7 +85,6 @@ Graph<> PathFinding<Type>::dijkstra(Graph<Type> & graph, GraphTypes::node_id sou
   std::map<GraphTypes::node_id, GraphTypes::Cost> distance_from_source;
   std::map<GraphTypes::node_id, GraphTypes::node_id> best_predecessor;
   std::list<GraphTypes::node_id> candidates;
-  typename Graph<Type>::NodeIterator it;
   Graph<> paths(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
   GraphTypes::node_id closest, bestPred;
   bool allInfinite;
@@ -190,7 +189,7 @@ void PathFinding<Type>::_insert_waiting_nodes(Graph<Type> & graph, Graph<> & pat
 }
 
 template <typename Type>
-void XPathFinding<Type>::_remove_nodes(std::list<GraphTypes::node_id> & candidates, std::deque<GraphTypes::node_id> & waiting_for_insertion)
+void PathFinding<Type>::_remove_nodes(std::list<GraphTypes::node_id> & candidates, std::deque<GraphTypes::node_id> & waiting_for_insertion)
 {
   std::deque<GraphTypes::node_id>::iterator node;
 
