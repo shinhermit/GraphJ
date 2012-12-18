@@ -6,6 +6,7 @@ int main()
 {
   Graph<> graph(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
   Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
+  std::list<GraphTypes::Path> paths_between;
   XPathFinding<> lookup;
   Exporter<> exporte;
 
@@ -30,9 +31,10 @@ int main()
   graph.add_edge(6,5, 1);
 
   paths = lookup.Xbellman(graph, 1);
+  paths_between = lookup.paths_to(paths, 5);
 
   //Exports
-  exporte.toGraphviz(graph, "test_Xbellman.graph");
+  exporte.toGraphviz(graph, paths_between, "test_Xbellman.graph");
   exporte.toGraphviz(paths, "paths_Xbellman.graph");
 
   //compilation dot
