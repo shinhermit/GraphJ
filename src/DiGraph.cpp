@@ -94,13 +94,34 @@ void DiGraph::EdgeIterator::operator--(int){
 }
 
 bool DiGraph::EdgeIterator::operator==(const DiGraph::EdgeIterator & ref){
+  bool equal;
 
-  return (_current == ref._current && _targetNode == ref._targetNode);
+  equal = false;
+
+  if(
+     (_current == _end && ref._current == _current) ||
+     (_current != _end && _current == ref._current && _targetNode == ref._targetNode)
+     ){
+    equal = true;
+  }
+
+  return equal;
 }
 
 bool DiGraph::EdgeIterator::operator!=(const DiGraph::EdgeIterator & ref){
 
-  return !(_current == ref._current && _targetNode == ref._targetNode);
+  bool neq;
+
+  neq = false;
+
+  if(
+     (_current == _end && ref._current != _current) ||
+     (_current != _end && (_current != ref._current || _targetNode != ref._targetNode) )
+     ){
+    neq = true;
+  }
+
+  return neq;
 }
 
 DiGraph::DiGraph():_nb_of_edges(0){}

@@ -3,7 +3,7 @@
 //ils fournissent les chemins équivalents (chemins optimaux de coûts égaux),
 //contrairement à la première version
 
-FONCTION bellman(G : Graphe (S,A); source : Sommet) : Graphe
+FONCTION bellman(DON G : Graphe (S,A); DON source : Sommet) : Graphe
 	VARIABLES
 		chemins : Graphe (S', A')
 		distance_a_source : Map<Sommet, Entier>
@@ -14,18 +14,7 @@ FONCTION bellman(G : Graphe (S,A); source : Sommet) : Graphe
 		INFINITY := 30 000
 
 	DÉBUT
-		//initialisations
-		distance_a_source[source] := 0
-		ajouter_sommet(chemins, source)
-		POUR i=1 à taille(S) FAIRE
-			s := ieme(S,i)
-			SI
-				s != source
-			ALORS
-				distance_a_source[s] := INFINI
-				ajouter(candidats, s, taille(candidats)+1)
-			FINSI
-		FINPOUR
+		_initialiser(G, chemins, source, candidats, distance_a_source)
 		
 		//début de l'algorithme
 		en_attente_d_ajout := _relaxation(G, chemins, candidats)
@@ -39,7 +28,26 @@ FONCTION bellman(G : Graphe (S,A); source : Sommet) : Graphe
 		retourner chemins
 	FIN
 
-FONCTION _relaxation(G, G' : Graphe; candidats : Liste<Sommet>) : File<Sommet>
+PROCÉDURE _initialiser(DON G(S,A), DON-RES G'(S',A') : Graphe; DON source : Sommet; DON-RES candidats : Liste<Sommet>; DON-RES distance_a_source : Map<Sommet, Entier>)
+	VARIABLES
+		i : Entier
+		s : Sommet
+		INFINI := 30000
+	DÉBUT
+		distance_a_source[source] = 0
+		ajouter_sommet(chemins, source)
+		POUR i := 1 à taille(S) FAIRE
+			s = ieme(S,i)
+			SI
+				s != source
+			ALORS
+				distance_a_source[s] = INFINI
+				ajouter(candidats, s, taille(candidats)+1)
+			FINSI
+		FINPOUR
+	FIN
+
+FONCTION _relaxation(DON G, DON G' : Graphe; DON candidats : Liste<Sommet>) : File<Sommet>
 	VARIABLES
 		en_attente_d_ajout : File<Sommet>
 		prédécesseurs : Liste<Sommet>
@@ -71,7 +79,7 @@ FONCTION _relaxation(G, G' : Graphe; candidats : Liste<Sommet>) : File<Sommet>
 		retourner en_attente_d_ajout
 	FIN
 
-PROCÉDURE _correction_des_tables(G, chemins : Graphe en_attente_d_ajout : File<Sommet>; distance_a_source : Map<Sommet, Entier>; meilleurs_prédécesseurs : Map<Sommet, Liste<Sommet> >)
+PROCÉDURE _correction_des_tables(DON G, DON chemins : Graphe; DON en_attente_d_ajout : File<Sommet>; DON-RES distance_a_source : Map<Sommet, Entier>; DON-RES meilleurs_prédécesseurs : Map<Sommet, Liste<Sommet> >)
 	VARIABLE
 		prédecesseurs : Set<Sommets>
 		s, pred : Sommet
@@ -108,7 +116,7 @@ PROCÉDURE _correction_des_tables(G, chemins : Graphe en_attente_d_ajout : File<
 	FIN	
 
 
-PROCÉDURE _inserer_sommets_en_attente(G, chemins : Graphe; en_attente_d_ajout : File<Sommet>; meilleurs_prédécesseurs : Map<Sommet, Liste<Sommet> >)
+PROCÉDURE _inserer_sommets_en_attente(DON G, DON-RES chemins : Graphe; DON-RES en_attente_d_ajout : File<Sommet>; DON meilleurs_prédécesseurs : Map<Sommet, Liste<Sommet> >)
 	VARIABLES
 		s, pred : Sommet
 		i : Entier
@@ -124,7 +132,7 @@ PROCÉDURE _inserer_sommets_en_attente(G, chemins : Graphe; en_attente_d_ajout :
 		FINTANTQUE
 	FIN
 
-PROCÉDURE _retirer_sommets(candidats : Liste<Sommet>; en_attente_d_ajout : File<Sommet>)
+PROCÉDURE _retirer_sommets(DON-RES candidats : Liste<Sommet>; DON en_attente_d_ajout : File<Sommet>)
 	VARIABLES
 		s : Sommet
 		i : Entier

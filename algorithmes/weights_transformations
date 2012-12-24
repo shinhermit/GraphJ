@@ -1,0 +1,70 @@
+//La fonction décaler_coûts() permet d'obtenir un graphe
+//dont tous les coûts sont décalés d'un offset fourni en argument.
+//Pour effectuer le décalage opposé, il suffit de fournir l'opposé de l'offset (-offset).
+
+//Le fonction offset() permet d'obtenir le décalage à zéro de l'ensemble des poids.
+//L'ensemble {-2, -3, 0, 100} aura un offset égal à 3.
+//L'application de décaler_coûts() avec cet offset permettra d'obtenir
+//{1, 0, 3, 103}, c'est à dire de passer dans l'espace des positifs ou nuls,
+//en gardant l'ordre des poids. {4, 10, 13} aura un offset égal à -4, et
+//décaler_coûts() fournira {0, 6, 9}
+
+//Pour la fonction inverser_ordre(), nous avons fait mieux qu'une bijection:
+// nous définissons une involution :D :D :p
+
+FONCTION décaler_coûts( DON G(S,A): Graphe, DON offset : Entier ) : Graphe
+	VARIABLES
+		i : Entier
+		a : Arc
+	DÉBUT
+		POUR i := 1 à taille(A) FAIRE
+			a := ieme(A, i)
+			modifier_coût(G, a, coût(a) + offset)
+		FINPOUR
+		
+		retourner G
+	FIN	
+
+FONCTION offset( DON G(S,A) : Graphe ) : Entier
+	VARIABLES
+		a : Arc
+		i, min :  Entier
+	
+	DÉBUT
+		min := coût( ieme(A,1) )
+		POUR i := 2 a taille(A) FAIRE
+			a := ieme(A,i)
+			SI
+				coût(G, a) < min
+			ALORS
+				min := coût(G, a)
+			FINSI
+		FINPOUR
+		retourner 0-min
+	FIN
+
+PROCÉDURE _inverser_signes_des_poids( DON-RES G(S,A) : Graphe )
+	VARIABLES
+		i : Entier
+		a : Arc
+	DÉBUT
+		POUR i := 1 à taille(A) FAIRE
+			a = ieme(A,i)
+			modifier_coût( G, a, coût(G,a)*-1 )
+		FINPOUR
+	FIN
+
+FONCTION inverser_ordre( DON G(S,A) : Graphe) : Graphe
+	VARIABLES
+		i, offset_initial, offset : Entier
+		a : Arc
+		G'(S',A') : Graphe
+	DÉBUT
+		G' := G
+		offset_initial := offset(G)
+		_inverser_signes_des_poids(G')
+		offset = offset(G')
+		G' = décaler_coûts(G', offset - offset_initial)
+		retourner G'
+	FIN
+

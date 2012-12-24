@@ -117,6 +117,11 @@ GraphTypes::Cost PonderableGraph::getCost(GraphTypes::node_id node1, GraphTypes:
   }
 }
 
+GraphTypes::Cost PonderableGraph::getCost(const Edge & edge) throw(std::invalid_argument, std::logic_error)
+{
+  return getCost( edge.source(), edge.target() );
+}
+
 GraphTypes::Cost PonderableGraph::cost() throw(std::logic_error){
   std::map<Edge,GraphTypes::Cost>::iterator it;
   GraphTypes::Cost cost;

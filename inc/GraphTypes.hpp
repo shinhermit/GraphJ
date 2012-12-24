@@ -24,6 +24,10 @@ public:
 
   enum SearchAlgorithm{DIJKSTRA, BELLMAN};
 
+  enum AlgorithmicClass{GREEDY, DYNAMIC};
+
+  enum ComputingValidity{UNDEFINED, VALID, INVALID};
+
   static const int INFINITY;
 };
 

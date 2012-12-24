@@ -3,7 +3,7 @@
 //ils fournissent les chemins équivalents (chemins optimaux de coûts égaux),
 //contrairement à la première version
 
-FONCTION dijkstra(G(S,A) : Graphe; source : Sommet) : Graphe
+FONCTION dijkstra(DON G(S,A) : Graphe; DON source : Sommet) : Graphe
 	VARIABLES
 		distance_a_source : Map<Sommet, Entier>
 		meilleurs_predecesseurs : Map<Sommet, Liste<Sommet> >
@@ -32,7 +32,7 @@ FONCTION dijkstra(G(S,A) : Graphe; source : Sommet) : Graphe
 		retourner chemins
 	FIN
 
-PROCÉDURE _initialiser(G(S,A), chemin(S', A') : Graphe; source : Sommet; candidats : Liste<Sommet>; distance_a_source : Map<Sommet, Entier>; meilleurs_predecesseurs : Map<Sommet, Liste<Sommet> >)
+PROCÉDURE _initialiser(DON G(S,A), DON-RES chemin(S', A') : Graphe; DON source : Sommet; DON-RES candidats : Liste<Sommet>; DON-RES distance_a_source : Map<Sommet, Entier>; DON-RES meilleurs_predecesseurs : Map<Sommet, Liste<Sommet> >)
 	VARIABLES
 		s : Sommet
 		i, distance : Entier
@@ -60,7 +60,7 @@ PROCÉDURE _initialiser(G(S,A), chemin(S', A') : Graphe; source : Sommet; candid
 		FINPOUR
 	FIN
 
-FONCTION _plusProches(candidats : Liste<Sommet>; distance_a_source : Map<Sommet, Entier>) : Liste<Sommet>
+FONCTION _plusProches(DON candidats : Liste<Sommet>; DON distance_a_source : Map<Sommet, Entier>) : Liste<Sommet>
 	VARIABLES
 		s, plusProche : Sommet
 		i, nvlle_distance, d_plusProche : Entier
@@ -93,7 +93,7 @@ FONCTION _plusProches(candidats : Liste<Sommet>; distance_a_source : Map<Sommet,
 		retourner plusProche
 	FIN
 
-PROCÉDURE _ajouter_arcs(G, chemins : Graphe; meileurs_prédécesseurs : Map<Sommet, Liste<Sommet> >; tousLesPlusProches : Liste<Sommet>)
+PROCÉDURE _ajouter_arcs(DON G, DON-RES chemins : Graphe; DON meileurs_prédécesseurs : Map<Sommet, Liste<Sommet> >; DON tousLesPlusProches : Liste<Sommet>)
 	VARIABLES
 		meilPreds : Liste<Sommet>
 		plusProche, pred : Sommet
@@ -111,7 +111,7 @@ PROCÉDURE _ajouter_arcs(G, chemins : Graphe; meileurs_prédécesseurs : Map<Som
 		FINPOUR
 	FIN
 
-PROCÉDURE _retirer_sommets(candidats, tousLesPlusProches : Liste<Sommet>)
+PROCÉDURE _retirer_sommets(DON-RES candidats, DON tousLesPlusProches : Liste<Sommet>)
 	VARIABLES
 		plusProche : Sommet
 		i : Entier
@@ -123,7 +123,7 @@ PROCÉDURE _retirer_sommets(candidats, tousLesPlusProches : Liste<Sommet>)
 		FINPOUR
 	FIN
 
-PROCÉDURE _correction_des_tables(G, chemins : Graphe; tousLesplusProches : Liste<Sommet>; distance_a_source : Map<Sommet, Entier>; meilleurs_predecesseurs : Map<Sommet, Liste<Sommet> >)
+PROCÉDURE _correction_des_tables(DON G, DON chemins : Graphe; DON tousLesplusProches : Liste<Sommet>; DON-RES distance_a_source : Map<Sommet, Entier>; DON-RES meilleurs_predecesseurs : Map<Sommet, Liste<Sommet> >)
 	VARIABLES
 		successeurs : Set<Sommet>
 		succ, plusProche : Sommet

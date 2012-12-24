@@ -51,7 +51,7 @@ FONCTION dijkstra(G : Graphe; source : Sommet) : Graphe
 		retourner chemins
 	FIN
 
-PROCÉDURE _initialiser(G(S,A), chemin(S', A') : Graphe; source : Sommet; candidats : Liste<Sommet>; distance_a_source : Map<Sommet, Entier>; meilleur_predecesseur : Map<Sommet, Sommet>)
+PROCÉDURE _initialiser(DON G(S,A), DON-RES chemin(S', A') : Graphe; DON source : Sommet; DON-RES candidats : Liste<Sommet>; DON-RES distance_a_source : Map<Sommet, Entier>; DON-RES meilleur_predecesseur : Map<Sommet, Sommet>)
 	VARIABLES
 		s : Sommet
 		i, distance : Entier
@@ -79,7 +79,7 @@ PROCÉDURE _initialiser(G(S,A), chemin(S', A') : Graphe; source : Sommet; candid
 		FINPOUR
 	FIN
 
-FONCTION _plusProche(candidats : Liste<Sommet>; distance_a_source : Map<Sommet, Entier>) : Sommet
+FONCTION _plusProche(DON candidats : Liste<Sommet>; DON distance_a_source : Map<Sommet, Entier>) : Sommet
 	VARIABLES
 		s, plusProche : Sommet
 		i, nvlle_distance, d_plusProche : Entier
@@ -102,7 +102,7 @@ FONCTION _plusProche(candidats : Liste<Sommet>; distance_a_source : Map<Sommet, 
 		retourner plusProche
 	FIN
 
-PROCÉDURE _correction_des_tables(G, chemins : Graphe; plusProche : Sommet; distance_a_source : Map<Sommet, Entier>; meilleur_predecesseur : Map<Sommet, Sommet>)
+PROCÉDURE _correction_des_tables(DON G, DON chemins : Graphe; DON plusProche : Sommet; DON-RES distance_a_source : Map<Sommet, Entier>; DON-RES meilleur_predecesseur : Map<Sommet, Sommet>)
 	VARIABLES
 		successeurs : Set<Sommet>
 		succ : Sommet

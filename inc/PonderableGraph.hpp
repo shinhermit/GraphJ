@@ -29,6 +29,7 @@ public:
   // Nouvelles opérations
   void setCost(GraphTypes::node_id node1, GraphTypes::node_id node2, GraphTypes::Cost cost) throw(std::invalid_argument, std::logic_error);
   GraphTypes::Cost getCost(GraphTypes::node_id node1, GraphTypes::node_id node2) throw(std::invalid_argument, std::logic_error);
+  GraphTypes::Cost getCost(const Edge & edge) throw(std::invalid_argument, std::logic_error);
   GraphTypes::Cost cost() throw(std::logic_error);
 
 };

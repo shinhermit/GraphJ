@@ -1,0 +1,91 @@
+//L'algorithme de Bellman basé sur la relaxation des arcs
+//ne fonctionne pas lorsque le graphe contient des circuits.
+//Or, dès qu'un graphe est relativement dense, il y a de fortes
+//chances qu'il contienne des circuits. Nous retournons donc à
+//la version original de l'algorithme, qui, à l'instar de celui de
+//Dijkstra, ne fournit pas le bon résultat lorsqu'il y a des circuits absorbants.
+//pour savoir si on a rencontré des circuits absorbants, nous
+//utilisons le "drapeau" booléen #absorbant# (en pratique, champs de la classe)
+
+FONCTION bellman_alpha( DON G(S,A) : Graphe; DON source : Sommet; DON-RES absorbant : Booléen  ) : Graphe
+	VARIABLES
+		distance_a_source : Map<Sommet, Entier>
+		meilleur_prédécesseur : Map<Sommet, Sommet>
+		i : Entier
+		G'(S',A') : Graphe
+	DÉBUT
+		_initialiser(G, G', source, distance_a_source)
+		
+		POUR i := 1 à taille(S) FAIRE
+			_correction_des_tables(G, distance_a_source, meilleur_prédécesseur)
+		FINPOUR
+		
+		absorbant := _construire_G'(G, G', distance_a_source, meilleur_prédécesseur)
+
+		retourner G'
+	FIN
+
+PROCÉDURE _initialiser(DON G(S,A), DON-RES G'(S',A') : Graphe; DON source : Sommet; DON-RES distance_a_source : Map<Sommet, Entier>)
+	VARIABLES
+		i : Entier
+		s : Sommet
+		INFINI := 30000
+	DÉBUT
+		distance_a_source[source] = 0
+		ajouter_sommet(G', source)
+		POUR i := 1 à taille(S) FAIRE
+			s = ieme(S,i)
+			SI
+				s != source
+			ALORS
+				distance_a_source[s] = INFINI
+			FINSI
+		FINPOUR
+	FIN
+
+PROCÉDURE _correction_des_tables(DON G(S,A) : Graphe; DON-RES distance_a_source : Map<Sommet, Entier>; DON-RES meilleur_prédécesseur : Map<Sommet, Sommet>)
+	VARIABLES
+		a : Arc
+		u,v : Sommet
+		i, distance, nvlle_distance : Entier
+	DÉBUT
+		POUR i := 1 à taille(A) FAIRE
+			a = ieme(A,i)
+			u = source(a)
+			v = target(a)
+			distance = distance_a_source[v]
+			nvlle_distance = distance_a_source(u) + coût(G, a)
+			SI
+				nvlle_distance < distance
+			ALORS
+				distance_a_source[v] = nvlle_distance
+				meilleur_prédécesseur[v] = u
+			FINSI
+		FINPOUR
+	FIN
+
+FONCTION _construire_G'(DON G(S,A), DON-RES G'(S',A') : Graphe; DON distance_a_source : Map<Sommet,Entier>; DON meilleur_prédécesseur : Map<Sommet, Entier>) : Booléen
+	VARIABLES
+		absorbant : Booléen
+		a : Arc
+		u,v : Sommet
+		i : Entier
+	DÉBUT
+		absorbant := FAUX
+		
+		POUR i := 1 À taille(A) FAIRE
+			a := ieme(A,i)
+			u = source(a)
+			v = target(a)
+			SI
+				distance_a_source[v] > distance_a_source[u] + coût(G, a)
+			ALORS
+				absorbant := VRAI
+			FINSI
+			ajouter_arc(G', a)
+			i := i+1
+		FINPOUR
+		
+		retourner absorbant
+	FIN
+

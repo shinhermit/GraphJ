@@ -6,7 +6,8 @@
 int main()
 {
   Graph<> graph(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
-  Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
+  Graph<> paths_greedy(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
+  Graph<> paths_dynamic(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
   PathFinding<> lookup;
   Exporter<> exporte;
 
@@ -27,24 +28,29 @@ int main()
   graph.add_edge(6,2, 1);
   graph.add_edge(6,5, 1);
 
-  paths = lookup.bellman(graph, 1);
+  paths_greedy = lookup.bellman(graph, 1, GraphTypes::GREEDY);
+  paths_dynamic = lookup.bellman(graph, 1, GraphTypes::DYNAMIC);
 
   //Exports
   exporte.toGraphviz(graph, "test_bellman.graph");
-  exporte.toGraphviz(paths, "paths_bellman.graph");
+  exporte.toGraphviz(paths_greedy, "greedy_bellman.graph");
+  exporte.toGraphviz(paths_dynamic, "dynamic_bellman.graph");
 
   //compilation dot
   system("dot -Tpng test_bellman.graph -o test_bellman.png");
-  system("dot -Tpng paths_bellman.graph -o paths_bellman.png");
+  system("dot -Tpng greedy_bellman.graph -o greedy_bellman.png");
+  system("dot -Tpng dynamic_bellman.graph -o dynamic_bellman.png");
 
   //affichages
   std::cout << "Graph a été exporté dans le fichier test_bellman.graph" << std::endl;
-  std::cout << "Arbre des chemins a été exporté dans le fichier paths_bellman.graph" << std::endl;
+  std::cout << "Bellman Glouton: Arbre des chemins a été exporté dans le fichier greedy_bellman.graph" << std::endl;
+  std::cout << "Bellman Dynamique: Arbre des chemins a été exporté dans le fichier dynamic_bellman.graph" << std::endl;
 
   std::cout << std::endl << "dot -Tpng test_bellman.graph -o test_bellman.png" << std::endl;
   std::cout << "Graph a été compilé dans le fichier test_bellman.png" << std::endl;
   std::cout << std::endl << "dot -Tpng paths_bellman.graph -o paths_bellman.png" << std::endl;
-  std::cout << "Arbre des chemins a été compilé dans le fichier paths_bellman.png" << std::endl;
+  std::cout << "Bellman glouton: arbre des chemins a été compilé dans le fichier greedy_bellman.png" << std::endl;
+  std::cout << "Bellman dynamique: arbre des chemins a été compilé dans le fichier dynamic_bellman.png" << std::endl;
 
   return 0;
 }

@@ -1,4 +1,28 @@
 template <typename Type>
+PathFinding<Type>::PathFinding():_validity(GraphTypes::UNDEFINED){}
+
+template <typename Type>
+GraphTypes::ComputingValidity PathFinding<Type>::_check_computing_validity(Graph<Type> & graph, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source)
+{
+  typename Graph<Type>::EdgeIterator it;
+  Edge edge(0,0);
+  GraphTypes::node_id pred, succ;
+  GraphTypes::ComputingValidity validity;
+
+  validity = GraphTypes::VALID;
+  for(it = graph.edges_begin(); it != graph.edges_end(); it++){
+    edge = *it;
+    pred = edge.source();
+    succ = edge.target();
+    if( distance_from_source[succ] > distance_from_source[pred] + graph.getCost(pred,succ) ){
+      validity = GraphTypes::INVALID;
+    }
+  }
+
+  return validity;
+}
+
+template <typename Type>
 void PathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::list<GraphTypes::node_id> & candidates, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor)
 {
   typename Graph<Type>::NodeIterator it;
@@ -110,7 +134,27 @@ Graph<> PathFinding<Type>::dijkstra(Graph<Type> & graph, GraphTypes::node_id sou
     }
   }
 
+  _validity = _check_computing_validity(graph, distance_from_source);
+
   return paths;
+}
+
+template <typename Type>
+void PathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::list<GraphTypes::node_id> & candidates, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source)
+{
+  typename Graph<Type>::NodeIterator it;
+
+  distance_from_source[sourceNode] = 0;
+  paths.add_node(sourceNode);
+
+  for(it = graph.nodes_begin(); it != graph.nodes_end(); it++){
+
+    if(*it != sourceNode){
+
+      distance_from_source[*it] = GraphTypes::INFINITY;
+      candidates.push_back(*it);
+    }
+  }
 }
 
 template <typename Type>
@@ -199,29 +243,16 @@ void PathFinding<Type>::_remove_nodes(std::list<GraphTypes::node_id> & candidate
 }
 
 template <typename Type>
-Graph<> PathFinding<Type>::bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode)
+Graph<> PathFinding<Type>::_greedy_bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode)
 {
   Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
-  typename Graph<Type>::NodeIterator it;
   std::map<GraphTypes::node_id, GraphTypes::Cost> distance_from_source;
   std::map<GraphTypes::node_id, GraphTypes::node_id> best_predecessor;
   std::list<GraphTypes::node_id> candidates;
   std::deque<GraphTypes::node_id> waiting_for_insertion;
 
-  //initialisations
-  distance_from_source[sourceNode] = 0;
-  paths.add_node(sourceNode);
+  _init(graph, paths, sourceNode, candidates, distance_from_source);
 
-  for(it = graph.nodes_begin(); it != graph.nodes_end(); it++){
-
-    if(*it != sourceNode){
-
-      distance_from_source[*it] = GraphTypes::INFINITY;
-      candidates.push_back(*it);
-    }
-  }
-
-  //début de l'algorithme
   waiting_for_insertion = _relaxation(graph, paths, candidates);
   while( waiting_for_insertion.size() > 0 ){
     _update_tables(graph, paths, waiting_for_insertion, distance_from_source, best_predecessor);
@@ -230,20 +261,150 @@ Graph<> PathFinding<Type>::bellman(Graph<Type> & graph, GraphTypes::node_id sour
     waiting_for_insertion = _relaxation(graph, paths, candidates);
   }
 
+  _validity = _check_computing_validity(graph, distance_from_source);
+
   return paths;
 }
 
 template <typename Type>
-Graph<> PathFinding<Type>::between(Graph<Type> & graph, GraphTypes::node_id source, GraphTypes::node_id target, GraphTypes::SearchAlgorithm algo)
+void PathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source)
 {
-  Traverse<> traverse;
-  PathBuilderVisitor<> pathBuilder;
-  std::set<GraphTypes::node_id> marker;
+  typename Graph<Type>::NodeIterator node;
+
+  distance_from_source[sourceNode] = 0;
+  paths.add_node(sourceNode);
+
+  for(node = graph.nodes_begin(); node != graph.nodes_end(); node++){
+
+    if(*node != sourceNode){
+
+      distance_from_source[*node] = GraphTypes::INFINITY;
+    }
+  }
+}
+
+template <typename Type>
+void PathFinding<Type>::_update_tables(Graph<Type> & graph, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor)
+{
+  typename Graph<Type>::EdgeIterator it;
+  Edge edge(0,0);
+  GraphTypes::node_id pred, succ;
+  GraphTypes::Cost distance, new_distance;
+
+  for(it = graph.edges_begin(); it != graph.edges_end(); it++){
+    edge = *it;
+    pred = edge.source();
+    succ = edge.target();
+    distance = distance_from_source[succ];
+    new_distance = distance_from_source[pred] + graph.getCost(pred,succ);
+
+    if(new_distance < distance){
+      distance_from_source[succ] = new_distance;
+      best_predecessor[succ] = pred;
+    }
+
+  }
+}
+
+template <typename Type>
+void PathFinding<Type>::_build_paths_graph(Graph<Type> & graph, Graph<> & paths, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor)
+{
+  std::map<GraphTypes::node_id, GraphTypes::node_id>::iterator it;
+  GraphTypes::node_id pred, succ;
+
+  for(it = best_predecessor.begin(); it != best_predecessor.end(); it++){
+    succ = it->first;
+    pred = it->second;
+    paths.add_edge( pred, succ, graph.getCost(pred, succ) );
+  }
+}
+
+template <typename Type>
+Graph<> PathFinding<Type>::_dynamic_bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode)
+{
   Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
+  std::map<GraphTypes::node_id, GraphTypes::Cost> distance_from_source;
+  std::map<GraphTypes::node_id, GraphTypes::node_id> best_predecessor;
+  std::pair<Graph<Type>, bool> result;
+  int i, size;
 
-  paths = (algo == GraphTypes::DIJKSTRA) ? dijkstra(graph, source) : bellman(graph, source);
+  _init(graph, paths, sourceNode, distance_from_source);
 
-  traverse.reverse_breadth_once(paths, target, pathBuilder, marker);
+  size = graph.nodes_size();
+  for(i=0; i < size; i++){
+    _update_tables(graph, distance_from_source, best_predecessor);
+  }
 
-  return pathBuilder.path();
+  _build_paths_graph(graph, paths, distance_from_source, best_predecessor);
+
+  _validity = _check_computing_validity(graph, distance_from_source);
+
+  return paths;
+}
+
+template <typename Type>
+Graph<> PathFinding<Type>::bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode, GraphTypes::AlgorithmicClass algoClass)
+{
+  if(algoClass == GraphTypes::DYNAMIC){
+    return _dynamic_bellman(graph, sourceNode);
+  }
+  else{
+    return _greedy_bellman(graph, sourceNode);
+  }
+}
+
+template <typename Type>
+std::list<GraphTypes::Path> PathFinding<Type>::paths_to(Graph<> & allPaths, GraphTypes::node_id target) throw(std::logic_error)
+{
+  std::list<GraphTypes::Path> paths, until_pred;
+  std::set<GraphTypes::node_id> predecessors;
+  std::set<GraphTypes::node_id>::iterator pred;
+  std::list<GraphTypes::Path>::iterator onePath;
+
+  if( !allPaths.is_directed() ){
+    throw std::logic_error("Unsafe usage of XPathFinding<Type>::paths_to(Graph<>&, GraphTypes::node_id) with an undirected graph. Maybe you should convert the original graph before.");
+  }
+
+  predecessors = allPaths.predecessors(target);
+  if( predecessors.size() > 0 ){
+
+    for(pred = predecessors.begin(); pred != predecessors.end(); pred++){
+      until_pred = paths_to(allPaths, *pred);
+      paths.insert(paths.begin(), until_pred.begin(), until_pred.end() );
+    }
+  }
+
+  if( paths.size() > 0 ){
+
+    for(onePath = paths.begin(); onePath != paths.end(); onePath++){
+      onePath->push_back(target);
+    }
+  }
+  else{
+
+    paths.push_back( std::list<GraphTypes::node_id>() );
+    onePath = paths.begin();
+    onePath->push_back(target);
+  }
+
+  return paths;
+}
+
+template <typename Type>
+std::list<GraphTypes::Path> PathFinding<Type>::between(Graph<Type> & graph, GraphTypes::node_id source, GraphTypes::node_id target, GraphTypes::SearchAlgorithm algo) throw(std::logic_error)
+{
+  std::list<GraphTypes::Path> to_target;
+  Graph<> allPaths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
+
+  allPaths = (algo == GraphTypes::DIJKSTRA) ? dijkstra(graph, source) : bellman(graph, source);
+
+  to_target = paths_to(allPaths, target);
+
+  return to_target;
+}
+
+template <typename Type>
+GraphTypes::ComputingValidity PathFinding<Type>::validity()const
+{
+  return _validity;
 }

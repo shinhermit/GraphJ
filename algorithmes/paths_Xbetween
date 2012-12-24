@@ -17,7 +17,7 @@ ATTENTION: on suppose que le graphe "chemins" passé à la fonction a une racine
 
 RENOMMER Liste<Sommet> EN Chemin
 
-FONCTION chemin_entre(G : Graphe; source, cible : Sommet; algo_dijkstra : Booléen) : Liste<Chemin>
+FONCTION chemin_entre(DON G : Graphe; DON source, DON cible : Sommet; DON algo_dijkstra : Booléen) : Liste<Chemin>
 	VARIABLES
 		lesChemins : Liste<Chemin>
 		chemins : Graphe
@@ -28,7 +28,7 @@ FONCTION chemin_entre(G : Graphe; source, cible : Sommet; algo_dijkstra : Boolé
 		retourner lesChemins
 	FIN
 
-FONCTION chemins_jusqua(chemins : Graphe; cible : Sommet) : Liste<Chemin>
+FONCTION chemins_jusqua(DON chemins : Graphe; DON cible : Sommet) : Liste<Chemin>
 	VARIABLES
 		i : Entier
 		prédécesseurs : Liste<Sommet>
@@ -64,7 +64,7 @@ FONCTION chemins_jusqua(chemins : Graphe; cible : Sommet) : Liste<Chemin>
 		retourner lesChemins
 	FIN
 
-PROCÉDURE _ajouter_tous(lesChemins, jusqua_pred : Liste<Chemin>)
+PROCÉDURE _ajouter_tous(DON-RES lesChemins, DON jusqua_pred : Liste<Chemin>)
 	VARIABLES
 		i : Entier
 		unChemin : Chemin
