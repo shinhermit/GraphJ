@@ -1,4 +1,28 @@
 template <typename Type>
+XPathFinding<Type>::XPathFinding():_validity(GraphTypes::UNDEFINED){}
+
+template <typename Type>
+GraphTypes::ComputingValidity XPathFinding<Type>::_check_computing_validity(Graph<Type> & graph, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source)
+{
+  typename Graph<Type>::EdgeIterator it;
+  Edge edge(0,0);
+  GraphTypes::node_id pred, succ;
+  GraphTypes::ComputingValidity validity;
+
+  validity = GraphTypes::VALID;
+  for(it = graph.edges_begin(); it != graph.edges_end(); it++){
+    edge = *it;
+    pred = edge.source();
+    succ = edge.target();
+    if( distance_from_source[succ] > distance_from_source[pred] + graph.getCost(pred,succ) ){
+      validity = GraphTypes::INVALID;
+    }
+  }
+
+  return validity;
+}
+
+template <typename Type>
 void XPathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::list<GraphTypes::node_id> & candidates, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors)
 {
   typename Graph<Type>::NodeIterator it;
@@ -262,7 +286,7 @@ void XPathFinding<Type>::_remove_nodes(std::list<GraphTypes::node_id> & candidat
 }
 
 template <typename Type>
-Graph<> XPathFinding<Type>::Xbellman(Graph<Type> & graph, GraphTypes::node_id sourceNode)
+Graph<> XPathFinding<Type>::_greedy_bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode)
 {
   Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
   std::map<GraphTypes::node_id, GraphTypes::Cost> distance_from_source;
@@ -281,6 +305,105 @@ Graph<> XPathFinding<Type>::Xbellman(Graph<Type> & graph, GraphTypes::node_id so
   }
 
   return paths;
+}
+
+template <typename Type>
+void XPathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source)
+{
+  typename Graph<Type>::NodeIterator node;
+
+  distance_from_source[sourceNode] = 0;
+  paths.add_node(sourceNode);
+
+  for(node = graph.nodes_begin(); node != graph.nodes_end(); node++){
+
+    if(*node != sourceNode){
+
+      distance_from_source[*node] = GraphTypes::INFINITY;
+    }
+  }
+}
+
+template <typename Type>
+void XPathFinding<Type>::_update_tables(Graph<Type> & graph, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors)
+{
+  typename Graph<Type>::EdgeIterator it;
+  Edge edge(0,0);
+  GraphTypes::node_id pred, succ;
+  GraphTypes::Cost distance, new_distance;
+
+  for(it = graph.edges_begin(); it != graph.edges_end(); it++){
+    edge = *it;
+    pred = edge.source();
+    succ = edge.target();
+    GraphTypes::Cost & succ_distance = distance_from_source[succ];
+    std::list<GraphTypes::node_id> & succ_pred_list = best_predecessors[succ];
+
+    distance = succ_distance;
+    new_distance = distance_from_source[pred] + graph.getCost(pred,succ);
+
+    if(new_distance < distance){
+      succ_distance = new_distance;
+      succ_pred_list.clear();
+      succ_pred_list.push_back(pred);
+    }
+    else if(new_distance == distance){
+      succ_pred_list.push_back(pred);
+    }
+
+  }
+}
+
+template <typename Type>
+void XPathFinding<Type>::_build_paths_graph(Graph<Type> & graph, Graph<> & paths, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors)
+{
+  std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> >::iterator it;
+  GraphTypes::node_id succ;
+  std::list<GraphTypes::node_id>::iterator pred;
+
+  for(it = best_predecessors.begin(); it != best_predecessors.end(); it++){
+    succ = it->first;
+    std::list<GraphTypes::node_id> & pred_list = it->second;
+
+    for(pred = pred_list.begin(); pred != pred_list.end(); pred++){
+      paths.add_edge( *pred, succ, graph.getCost(*pred, succ) );
+    }
+
+  }
+}
+
+template <typename Type>
+Graph<> XPathFinding<Type>::_dynamic_bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode)
+{
+  Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
+  std::map<GraphTypes::node_id, GraphTypes::Cost> distance_from_source;
+  std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > best_predecessors;
+  std::pair<Graph<Type>, bool> result;
+  int i, size;
+
+  _init(graph, paths, sourceNode, distance_from_source);
+
+  size = graph.nodes_size();
+  for(i=0; i < size; i++){
+    _update_tables(graph, distance_from_source, best_predecessors);
+  }
+
+  _build_paths_graph(graph, paths, distance_from_source, best_predecessors);
+
+  _validity = _check_computing_validity(graph, distance_from_source);
+
+  return paths;
+}
+
+template <typename Type>
+Graph<> XPathFinding<Type>::Xbellman(Graph<Type> & graph, GraphTypes::node_id sourceNode, GraphTypes::AlgorithmicClass algoClass)
+{
+  if(algoClass == GraphTypes::DYNAMIC){
+    return _dynamic_bellman(graph, sourceNode);
+  }
+  else{
+    return _greedy_bellman(graph, sourceNode);
+  }
 }
 
 template <typename Type>

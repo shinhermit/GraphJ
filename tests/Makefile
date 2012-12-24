@@ -38,6 +38,9 @@ test_Xdijkstra:
 test_Xbellman:
 	$(cmd)
 
+test_weights_transformations:
+	$(cmd)
+
 reseau_routier:
 	$(cmd)
 

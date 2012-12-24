@@ -1,4 +1,3 @@
-tester bellman
-tester weightsTransformer, prover involution
+tester weightsTransformer, prouver involution
 tester Xbetween
 

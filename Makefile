@@ -71,6 +71,9 @@ test_Xdijkstra: all_classes
 test_Xbellman: all_classes
 	$(cmd_exe)
 
+test_weights_transformations: all_classes
+	$(cmd_exe)
+
 reseau_routier: all_classes
 	$(cmd_exe)
 

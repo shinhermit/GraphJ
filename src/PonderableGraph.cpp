@@ -34,8 +34,6 @@ void PonderableGraph::remove_node(GraphTypes::node_id id){
 void PonderableGraph::add_edge(GraphTypes::node_id id1, GraphTypes::node_id id2,GraphTypes::Cost cost){
   std::map<Edge,GraphTypes::Cost>::iterator it;
 
-  if(cost < 0) throw std::invalid_argument("PonderableGraph::add_edge(node_id, node_id, int): argument 3 of type GraphTypes::Cost may not be negative");
-
   DirectableGraph::add_edge(id1, id2);
   if(_edgeState == GraphTypes::WEIGHTED){
     _weights.insert( std::pair<Edge,GraphTypes::Cost>(Edge(id1, id2), cost) );
@@ -71,9 +69,6 @@ void PonderableGraph::setCost(GraphTypes::node_id node1, GraphTypes::node_id nod
   }
   else if(_edgeState == GraphTypes::UNWEIGHTED){
     throw std::logic_error("PonderableGraph::setCost(node_id, node_id,Cost): the graph is an unweighted Graph");
-  }
-  else if(cost < 0){
-    throw std::invalid_argument("PonderableGraph::setCost(node_id, node_id, int): argument 3 of type Cost may not be negative");
   }
   else{
     it = _weights.find( Edge(node1, node2) );

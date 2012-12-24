@@ -6,16 +6,14 @@
 template<typename Type=GraphTypes::Default>
 class WeightsTransformer
 {
-private:
-  void _invert_weights_signs(Graph<Type> & graph);
-
 public:
-  GraphTypes::Cost get_zero_offset(const Graph<Type> & graph);
-  Graph<Type> translate_weights(const Graph<Type> & graph, const GraphTypes::Cost & offset);
-  Graph<Type> translate_weights(const Graph<Type> & graph);
-  Graph<Type> reverse_weights_order(const Graph<Type> & graph);
+  Graph<Type> invert_weights_signs(Graph<Type> & graph);
+  GraphTypes::Cost get_zero_offset(Graph<Type> & graph);
+  Graph<Type> translate_weights(Graph<Type> & graph, const GraphTypes::Cost & offset);
+  Graph<Type> translate_weights(Graph<Type> & graph);
+  Graph<Type> reverse_weights_order(Graph<Type> & graph);
   template<typename V>
-  Graph<Type> update_subgraph(const Graph<Type> & graph, const Graph<V> & subgraph);
+  Graph<Type> update_subgraph(Graph<Type> & graph, Graph<V> & subgraph);
 };
 
 #include "WeightsTransformer.cpp"
