@@ -10,13 +10,17 @@ GraphTypes::ComputingValidity PathFinding<Type>::_check_computing_validity(Graph
   GraphTypes::ComputingValidity validity;
 
   validity = GraphTypes::VALID;
-  for(it = graph.edges_begin(); it != graph.edges_end(); it++){
+  it = graph.edges_begin();
+  while( it != graph.edges_end() && validity == GraphTypes::VALID ){
     edge = *it;
     pred = edge.source();
     succ = edge.target();
+
     if( distance_from_source[succ] > distance_from_source[pred] + graph.getCost(pred,succ) ){
       validity = GraphTypes::INVALID;
     }
+
+    it++;
   }
 
   return validity;

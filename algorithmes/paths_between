@@ -52,7 +52,6 @@ FONCTION chemins_jusqua(DON chemins : Graphe; DON cible : Sommet) : Liste<Chemin
 			taille(lesChemins) > 0
 		ALORS
 			POUR i:=1 à taille(lesChemins) FAIRE
-				//n'est pas rigoureusement correct: on considèrera que ieme retourne une référence
 				unChemin = ieme(lesChemins, i)
 				insérer(unChemin, cible, taille(unChemin)+1)
 			FINPOUR

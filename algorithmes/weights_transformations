@@ -12,18 +12,16 @@
 //Pour la fonction inverser_ordre(), nous avons fait mieux qu'une bijection:
 // nous définissons une involution :D :D :p
 
-FONCTION décaler_coûts( DON G(S,A): Graphe, DON offset : Entier ) : Graphe
+PROCÉDURE _inverser_signes_des_poids( DON-RES G(S,A) : Graphe )
 	VARIABLES
 		i : Entier
 		a : Arc
 	DÉBUT
 		POUR i := 1 à taille(A) FAIRE
-			a := ieme(A, i)
-			modifier_coût(G, a, coût(a) + offset)
+			a = ieme(A,i)
+			modifier_coût( G, a, 0-coût(G,a) )
 		FINPOUR
-		
-		retourner G
-	FIN	
+	FIN
 
 FONCTION offset( DON G(S,A) : Graphe ) : Entier
 	VARIABLES
@@ -43,16 +41,18 @@ FONCTION offset( DON G(S,A) : Graphe ) : Entier
 		retourner 0-min
 	FIN
 
-PROCÉDURE _inverser_signes_des_poids( DON-RES G(S,A) : Graphe )
+FONCTION décaler_coûts( DON G(S,A): Graphe, DON offset : Entier ) : Graphe
 	VARIABLES
 		i : Entier
 		a : Arc
 	DÉBUT
 		POUR i := 1 à taille(A) FAIRE
-			a = ieme(A,i)
-			modifier_coût( G, a, coût(G,a)*-1 )
+			a := ieme(A, i)
+			modifier_coût(G, a, coût(G, a) + offset)
 		FINPOUR
-	FIN
+		
+		retourner G
+	FIN	
 
 FONCTION inverser_ordre( DON G(S,A) : Graphe) : Graphe
 	VARIABLES
@@ -60,11 +60,24 @@ FONCTION inverser_ordre( DON G(S,A) : Graphe) : Graphe
 		a : Arc
 		G'(S',A') : Graphe
 	DÉBUT
-		G' := G
 		offset_initial := offset(G)
-		_inverser_signes_des_poids(G')
+		G' = inverser_signes_des_poids(G)
 		offset = offset(G')
 		G' = décaler_coûts(G', offset - offset_initial)
 		retourner G'
+	FIN
+
+FONCTION mise_a_jour_sousGraphe(DON graph(S,A), DON sousGraph(S',A') : Graphe) : Graphe
+	VARIABLES
+		a : Arc
+		i : Entier
+
+	DÉBUT
+		POUR i := 1 à taille(A') FAIRE
+			a = ieme(A', i);
+			modifier_coût( sousGraph, a, coût(G, a) );
+		FINPOUR
+
+		retourner sousGraph
 	FIN
 

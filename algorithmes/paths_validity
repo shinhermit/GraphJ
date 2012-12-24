@@ -1,0 +1,30 @@
+//La fonction définie ci-dessous permet de vérifier
+//si le calcul effectué par un des algorithmes de recherche
+//de chemins optimaux est valide, en se basant sur la table
+//des distances obtenue.
+
+FONCTION calcul_valide?( DON G(S,A) : Graphe; DON distance_a_source : Map<Sommet,Entier> ) : Booléen
+	VARIABLES
+		valide : Booléen
+		a : Arc
+		pred, succ : Sommet
+		i : Entier
+	DÉBUT
+		valide := VRAI
+		
+		i := 1
+		TANTQUE i <= (A) ET valide FAIRE
+			a := ieme(A,i)
+			pred := source(a)
+			succ := target(a)
+			SI
+				distance_a_source[succ] > distance_a_source[pred] + coût(G, a)
+			ALORS
+				valide := FAUX
+			FINSI
+			i := i+1
+		FINTANTQUE
+		
+		retourner valide
+	FIN
+

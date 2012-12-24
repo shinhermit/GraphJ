@@ -7,30 +7,34 @@
 //pour savoir si on a rencontré des circuits absorbants, nous
 //utilisons le "drapeau" booléen #absorbant# (en pratique, champs de la classe)
 
-FONCTION bellman_alpha( DON G(S,A) : Graphe; DON source : Sommet; DON-RES absorbant : Booléen  ) : Graphe
+FONCTION bellman_dynamique( DON G(S,A) : Graphe; DON source : Sommet; minimisation : Booléen ) : Graphe
 	VARIABLES
 		distance_a_source : Map<Sommet, Entier>
 		meilleur_prédécesseur : Map<Sommet, Sommet>
 		i : Entier
 		G'(S',A') : Graphe
 	DÉBUT
-		_initialiser(G, G', source, distance_a_source)
+		_initialiser(G, G', source, distance_a_source, minimisation)
 		
 		POUR i := 1 à taille(S) FAIRE
-			_correction_des_tables(G, distance_a_source, meilleur_prédécesseur)
+			_correction_des_tables(G, distance_a_source, meilleur_prédécesseur, minimisation)
 		FINPOUR
 		
-		absorbant := _construire_G'(G, G', distance_a_source, meilleur_prédécesseur)
+		_construire_G'(G, G', distance_a_source, meilleur_prédécesseur)
 
 		retourner G'
 	FIN
 
-PROCÉDURE _initialiser(DON G(S,A), DON-RES G'(S',A') : Graphe; DON source : Sommet; DON-RES distance_a_source : Map<Sommet, Entier>)
+PROCÉDURE _initialiser(DON G(S,A), DON-RES G'(S',A') : Graphe; DON source : Sommet; DON-RES distance_a_source : Map<Sommet, Entier>; minimisation : Booléen)
 	VARIABLES
-		i : Entier
+		i, infini : Entier
 		s : Sommet
-		INFINI := 30000
+		Moins_infini := -30000
+		Plus_infini := 30000
+
 	DÉBUT
+		infini := SI minimisation ALORS Plus_infini SINON Moins_infini
+		
 		distance_a_source[source] = 0
 		ajouter_sommet(G', source)
 		POUR i := 1 à taille(S) FAIRE
@@ -38,16 +42,18 @@ PROCÉDURE _initialiser(DON G(S,A), DON-RES G'(S',A') : Graphe; DON source : Som
 			SI
 				s != source
 			ALORS
-				distance_a_source[s] = INFINI
+				distance_a_source[s] = infini
 			FINSI
 		FINPOUR
 	FIN
 
-PROCÉDURE _correction_des_tables(DON G(S,A) : Graphe; DON-RES distance_a_source : Map<Sommet, Entier>; DON-RES meilleur_prédécesseur : Map<Sommet, Sommet>)
+PROCÉDURE _correction_des_tables(DON G(S,A) : Graphe; DON-RES distance_a_source : Map<Sommet, Entier>; DON-RES meilleur_prédécesseur : Map<Sommet, Sommet>; minimisation : Booléen)
 	VARIABLES
 		a : Arc
 		u,v : Sommet
 		i, distance, nvlle_distance : Entier
+		optimal : Booléen
+
 	DÉBUT
 		POUR i := 1 à taille(A) FAIRE
 			a = ieme(A,i)
@@ -55,8 +61,10 @@ PROCÉDURE _correction_des_tables(DON G(S,A) : Graphe; DON-RES distance_a_source
 			v = target(a)
 			distance = distance_a_source[v]
 			nvlle_distance = distance_a_source(u) + coût(G, a)
+			
+			optimal := SI minimisation ALORS (nvlle_distance < distance) SINON (nvlle_distance > distance)
 			SI
-				nvlle_distance < distance
+				optimal
 			ALORS
 				distance_a_source[v] = nvlle_distance
 				meilleur_prédécesseur[v] = u
@@ -64,28 +72,19 @@ PROCÉDURE _correction_des_tables(DON G(S,A) : Graphe; DON-RES distance_a_source
 		FINPOUR
 	FIN
 
-FONCTION _construire_G'(DON G(S,A), DON-RES G'(S',A') : Graphe; DON distance_a_source : Map<Sommet,Entier>; DON meilleur_prédécesseur : Map<Sommet, Entier>) : Booléen
+PROCÉDURE _construire_G'(DON G(S,A) : Graphe; DON distance_a_source : Map<Sommet,Entier>; DON meilleur_prédécesseur : Map<Sommet, Sommet>) : Booléen
 	VARIABLES
 		absorbant : Booléen
 		a : Arc
-		u,v : Sommet
+		pred, succ : Sommet
 		i : Entier
+
 	DÉBUT
-		absorbant := FAUX
-		
-		POUR i := 1 À taille(A) FAIRE
-			a := ieme(A,i)
-			u = source(a)
-			v = target(a)
-			SI
-				distance_a_source[v] > distance_a_source[u] + coût(G, a)
-			ALORS
-				absorbant := VRAI
-			FINSI
-			ajouter_arc(G', a)
-			i := i+1
+		POUR i := 1 À taille(meilleur_prédécesseur) FAIRE
+			pred = second( ieme(meilleur_prédécesseur, i) )
+			succ = premier( ieme(meilleur_prédécesseur, i) )
+			
+			ajouter_arc(G', pred, succ, coût(G, pred, succ) )
 		FINPOUR
-		
-		retourner absorbant
 	FIN
 

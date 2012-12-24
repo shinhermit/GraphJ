@@ -1,3 +1,4 @@
-tester weightsTransformer, prouver involution
+tester translation poids négatifs avec Dijkstra
+ajouter les vérifications de validité de calcul
 tester Xbetween
 

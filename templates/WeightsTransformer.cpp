@@ -75,10 +75,10 @@ template<typename Type>
 Graph<Type> WeightsTransformer<Type>::reverse_weights_order(Graph<Type> & graph)
 {
   GraphTypes::Cost initial_offset, offset;
-  Graph<Type> transformed = graph;
+  Graph<Type> transformed;
 
   initial_offset = get_zero_offset(graph);
-  transformed = invert_weights_signs(transformed);
+  transformed = invert_weights_signs(graph);
   offset = get_zero_offset(transformed);
   return translate_weights(transformed, offset - initial_offset);
 }
@@ -99,8 +99,8 @@ Graph<Type> WeightsTransformer<Type>::update_subgraph(Graph<Type> & graph, Graph
     edge = *it;
     pred = edge.source();
     succ = edge.target();
-    subgraph.setCost(pred,succ, graph.getCost(pred,succ));
+    updated.setCost(pred,succ, graph.getCost(pred,succ));
   }
 
-  return subgraph;
+  return updated;
 }

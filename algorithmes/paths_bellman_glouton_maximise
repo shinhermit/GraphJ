@@ -1,0 +1,143 @@
+//les algorithmes ci-dessous donnent des arbres (couvrants pour un graphe connexe),
+//ils ne fournissent donc pas les chemins équivalents (chemins optimaux de coûts égaux)
+//nous implémenterons une deuxième version qui fournira les chemins équivalents (donc pas
+// forcément des arbres)
+
+FONCTION bellman(DON G : Graphe (S,A); DON source : Sommet; minimisation : Booléen) : Graphe
+	VARIABLES
+		chemins : Graphe (S', A')
+		distance_a_source : Map<Sommet, Entier>
+		meilleur_prédécesseur : Map<Sommet, Sommet>
+		candidats : Liste<Sommet>
+		en_attente_d_ajout : File<Sommet>
+		i : Entier
+
+	DÉBUT
+		_initialiser(G, chemins, source, candidats, distance_a_source)
+		
+		en_attente_d_ajout := _relaxation(G, chemins, candidats)
+		TANTQUE taille(en_attente_d_ajout) > 0 FAIRE
+				_correction_des_tables(G, chemins, en_attente_d_ajout, distance_a_source, meilleur_prédécesseur)
+				_retirer_sommets(candidats, en_attente_d_ajout)
+				_inserer_sommets_en_attente(G, chemins, en_attente_d_ajout, meilleur_prédécesseur)
+				en_attente_d_ajout := _relaxation(G, chemins, candidats)
+		FINTANTQUE
+
+		retourner chemins
+	FIN
+
+PROCÉDURE _initialiser(DON G(S,A), DON-RES G'(S',A') : Graphe; DON source : Sommet; DON-RES candidats : Liste<Sommet>; DON-RES distance_a_source : Map<Sommet, Entier>; minimisation : Booléen)
+	VARIABLES
+		i, infini : Entier
+		s : Sommet
+		Moins_infini := -30000
+		Plus_infini := 30000
+
+	DÉBUT
+		infini := SI minimisation ALORS Plus_infini SINON Moins_infini
+		
+		distance_a_source[source] = 0
+		ajouter_sommet(chemins, source)
+		POUR i := 1 à taille(S) FAIRE
+			s = ieme(S,i)
+			SI
+				s != source
+			ALORS
+				distance_a_source[s] = infini
+				ajouter(candidats, s, taille(candidats)+1)
+			FINSI
+		FINPOUR
+	FIN
+
+FONCTION _relaxation(DON G, DON G' : Graphe; DON candidats : Liste<Sommet>) : File<Sommet>
+	VARIABLES
+		en_attente_d_ajout : File<Sommet>
+		prédécesseurs : Liste<Sommet>
+		s, pred : Sommet
+		i, j : Entier
+		relaxable : Booléen
+	DÉBUT
+		POUR i:=1 à taille(candidats) FAIRE
+			s := ieme(candidats, i)
+			prédécesseurs := prédécesseurs(G, s)
+			relaxable := VRAI
+			j:=0
+			TANTQUE j < taille(prédécesseurs) ET relaxable FAIRE
+				pred := ieme(prédécesseurs, j)
+				SI
+					NON est_sommet_de(G', pred)
+				ALORS
+					relaxable := FAUX
+				FINSI
+				j := j + 1
+			FINTANTQUE
+			SI
+				relaxable
+			ALORS
+				enfiler(en_attente_d_ajout, s)
+			FINSI
+		FINPOUR
+
+		retourner en_attente_d_ajout
+	FIN
+
+PROCÉDURE _correction_des_tables(DON G, DON chemins, DON en_attente_d_ajout, DON-RES distance_a_source, DON-RES meilleur_prédécesseur; minimisation : Booléen)
+	VARIABLE
+		prédecesseurs : Set<Sommets>
+		s, pred : Sommet
+		i, j, distance, nvlle_distance : Entier
+		optimal : Booléen
+
+	DÉBUT
+		POUR i:=1 à taille(en_attente_d_ajout) FAIRE
+			s := ième(en_attente_d_ajout)
+			prédécesseurs := prédécesseurs(G, s)
+
+			POUR j:=1 à taille(prédécesseurs) FAIRE
+				pred := ième(prédécesseur, i)
+				SI
+					 est_sommet_de(chemins, pred)
+				ALORS
+					distance := distance_a_source[s]
+					nvlle_distance := distance_a_source[pred] + coût(G, pred, s)
+					
+					optimal := SI minimisation ALORS (nvlle_distance < distance) SINON (nvlle_distance > distance)
+					SI
+						optimal
+					ALORS
+						distance_a_source[s] := new_distance
+						meilleur_prédécesseur[s] := pred
+					FINSI
+				FINSI
+			FINPOUR
+
+		FINPOUR
+	FIN	
+
+
+PROCÉDURE _inserer_sommets_en_attente(DON G, DON-RES chemins : Graphe; DON-RES en_attente_d_ajout : File<Sommet>; DON meilleur_prédécesseur : Map<Sommet, Sommet>)
+	VARIABLES
+		s, pred : Sommet
+
+	DÉBUT
+		TANTQUE taille(en_attente_d_ajout) > 0 FAIRE
+			s := premier(en_attente_d_ajout)
+			pred := meilleur_prédécesseur[s]
+			ajouter_arc(chemins, pred, s, coût(G,pred,s))
+			retirer(en_attente_d_ajout)
+		FINTANTQUE
+	FIN
+
+PROCÉDURE _retirer_sommets(DON-RES candidats : Liste<Sommet>; DON en_attente_d_ajout : File<Sommet>)
+	VARIABLES
+		s : Sommet
+		i : Entier
+
+	DÉBUT
+		POUR i := 1 à taille(en_attente_d_ajout) FAIRE
+			s := ième(en_attente_d_ajout)
+			retirer(candidats, s)
+		FINPOUR
+
+	FIN
+

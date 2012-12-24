@@ -29,6 +29,12 @@ test_coloring:
 test_dijkstra:
 	$(cmd)
 
+test_dijkstra_maximize:
+	$(cmd)
+
+test_dijkstra_negative:
+	$(cmd)
+
 test_bellman:
 	$(cmd)
 

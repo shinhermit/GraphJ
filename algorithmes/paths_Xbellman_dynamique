@@ -1,0 +1,88 @@
+//L'algorithme suivant est l'entension de bellman_dynamique
+//afin de retourner les chemins optimaux équivalents
+
+FONCTION Xbellman_dynamique( DON G(S,A) : Graphe; DON source : Sommet ) : Graphe
+	VARIABLES
+		distance_a_source : Map<Sommet, Entier>
+		meilleurs_prédécesseurs : Map<Sommet, Liste<Sommet> >
+		i : Entier
+		G'(S',A') : Graphe
+	DÉBUT
+		_initialiser(G, G', source, distance_a_source)
+		
+		POUR i := 1 à taille(S) FAIRE
+			_correction_des_tables(G, distance_a_source, meilleurs_prédécesseurs)
+		FINPOUR
+		
+		_construire_G'(G, G', distance_a_source, meilleurs_prédécesseurs)
+
+		retourner G'
+	FIN
+
+PROCÉDURE _initialiser(DON G(S,A), DON-RES G'(S',A') : Graphe; DON source : Sommet; DON-RES distance_a_source : Map<Sommet, Entier>)
+	VARIABLES
+		i : Entier
+		s : Sommet
+		INFINI := 30000
+	DÉBUT
+		distance_a_source[source] := 0
+		ajouter_sommet(G', source)
+		POUR i := 1 à taille(S) FAIRE
+			s = ieme(S,i)
+			SI
+				s != source
+			ALORS
+				distance_a_source[s] := INFINI
+			FINSI
+		FINPOUR
+	FIN
+
+PROCÉDURE _correction_des_tables(DON G(S,A) : Graphe; DON-RES distance_a_source : Map<Sommet, Entier>; DON-RES meilleurs_prédécesseurs : Map<Sommet, Liste<Sommet> >)
+	VARIABLES
+		a : Arc
+		pred, succ : Sommet
+		i, distance, nvlle_distance : Entier
+	DÉBUT
+		POUR i := 1 à taille(A) FAIRE
+			a := ieme(A,i)
+			pred := source(a)
+			succ := target(a)
+			
+			distance := distance_a_source[succ]
+			nvlle_distance := distance_a_source(pred) + coût(G, pred, succ)
+			
+			SI
+				nvlle_distance < distance
+			ALORS
+				distance_a_source[succ] := nvlle_distance
+				vider( meilleurs_prédécesseurs[succ] )
+				ajouter( meilleurs_prédécesseurs[succ], pred, 1 )
+			SINON
+				SI
+					nvlle_distance = distance
+				ALORS
+					ajouter( meilleurs_prédécesseurs[succ], pred, taille(meilleurs_prédécesseurs[succ])+1 )
+				FINSI
+			FINSI
+		FINPOUR
+	FIN
+
+PROCÉDURE _construire_G'(DON G(S,A) : Graphe; DON distance_a_source : Map<Sommet,Entier>; DON meilleurs_prédécesseurs : Map<Sommet, Lsite<Sommet>>) : Booléen
+	VARIABLES
+		absorbant : Booléen
+		a : Arc
+		preds : Liste<Sommet>
+		pred, succ : Sommet
+		i, j : Entier
+
+	DÉBUT
+		POUR i := 1 À taille(meilleurs_prédécesseurs) FAIRE
+			succ := premier( ieme(meilleur_prédécesseur, i) )
+			preds := second( ieme(meilleur_prédécesseur, i) )
+			POUR j := 1 à taille(preds) FAIRE
+				pred = ieme(preds, j)
+				ajouter_arc(G', pred, succ, coût(G, pred, succ) )
+			FINPOUR
+		FINPOUR
+	FIN
+

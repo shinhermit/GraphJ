@@ -62,6 +62,12 @@ test_coloring: all_classes
 test_dijkstra: all_classes
 	$(cmd_exe)
 
+test_dijkstra_maximize: all_classes
+	$(cmd_exe)
+
+test_dijkstra_negative: all_classes
+	$(cmd_exe)
+
 test_bellman: all_classes
 	$(cmd_exe)
 
