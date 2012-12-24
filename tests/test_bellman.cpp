@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include "PathFinding.hpp"
-#include "XPathFinding.hpp"
 #include "Exporter.hpp"
 
 int main()

@@ -28,7 +28,10 @@ public:
 
   enum ComputingValidity{UNDEFINED, VALID, INVALID};
 
-  static const int INFINITY;
+  enum OptimizationType{MAXIMIZE, MINIMIZE};
+
+  static const int POSITIVE_INFINITY;
+  static const int NEGATIVE_INFINITY;
 };
 
 #endif

@@ -45,7 +45,7 @@ void PathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, GraphTypes::
 	distance = graph.getCost(sourceNode, *it);
       }
       else{
-	distance = GraphTypes::INFINITY;
+	distance = GraphTypes::POSITIVE_INFINITY;
       }
 
       distance_from_source[*it] = distance;
@@ -125,7 +125,7 @@ Graph<> PathFinding<Type>::dijkstra(Graph<Type> & graph, GraphTypes::node_id sou
   while( paths.nodes_size() < graph.nodes_size() && !allInfinite ){
     closest = _closest(candidates, distance_from_source);
 
-    if(distance_from_source[closest] == GraphTypes::INFINITY){
+    if(distance_from_source[closest] == GraphTypes::POSITIVE_INFINITY){
       allInfinite = true;
     }
     else{
@@ -144,9 +144,12 @@ Graph<> PathFinding<Type>::dijkstra(Graph<Type> & graph, GraphTypes::node_id sou
 }
 
 template <typename Type>
-void PathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::list<GraphTypes::node_id> & candidates, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source)
+void PathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::list<GraphTypes::node_id> & candidates, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, GraphTypes::OptimizationType optimizationType)
 {
   typename Graph<Type>::NodeIterator it;
+  GraphTypes::Cost infinite;
+
+  infinite = (optimizationType == GraphTypes::MINIMIZE) ? GraphTypes::POSITIVE_INFINITY : GraphTypes::NEGATIVE_INFINITY;
 
   distance_from_source[sourceNode] = 0;
   paths.add_node(sourceNode);
@@ -155,7 +158,7 @@ void PathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, GraphTypes::
 
     if(*it != sourceNode){
 
-      distance_from_source[*it] = GraphTypes::INFINITY;
+      distance_from_source[*it] = infinite;
       candidates.push_back(*it);
     }
   }
@@ -195,12 +198,13 @@ std::deque<GraphTypes::node_id> PathFinding<Type>::_relaxation(Graph<Type> & gra
 }
 
 template <typename Type>
-void PathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, std::deque<GraphTypes::node_id> & waiting_for_insertion, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor)
+void PathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, std::deque<GraphTypes::node_id> & waiting_for_insertion, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor, GraphTypes::OptimizationType optimizationType)
 {
   std::set<GraphTypes::node_id> predecessors;
   std::set<GraphTypes::node_id>::iterator pred;
   std::deque<GraphTypes::node_id>::iterator s;
   GraphTypes::Cost new_distance;
+  bool optimal;
 
   for(s = waiting_for_insertion.begin(); s != waiting_for_insertion.end(); s++){
     predecessors = graph.predecessors(*s);
@@ -212,7 +216,9 @@ void PathFinding<Type>::_update_tables(Graph<Type> & graph, Graph<> & paths, std
       if( paths.has_node(*pred) ){
 
 	new_distance = distance_from_source[*pred] + graph.getCost(*pred, *s);
-	if(new_distance < s_distance){
+
+	optimal = (optimizationType == GraphTypes::MINIMIZE) ? (new_distance < s_distance) : (new_distance > s_distance);
+	if(optimal){
 
 	  s_distance = new_distance;
 	  s_best_pred = *pred;
@@ -247,7 +253,7 @@ void PathFinding<Type>::_remove_nodes(std::list<GraphTypes::node_id> & candidate
 }
 
 template <typename Type>
-Graph<> PathFinding<Type>::_greedy_bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode)
+Graph<> PathFinding<Type>::_greedy_bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode, GraphTypes::OptimizationType optimizationType)
 {
   Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
   std::map<GraphTypes::node_id, GraphTypes::Cost> distance_from_source;
@@ -255,11 +261,11 @@ Graph<> PathFinding<Type>::_greedy_bellman(Graph<Type> & graph, GraphTypes::node
   std::list<GraphTypes::node_id> candidates;
   std::deque<GraphTypes::node_id> waiting_for_insertion;
 
-  _init(graph, paths, sourceNode, candidates, distance_from_source);
+  _init(graph, paths, sourceNode, candidates, distance_from_source, optimizationType);
 
   waiting_for_insertion = _relaxation(graph, paths, candidates);
   while( waiting_for_insertion.size() > 0 ){
-    _update_tables(graph, paths, waiting_for_insertion, distance_from_source, best_predecessor);
+    _update_tables(graph, paths, waiting_for_insertion, distance_from_source, best_predecessor, optimizationType);
     _remove_nodes(candidates, waiting_for_insertion);
     _insert_waiting_nodes(graph, paths, waiting_for_insertion, best_predecessor);
     waiting_for_insertion = _relaxation(graph, paths, candidates);
@@ -271,9 +277,12 @@ Graph<> PathFinding<Type>::_greedy_bellman(Graph<Type> & graph, GraphTypes::node
 }
 
 template <typename Type>
-void PathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source)
+void PathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, GraphTypes::OptimizationType optimizationType)
 {
   typename Graph<Type>::NodeIterator node;
+  GraphTypes::Cost infinite;
+
+  infinite = (optimizationType == GraphTypes::MINIMIZE) ? GraphTypes::POSITIVE_INFINITY : GraphTypes::NEGATIVE_INFINITY;
 
   distance_from_source[sourceNode] = 0;
   paths.add_node(sourceNode);
@@ -282,18 +291,19 @@ void PathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, GraphTypes::
 
     if(*node != sourceNode){
 
-      distance_from_source[*node] = GraphTypes::INFINITY;
+      distance_from_source[*node] = infinite;
     }
   }
 }
 
 template <typename Type>
-void PathFinding<Type>::_update_tables(Graph<Type> & graph, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor)
+void PathFinding<Type>::_update_tables(Graph<Type> & graph, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor, GraphTypes::OptimizationType optimizationType)
 {
   typename Graph<Type>::EdgeIterator it;
   Edge edge(0,0);
   GraphTypes::node_id pred, succ;
   GraphTypes::Cost distance, new_distance;
+  bool optimal;
 
   for(it = graph.edges_begin(); it != graph.edges_end(); it++){
     edge = *it;
@@ -302,7 +312,8 @@ void PathFinding<Type>::_update_tables(Graph<Type> & graph, std::map<GraphTypes:
     distance = distance_from_source[succ];
     new_distance = distance_from_source[pred] + graph.getCost(pred,succ);
 
-    if(new_distance < distance){
+    optimal = (optimizationType == GraphTypes::MINIMIZE) ? (new_distance < distance) : (new_distance > distance);
+    if(optimal){
       distance_from_source[succ] = new_distance;
       best_predecessor[succ] = pred;
     }
@@ -324,7 +335,7 @@ void PathFinding<Type>::_build_paths_graph(Graph<Type> & graph, Graph<> & paths,
 }
 
 template <typename Type>
-Graph<> PathFinding<Type>::_dynamic_bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode)
+Graph<> PathFinding<Type>::_dynamic_bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode, GraphTypes::OptimizationType optimizationType)
 {
   Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
   std::map<GraphTypes::node_id, GraphTypes::Cost> distance_from_source;
@@ -332,11 +343,11 @@ Graph<> PathFinding<Type>::_dynamic_bellman(Graph<Type> & graph, GraphTypes::nod
   std::pair<Graph<Type>, bool> result;
   int i, size;
 
-  _init(graph, paths, sourceNode, distance_from_source);
+  _init(graph, paths, sourceNode, distance_from_source, optimizationType);
 
   size = graph.nodes_size();
   for(i=0; i < size; i++){
-    _update_tables(graph, distance_from_source, best_predecessor);
+    _update_tables(graph, distance_from_source, best_predecessor, optimizationType);
   }
 
   _build_paths_graph(graph, paths, distance_from_source, best_predecessor);
@@ -347,13 +358,13 @@ Graph<> PathFinding<Type>::_dynamic_bellman(Graph<Type> & graph, GraphTypes::nod
 }
 
 template <typename Type>
-Graph<> PathFinding<Type>::bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode, GraphTypes::AlgorithmicClass algoClass)
+Graph<> PathFinding<Type>::bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode, GraphTypes::AlgorithmicClass algoClass, GraphTypes::OptimizationType optimizationType)
 {
   if(algoClass == GraphTypes::DYNAMIC){
-    return _dynamic_bellman(graph, sourceNode);
+    return _dynamic_bellman(graph, sourceNode, optimizationType);
   }
   else{
-    return _greedy_bellman(graph, sourceNode);
+    return _greedy_bellman(graph, sourceNode, optimizationType);
   }
 }
 

@@ -28,33 +28,33 @@ private:
   void _update_tables(Graph<Type> & graph, Graph<> & paths, std::list<GraphTypes::node_id> allClosest, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors);
 
   //Xbellman: greedy
-  void _init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::list<GraphTypes::node_id> & candidates, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source);
+  void _init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::list<GraphTypes::node_id> & candidates, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, GraphTypes::OptimizationType optimizationType=GraphTypes::MINIMIZE);
 
   std::deque<GraphTypes::node_id> _relaxation(Graph<Type> & graph, Graph<> & paths, std::list<GraphTypes::node_id> & candidates);
 
-  void _update_tables(Graph<Type> & graph, Graph<> & paths, std::deque<GraphTypes::node_id> & waiting_for_insertion, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors);
+  void _update_tables(Graph<Type> & graph, Graph<> & paths, std::deque<GraphTypes::node_id> & waiting_for_insertion, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors, GraphTypes::OptimizationType optimizationType=GraphTypes::MINIMIZE);
 
   void _insert_waiting_nodes(Graph<Type> & graph, Graph<> & paths, std::deque<GraphTypes::node_id> & waiting_for_insertion, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors);
 
   void _remove_nodes(std::list<GraphTypes::node_id> & candidates, std::deque<GraphTypes::node_id> & waiting_for_insertion);
 
-  Graph<> _greedy_bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode);
+  Graph<> _greedy_bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode, GraphTypes::OptimizationType optimizationType=GraphTypes::MINIMIZE);
 
   //Xbellman: dynamic
-  void _init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source);
+  void _init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, GraphTypes::OptimizationType optimizationType=GraphTypes::MINIMIZE);
 
-  void _update_tables(Graph<Type> & graph, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors);
+  void _update_tables(Graph<Type> & graph, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors, GraphTypes::OptimizationType optimizationType=GraphTypes::MINIMIZE);
 
   void _build_paths_graph(Graph<Type> & graph, Graph<> & paths, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors);
 
-  Graph<> _dynamic_bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode);
+  Graph<> _dynamic_bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode, GraphTypes::OptimizationType optimizationType=GraphTypes::MINIMIZE);
 
 public:
   XPathFinding();
 
   Graph<> Xdijkstra(Graph<Type> & graph, GraphTypes::node_id sourceNode);
 
-  Graph<> Xbellman(Graph<Type> & graph, GraphTypes::node_id sourceNode, GraphTypes::AlgorithmicClass algoClass=GraphTypes::DYNAMIC);
+  Graph<> Xbellman(Graph<Type> & graph, GraphTypes::node_id sourceNode, GraphTypes::AlgorithmicClass algoClass=GraphTypes::DYNAMIC, GraphTypes::OptimizationType optimizationType=GraphTypes::MINIMIZE);
 
   std::list<GraphTypes::Path> paths_to(Graph<> & allPaths, GraphTypes::node_id target) throw(std::logic_error);
 
