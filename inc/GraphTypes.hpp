@@ -30,8 +30,8 @@ public:
 
   enum OptimizationType{MAXIMIZE, MINIMIZE};
 
-  static const int POSITIVE_INFINITY;
-  static const int NEGATIVE_INFINITY;
+  static const float POSITIVE_INFINITY;
+  static const float NEGATIVE_INFINITY;
 };
 
 #endif

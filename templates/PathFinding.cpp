@@ -178,13 +178,17 @@ std::deque<GraphTypes::node_id> PathFinding<Type>::_relaxation(Graph<Type> & gra
 
     predecessors = graph.predecessors(*s);
 
-    relaxable = true;
-    pred = predecessors.begin();
-    while(pred != predecessors.end() && relaxable){
-      if( !paths.has_node(*pred) ){
-	relaxable = false;
+    relaxable = false;
+
+    if( predecessors.size() > 0 ){
+      relaxable = true;
+      pred = predecessors.begin();
+      while(pred != predecessors.end() && relaxable){
+	if( !paths.has_node(*pred) ){
+	  relaxable = false;
+	}
+	pred++;
       }
-      pred++;
     }
 
     if(relaxable){
@@ -237,6 +241,7 @@ void PathFinding<Type>::_insert_waiting_nodes(Graph<Type> & graph, Graph<> & pat
   while( waiting_for_insertion.size() > 0 ){
     s  = waiting_for_insertion.front();
     pred = best_predecessor[s];
+    std::cout << "adding " << pred << ", " << s << std::endl;
     paths.add_edge( pred, s, graph.getCost(pred,s) );
     waiting_for_insertion.pop_front();
   }
@@ -262,7 +267,6 @@ Graph<> PathFinding<Type>::_greedy_bellman(Graph<Type> & graph, GraphTypes::node
   std::deque<GraphTypes::node_id> waiting_for_insertion;
 
   _init(graph, paths, sourceNode, candidates, distance_from_source, optimizationType);
-
   waiting_for_insertion = _relaxation(graph, paths, candidates);
   while( waiting_for_insertion.size() > 0 ){
     _update_tables(graph, paths, waiting_for_insertion, distance_from_source, best_predecessor, optimizationType);
@@ -322,7 +326,7 @@ void PathFinding<Type>::_update_tables(Graph<Type> & graph, std::map<GraphTypes:
 }
 
 template <typename Type>
-void PathFinding<Type>::_build_paths_graph(Graph<Type> & graph, Graph<> & paths, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor)
+void PathFinding<Type>::_build_paths_graph(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor)
 {
   std::map<GraphTypes::node_id, GraphTypes::node_id>::iterator it;
   GraphTypes::node_id pred, succ;
@@ -330,7 +334,9 @@ void PathFinding<Type>::_build_paths_graph(Graph<Type> & graph, Graph<> & paths,
   for(it = best_predecessor.begin(); it != best_predecessor.end(); it++){
     succ = it->first;
     pred = it->second;
-    paths.add_edge( pred, succ, graph.getCost(pred, succ) );
+    if(succ != sourceNode){
+      paths.add_edge( pred, succ, graph.getCost(pred, succ) );
+    }
   }
 }
 
@@ -350,7 +356,7 @@ Graph<> PathFinding<Type>::_dynamic_bellman(Graph<Type> & graph, GraphTypes::nod
     _update_tables(graph, distance_from_source, best_predecessor, optimizationType);
   }
 
-  _build_paths_graph(graph, paths, distance_from_source, best_predecessor);
+  _build_paths_graph(graph, paths, sourceNode, distance_from_source, best_predecessor);
 
   _validity = _check_computing_validity(graph, distance_from_source);
 
@@ -380,26 +386,30 @@ std::list<GraphTypes::Path> PathFinding<Type>::paths_to(Graph<> & allPaths, Grap
     throw std::logic_error("Unsafe usage of XPathFinding<Type>::paths_to(Graph<>&, GraphTypes::node_id) with an undirected graph. Maybe you should convert the original graph before.");
   }
 
-  predecessors = allPaths.predecessors(target);
-  if( predecessors.size() > 0 ){
+  if( allPaths.has_node(target) ){
 
-    for(pred = predecessors.begin(); pred != predecessors.end(); pred++){
-      until_pred = paths_to(allPaths, *pred);
-      paths.insert(paths.begin(), until_pred.begin(), until_pred.end() );
+    predecessors = allPaths.predecessors(target);
+    if( predecessors.size() > 0 ){
+
+      for(pred = predecessors.begin(); pred != predecessors.end(); pred++){
+	until_pred = paths_to(allPaths, *pred);
+	paths.insert(paths.begin(), until_pred.begin(), until_pred.end() );
+      }
     }
-  }
 
-  if( paths.size() > 0 ){
+    if( paths.size() > 0 ){
 
-    for(onePath = paths.begin(); onePath != paths.end(); onePath++){
+      for(onePath = paths.begin(); onePath != paths.end(); onePath++){
+	onePath->push_back(target);
+      }
+    }
+    else{
+
+      paths.push_back( std::list<GraphTypes::node_id>() );
+      onePath = paths.begin();
       onePath->push_back(target);
     }
-  }
-  else{
 
-    paths.push_back( std::list<GraphTypes::node_id>() );
-    onePath = paths.begin();
-    onePath->push_back(target);
   }
 
   return paths;

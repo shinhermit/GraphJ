@@ -1,3 +1,6 @@
+modifier algorithme _relaxation : if(predecessors.size)
+modifier algorithme paths_to : if(paths.has_node)
+modifier algorithme _build_paths_graph : if(succ != sourceNode)
 tester translation poids négatifs avec Dijkstra
 ajouter les vérifications de validité de calcul
 tester Xbetween

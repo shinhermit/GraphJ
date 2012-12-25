@@ -40,7 +40,7 @@ private:
 
   void _update_tables(Graph<Type> & graph, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor, GraphTypes::OptimizationType optimizationType=GraphTypes::MINIMIZE);
 
-  void _build_paths_graph(Graph<Type> & graph, Graph<> & paths, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor);
+  void _build_paths_graph(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor);
 
   Graph<> _dynamic_bellman(Graph<Type> & graph, GraphTypes::node_id sourceNode, GraphTypes::OptimizationType optimizationType=GraphTypes::MINIMIZE);
 

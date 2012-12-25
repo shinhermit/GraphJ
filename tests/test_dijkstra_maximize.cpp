@@ -6,8 +6,10 @@
 int main()
 {
   Graph<> graph(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
-  Graph<> allPaths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
-  std::list<GraphTypes::Path> paths_between;
+  Graph<> allPaths_dijkstra(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
+  Graph<> allPaths_bellman(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
+  std::list<GraphTypes::Path> paths_dijkstra_between, paths_bellman_between;
+  GraphTypes::node_id source, target;
   WeightsTransformer<> transformer;
   PathFinding<> lookup;
   Exporter<> exporte;
@@ -38,29 +40,52 @@ int main()
   Graph<> reversed = transformer.reverse_weights_order(graph);
 
   //Recherche des chemins
-  allPaths = lookup.dijkstra(reversed, 1);
-  paths_between = lookup.paths_to(allPaths, 6);
+  source = 1;
+  target = 6;
+
+  allPaths_dijkstra = lookup.dijkstra(reversed, source);
+  paths_dijkstra_between = lookup.paths_to(allPaths_dijkstra, target);
+
+  allPaths_bellman = lookup.bellman(graph, source, GraphTypes::DYNAMIC, GraphTypes::MAXIMIZE);
+  paths_bellman_between = lookup.paths_to(allPaths_bellman, target);
 
   //remettre les vrais poids dans l'arbre des chemins
-  allPaths = transformer.update_subgraph(graph, allPaths);
+  allPaths_dijkstra = transformer.update_subgraph(graph, allPaths_dijkstra);
 
   //Exports
-  exporte.toGraphviz(graph, paths_between, "test_dijkstra_max.graph");
-  exporte.toGraphviz(allPaths, "paths_dijkstra_max.graph");
+  exporte.toGraphviz(graph, paths_dijkstra_between, "dijkstra_maximize.graph");
+  exporte.toGraphviz(allPaths_dijkstra, "paths_dijkstra_maximize.graph");
+
+  exporte.toGraphviz(graph, paths_bellman_between, "bellman_maximize.graph");
+  exporte.toGraphviz(allPaths_bellman, "paths_bellman_maximize.graph");
 
   //compilation dot
-  system("dot -Tpng test_dijkstra_max.graph -o test_dijkstra_max.png");
-  system("dot -Tpng paths_dijkstra_max.graph -o paths_dijkstra_max.png");
+  system("dot -Tpng dijkstra_maximize.graph -o dijkstra_maximize.png");
+  system("dot -Tpng paths_dijkstra_maximize.graph -o paths_dijkstra_maximize.png");
+
+  system("dot -Tpng bellman_maximize.graph -o bellman_maximize.png");
+  system("dot -Tpng paths_bellman_maximize.graph -o paths_bellman_maximize.png");
 
   //affichages
-  std::cout << "Le graphe a été exporté dans le fichier test_dijkstra_max.graph" << std::endl;
-  std::cout << "L'arbre des chemins a été exporté dans le fichier paths_dijkstra_max.graph" << std::endl << std::endl;
+  std::cout << "DIJKSTRA: " << std::endl;
+  std::cout << "Le graphe a été exporté dans le fichier dijkstra_maximize.graph" << std::endl;
+  std::cout << "L'arbre des chemins a été exporté dans le fichier paths_dijkstra_maximize.graph" << std::endl << std::endl;
 
-  std::cout << std::endl << "dot -Tpng test_dijkstra.graph -o test_dijkstra_max.png" << std::endl;
-  std::cout << std::endl << "dot -Tpng paths_dijkstra.graph -o paths_dijkstra_max.png" << std::endl << std::endl;
+  std::cout << std::endl << "dot -Tpng dijkstra_maximize.graph -o dijkstra_maximize.png" << std::endl;
+  std::cout << std::endl << "dot -Tpng paths_dijkstra_maximize.graph -o paths_dijkstra_maximize.png" << std::endl << std::endl;
 
-  std::cout << "Le graphe a été exporté dans le fichier test_dijkstra_max.png" << std::endl;
-  std::cout << "L'arbre des chemins a été exporté dans le fichier paths_dijkstra_max.png" << std::endl << std::endl;
+  std::cout << "Le graphe a été exporté dans le fichier dijkstra_maximize.png" << std::endl;
+  std::cout << "L'arbre des chemins a été exporté dans le fichier dijkstra_maximize.png" << std::endl << std::endl;
+
+  std::cout << std::endl << "BELLMAN: " << std::endl;
+  std::cout << "Le graphe a été exporté dans le fichier bellman_maximize.graph" << std::endl;
+  std::cout << "L'arbre des chemins a été exporté dans le fichier paths_bellman_maximize.graph" << std::endl << std::endl;
+
+  std::cout << std::endl << "dot -Tpng bellman_maximize.graph -o bellman_maximize.png" << std::endl;
+  std::cout << std::endl << "dot -Tpng paths_bellman_maximize.graph -o paths_bellman_maximize.png" << std::endl << std::endl;
+
+  std::cout << "Le graphe a été exporté dans le fichier bellman_maximize.png" << std::endl;
+  std::cout << "L'arbre des chemins a été exporté dans le fichier bellman_maximize.png" << std::endl << std::endl;
 
 
   return 0;

@@ -1,4 +1,4 @@
 #include "GraphTypes.hpp"
 
-const int GraphTypes::POSITIVE_INFINITY = 20000;
-const int GraphTypes::NEGATIVE_INFINITY = -20000;
+const float GraphTypes::POSITIVE_INFINITY = 20000;
+const float GraphTypes::NEGATIVE_INFINITY = -20000;
