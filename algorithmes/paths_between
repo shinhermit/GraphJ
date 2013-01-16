@@ -37,28 +37,32 @@ FONCTION chemins_jusqua(DON chemins : Graphe; DON cible : Sommet) : Liste<Chemin
 		pred : Sommet
 
 	DÉBUT
-		prédécesseurs := prédécesseurs(chemins, cible)
 		SI
-			taille(prédécesseurs) > 0
+			sommet_de(chemins, cible)
 		ALORS
-			POUR i:=1 à taille(prédécesseurs) FAIRE
-				pred := ieme(prédécesseur, i)
-				jusqua_pred := chemins_jusqua(chemins, pred)
-				_ajouter_tous(lesChemins, jusqua_pred)
-			FINPOUR
-		FINSI
+			prédécesseurs := prédécesseurs(chemins, cible)
+			SI
+				taille(prédécesseurs) > 0
+			ALORS
+				POUR i:=1 à taille(prédécesseurs) FAIRE
+					pred := ieme(prédécesseur, i)
+					jusqua_pred := chemins_jusqua(chemins, pred)
+					_ajouter_tous(lesChemins, jusqua_pred)
+				FINPOUR
+			FINSI
 
-		SI
-			taille(lesChemins) > 0
-		ALORS
-			POUR i:=1 à taille(lesChemins) FAIRE
-				unChemin = ieme(lesChemins, i)
-				insérer(unChemin, cible, taille(unChemin)+1)
-			FINPOUR
-		SINON
-			insérer(unChemin, cible, 1)
-			insérer(lesChemins, unChemin, 1)
+			SI
+				taille(lesChemins) > 0
+			ALORS
+				POUR i:=1 à taille(lesChemins) FAIRE
+					unChemin = ieme(lesChemins, i)
+					insérer(unChemin, cible, taille(unChemin)+1)
+				FINPOUR
+			SINON
+				insérer(unChemin, cible, 1)
+				insérer(lesChemins, unChemin, 1)
 		
+			FINSI
 		FINSI
 		retourner lesChemins
 	FIN

@@ -83,17 +83,24 @@ FONCTION _relaxation(DON G, DON G' : Graphe; DON candidats : Liste<Sommet>) : Fi
 		POUR i:=1 à taille(candidats) FAIRE
 			s := ieme(candidats, i)
 			prédécesseurs := prédécesseurs(G, s)
-			relaxable := VRAI
-			j:=0
-			TANTQUE j < taille(prédécesseurs) ET relaxable FAIRE
-				pred := ieme(prédécesseurs, j)
-				SI
-					NON est_sommet_de(G', pred)
-				ALORS
-					relaxable := FAUX
-				FINSI
-				j := j + 1
-			FINTANTQUE
+			relaxable := FAUX
+			
+			SI
+				taille(prédécesseurs) > 0
+			ALORS
+				relaxable := VRAI
+				j:=0
+				TANTQUE j < taille(prédécesseurs) ET relaxable FAIRE
+					pred := ieme(prédécesseurs, j)
+					SI
+						NON est_sommet_de(G', pred)
+					ALORS
+						relaxable := FAUX
+					FINSI
+					j := j + 1
+				FINTANTQUE
+			FINSI
+			
 			SI
 				relaxable
 			ALORS

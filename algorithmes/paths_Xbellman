@@ -14,7 +14,7 @@ FONCTION Xbellman_dynamique( DON G(S,A) : Graphe; DON source : Sommet ) : Graphe
 			_correction_des_tables(G, distance_a_source, meilleurs_prédécesseurs)
 		FINPOUR
 		
-		_construire_G'(G, G', distance_a_source, meilleurs_prédécesseurs)
+		_construire_G'(G, G', source, distance_a_source, meilleurs_prédécesseurs)
 
 		retourner G'
 	FIN
@@ -67,7 +67,7 @@ PROCÉDURE _correction_des_tables(DON G(S,A) : Graphe; DON-RES distance_a_source
 		FINPOUR
 	FIN
 
-PROCÉDURE _construire_G'(DON G(S,A) : Graphe; DON distance_a_source : Map<Sommet,Entier>; DON meilleurs_prédécesseurs : Map<Sommet, Lsite<Sommet>>) : Booléen
+PROCÉDURE _construire_G'(DON G(S,A), DON G'(S',A') : Graphe; source : Sommet; DON distance_a_source : Map<Sommet,Entier>; DON meilleurs_prédécesseurs : Map<Sommet, Lsite<Sommet>>) : Booléen
 	VARIABLES
 		absorbant : Booléen
 		a : Arc
@@ -81,7 +81,12 @@ PROCÉDURE _construire_G'(DON G(S,A) : Graphe; DON distance_a_source : Map<Somme
 			preds := second( ieme(meilleur_prédécesseur, i) )
 			POUR j := 1 à taille(preds) FAIRE
 				pred = ieme(preds, j)
-				ajouter_arc(G', pred, succ, coût(G, pred, succ) )
+
+				SI
+					succ != source
+				ALORS
+					ajouter_arc(G', pred, succ, coût(G, pred, succ) )
+				FINSI
 			FINPOUR
 		FINPOUR
 	FIN

@@ -20,7 +20,7 @@ FONCTION bellman( DON G(S,A) : Graphe; DON source : Sommet ) : Graphe
 			_correction_des_tables(G, distance_a_source, meilleur_prédécesseur)
 		FINPOUR
 		
-		_construire_G'(G, G', distance_a_source, meilleur_prédécesseur)
+		_construire_G'(G, G', source, distance_a_source, meilleur_prédécesseur)
 
 		retourner G'
 	FIN
@@ -64,7 +64,7 @@ PROCÉDURE _correction_des_tables(DON G(S,A) : Graphe; DON-RES distance_a_source
 		FINPOUR
 	FIN
 
-PROCÉDURE _construire_G'(DON G(S,A) : Graphe; DON distance_a_source : Map<Sommet,Entier>; DON meilleur_prédécesseur : Map<Sommet, Sommet>) : Booléen
+PROCÉDURE _construire_G'(DON G(S,A), DON G'(S',A') : Graphe; DON source : Sommet; DON distance_a_source : Map<Sommet,Entier>; DON meilleur_prédécesseur : Map<Sommet, Sommet>) : Booléen
 	VARIABLES
 		absorbant : Booléen
 		a : Arc
@@ -76,7 +76,11 @@ PROCÉDURE _construire_G'(DON G(S,A) : Graphe; DON distance_a_source : Map<Somme
 			pred = second( ieme(meilleur_prédécesseur, i) )
 			succ = premier( ieme(meilleur_prédécesseur, i) )
 			
-			ajouter_arc(G', pred, succ, coût(G, pred, succ) )
+			SI
+				succ != source
+			ALORS
+				ajouter_arc(G', pred, succ, coût(G, pred, succ) )
+			FINSI
 		FINPOUR
 	FIN
 

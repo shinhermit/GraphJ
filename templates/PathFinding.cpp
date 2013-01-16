@@ -165,7 +165,7 @@ void PathFinding<Type>::_init(Graph<Type> & graph, Graph<> & paths, GraphTypes::
 }
 
 template <typename Type>
-std::deque<GraphTypes::node_id> PathFinding<Type>::_relaxation(Graph<Type> & graph, Graph<> & paths, std::list<GraphTypes::node_id> & candidates)
+std::deque<GraphTypes::node_id> PathFinding<Type>::_coupe(Graph<Type> & graph, Graph<> & paths, std::list<GraphTypes::node_id> & candidates)
 {
   std::list<GraphTypes::node_id>::iterator s;
   std::deque<GraphTypes::node_id> relaxed;
@@ -267,12 +267,12 @@ Graph<> PathFinding<Type>::_greedy_bellman(Graph<Type> & graph, GraphTypes::node
   std::deque<GraphTypes::node_id> waiting_for_insertion;
 
   _init(graph, paths, sourceNode, candidates, distance_from_source, optimizationType);
-  waiting_for_insertion = _relaxation(graph, paths, candidates);
+  waiting_for_insertion = _coupe(graph, paths, candidates);
   while( waiting_for_insertion.size() > 0 ){
     _update_tables(graph, paths, waiting_for_insertion, distance_from_source, best_predecessor, optimizationType);
     _remove_nodes(candidates, waiting_for_insertion);
     _insert_waiting_nodes(graph, paths, waiting_for_insertion, best_predecessor);
-    waiting_for_insertion = _relaxation(graph, paths, candidates);
+    waiting_for_insertion = _coupe(graph, paths, candidates);
   }
 
   _validity = _check_computing_validity(graph, distance_from_source);

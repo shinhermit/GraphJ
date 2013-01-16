@@ -25,7 +25,7 @@ private:
   //BELLMAN GREEDY
   void _init(Graph<Type> & graph, Graph<> & paths, GraphTypes::node_id sourceNode, std::list<GraphTypes::node_id> & candidates, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, GraphTypes::OptimizationType optimizationType=GraphTypes::MINIMIZE);
 
-  std::deque<GraphTypes::node_id> _relaxation(Graph<Type> & graph, Graph<> & paths, std::list<GraphTypes::node_id> & candidates);
+  std::deque<GraphTypes::node_id> _coupe(Graph<Type> & graph, Graph<> & paths, std::list<GraphTypes::node_id> & candidates);
 
   void _update_tables(Graph<Type> & graph, Graph<> & paths, std::deque<GraphTypes::node_id> & waiting_for_insertion, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source, std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor, GraphTypes::OptimizationType optimizationType=GraphTypes::MINIMIZE);
 
