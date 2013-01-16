@@ -1,7 +1,7 @@
 //L'algorithme suivant est l'entension de bellman_dynamique
 //afin de retourner les chemins optimaux équivalents
 
-FONCTION Xbellman_dynamique( DON G(S,A) : Graphe; DON source : Sommet; minimisation : Booléen ) : Graphe
+FONCTION Xbellman( DON G(S,A) : Graphe; DON source : Sommet; minimisation : Booléen ) : Graphe
 	VARIABLES
 		distance_a_source : Map<Sommet, Entier>
 		meilleurs_prédécesseurs : Map<Sommet, Liste<Sommet> >

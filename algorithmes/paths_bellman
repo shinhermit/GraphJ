@@ -5,19 +5,19 @@
 //la version original de l'algorithme, qui, à l'instar de celui de
 //Dijkstra, ne fournit pas le bon résultat lorsqu'il y a des circuits absorbants.
 //pour savoir si on a rencontré des circuits absorbants, nous
-//utilisons le "drapeau" booléen #absorbant# (en pratique, champs de la classe)
+//utiliserons le prédicat calcul_valide?(G, distances) défini ailleurs
 
-FONCTION bellman_dynamique( DON G(S,A) : Graphe; DON source : Sommet; minimisation : Booléen ) : Graphe
+FONCTION bellman( DON G(S,A) : Graphe; DON source : Sommet ) : Graphe
 	VARIABLES
 		distance_a_source : Map<Sommet, Entier>
 		meilleur_prédécesseur : Map<Sommet, Sommet>
 		i : Entier
 		G'(S',A') : Graphe
 	DÉBUT
-		_initialiser(G, G', source, distance_a_source, minimisation)
+		_initialiser(G, G', source, distance_a_source)
 		
 		POUR i := 1 à taille(S) FAIRE
-			_correction_des_tables(G, distance_a_source, meilleur_prédécesseur, minimisation)
+			_correction_des_tables(G, distance_a_source, meilleur_prédécesseur)
 		FINPOUR
 		
 		_construire_G'(G, G', distance_a_source, meilleur_prédécesseur)
@@ -25,16 +25,12 @@ FONCTION bellman_dynamique( DON G(S,A) : Graphe; DON source : Sommet; minimisati
 		retourner G'
 	FIN
 
-PROCÉDURE _initialiser(DON G(S,A), DON-RES G'(S',A') : Graphe; DON source : Sommet; DON-RES distance_a_source : Map<Sommet, Entier>; minimisation : Booléen)
+PROCÉDURE _initialiser(DON G(S,A), DON-RES G'(S',A') : Graphe; DON source : Sommet; DON-RES distance_a_source : Map<Sommet, Entier>)
 	VARIABLES
-		i, infini : Entier
+		i : Entier
 		s : Sommet
-		Moins_infini := -30000
-		Plus_infini := 30000
-
+		INFINI := 30000
 	DÉBUT
-		infini := SI minimisation ALORS Plus_infini SINON Moins_infini
-		
 		distance_a_source[source] = 0
 		ajouter_sommet(G', source)
 		POUR i := 1 à taille(S) FAIRE
@@ -42,18 +38,16 @@ PROCÉDURE _initialiser(DON G(S,A), DON-RES G'(S',A') : Graphe; DON source : Som
 			SI
 				s != source
 			ALORS
-				distance_a_source[s] = infini
+				distance_a_source[s] = INFINI
 			FINSI
 		FINPOUR
 	FIN
 
-PROCÉDURE _correction_des_tables(DON G(S,A) : Graphe; DON-RES distance_a_source : Map<Sommet, Entier>; DON-RES meilleur_prédécesseur : Map<Sommet, Sommet>; minimisation : Booléen)
+PROCÉDURE _correction_des_tables(DON G(S,A) : Graphe; DON-RES distance_a_source : Map<Sommet, Entier>; DON-RES meilleur_prédécesseur : Map<Sommet, Sommet>)
 	VARIABLES
 		a : Arc
 		u,v : Sommet
 		i, distance, nvlle_distance : Entier
-		optimal : Booléen
-
 	DÉBUT
 		POUR i := 1 à taille(A) FAIRE
 			a = ieme(A,i)
@@ -61,10 +55,8 @@ PROCÉDURE _correction_des_tables(DON G(S,A) : Graphe; DON-RES distance_a_source
 			v = target(a)
 			distance = distance_a_source[v]
 			nvlle_distance = distance_a_source(u) + coût(G, a)
-			
-			optimal := SI minimisation ALORS (nvlle_distance < distance) SINON (nvlle_distance > distance)
 			SI
-				optimal
+				nvlle_distance < distance
 			ALORS
 				distance_a_source[v] = nvlle_distance
 				meilleur_prédécesseur[v] = u

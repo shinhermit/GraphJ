@@ -3,7 +3,7 @@
 //ils fournissent les chemins équivalents (chemins optimaux de coûts égaux),
 //contrairement à la première version
 
-FONCTION bellman(DON G : Graphe (S,A); DON source : Sommet; minimisation : Booléen) : Graphe
+FONCTION Xbellman_rapide(DON G : Graphe (S,A); DON source : Sommet; minimisation : Booléen) : Graphe
 	VARIABLES
 		chemins : Graphe (S', A')
 		distance_a_source : Map<Sommet, Entier>

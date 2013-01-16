@@ -3,7 +3,7 @@
 //ils fournissent les chemins équivalents (chemins optimaux de coûts égaux),
 //contrairement à la première version
 
-FONCTION dijkstra(DON G(S,A) : Graphe; DON source : Sommet) : Graphe
+FONCTION Xdijkstra(DON G(S,A) : Graphe; DON source : Sommet) : Graphe
 	VARIABLES
 		distance_a_source : Map<Sommet, Entier>
 		meilleurs_predecesseurs : Map<Sommet, Liste<Sommet> >

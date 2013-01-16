@@ -105,7 +105,7 @@ int main(){
     allPaths_bellman = lookup.Xbellman(graph, sourceNode);
 
     dijkstra_between = lookup.paths_to(allPaths_dijkstra, targetNode);
-    // bellman_between = lookup.paths_to(allPaths_bellman, targetNode);
+    bellman_between = lookup.paths_to(allPaths_bellman, targetNode);
 
     //exports
     // std::cout << exporte.toMathString(graph, label_mapper) << std::endl << std::endl;
@@ -115,7 +115,7 @@ int main(){
     exporte.toGraphviz(allPaths_bellman, label_mapper, "chemins_bellman.graph");
 
     exporte.toGraphviz(graph, label_mapper, dijkstra_between, "highlight_dijkstra.graph");
-    // exporte.toGraphviz(graph, label_mapper, bellman_between, "highlight_bellman.graph");
+    exporte.toGraphviz(graph, label_mapper, bellman_between, "highlight_bellman.graph");
 
     //compilations dot
     system("dot -Tpng reseau_routier.graph -o reseau_routier.png");
@@ -124,7 +124,7 @@ int main(){
     system("dot -Tpng chemins_bellman.graph -o chemins_bellman.png");
 
     system("dot -Tpng highlight_dijkstra.graph -o highlight_dijkstra.png");
-    // system("dot -Tpng highlight_bellman.graph -o highlight_bellman.png");
+    system("dot -Tpng highlight_bellman.graph -o highlight_bellman.png");
 
     //affichages
     std::cout << "Le graphe du réseau routier a été exporté dans le fichier reseau_routier.graph" << std::endl;
@@ -139,8 +139,8 @@ int main(){
     std::cout << "dot -Tpng highlight_dijkstra.graph -o highlight_dijkstra.png" << std::endl;
     std::cout << "Les chemins optimaux entre les deux villes sont visibles sur l'image highlight_dijkstra.png" << std::endl << std::endl;
 
-    // std::cout << "dot -Tpng highlight_bellman.graph -o highlight_bellman.png" << std::endl;
-    // std::cout << "Les chemins optimaux entre les deux villes sont visibles sur l'image highlight_bellman.png" << std::endl;
+    std::cout << "dot -Tpng highlight_bellman.graph -o highlight_bellman.png" << std::endl;
+    std::cout << "Les chemins optimaux entre les deux villes sont visibles sur l'image highlight_bellman.png" << std::endl;
 
   }
   catch(std::invalid_argument & iv){
