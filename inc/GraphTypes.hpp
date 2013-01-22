@@ -22,16 +22,25 @@ public:
 
   enum Default{DEFAULT};
 
-  enum SearchAlgorithm{DIJKSTRA, BELLMAN};
+  struct Algorithms
+  {
+    enum SearchAlgorithm{DIJKSTRA, BELLMAN};
 
-  enum AlgorithmicClass{GREEDY, DYNAMIC};
+    enum AlgorithmicClass{GREEDY, DYNAMIC};
 
-  enum ComputingValidity{UNDEFINED, VALID, INVALID};
+    enum ComputingValidity{UNDEFINED, VALID, INVALID};
 
-  enum OptimizationType{MAXIMIZE, MINIMIZE};
+    enum OptimizationType{MAXIMIZE, MINIMIZE};
 
-  static const float POSITIVE_INFINITY;
-  static const float NEGATIVE_INFINITY;
+    static const float POSITIVE_INFINITY;
+    static const float NEGATIVE_INFINITY;
+  };
+
+  struct Exceptions
+  {
+    enum Verbosity{BRIEVE, VERBOSE};
+  };
+
 };
 
 #endif

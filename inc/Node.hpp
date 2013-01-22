@@ -9,7 +9,7 @@ protected:
   GraphTypes::node_id _id;
 
 public:
-  Node(GraphTypes::node_id id);
+  Node(const GraphTypes::node_id & id);
   Node(const Node & source);
 
   bool operator==(const Node & ref)const;

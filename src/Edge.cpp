@@ -1,38 +1,47 @@
 #include "Edge.hpp"
 
-Edge::Edge(GraphTypes::node_id node1, GraphTypes::node_id node2):_source(node1), _target(node2){}
+Edge::Edge(){}
 
-Edge::Edge(const Edge & source):_source(source._source), _target(source._target){
+Edge::Edge(const GraphTypes::node_id & origin, const GraphTypes::node_id & target):_origin(origin), _target(target){}
+
+Edge::Edge(const Edge & source):_origin(source._origin), _target(source._target){}
+
+bool Edge::operator==(const Edge & ref)const
+{
+  return _origin == ref._origin && _target == ref._target;
 }
 
-bool Edge::operator==(const Edge & ref)const{
-  return _source == ref._source && _target == ref._target;
+bool Edge::operator<(const Edge & ref)const
+{
+  return (_origin < ref._origin) || (_origin == ref._origin && _target < ref._target);
 }
 
-bool Edge::operator<(const Edge & ref)const{
-  return (_source < ref._source) || (_source == ref._source && _target < ref._target);
-}
-
-bool Edge::operator<=(const Edge & ref)const{
+bool Edge::operator<=(const Edge & ref)const
+{
   return operator<(ref) || operator==(ref);
 }
 
-bool Edge::operator>(const Edge & ref)const{
+bool Edge::operator>(const Edge & ref)const
+{
   return !operator<=(ref);
 }
 
-bool Edge::operator>=(const Edge & ref)const{
+bool Edge::operator>=(const Edge & ref)const
+{
   return !operator<(ref);  
 }
 
-bool Edge::operator!=(const Edge & ref)const{
-  return _source != ref._source || _target != ref._target;
+bool Edge::operator!=(const Edge & ref)const
+{
+  return _origin != ref._origin || _target != ref._target;
 }
 
-GraphTypes::node_id Edge::source()const{
-  return _source;
+GraphTypes::node_id Edge::source()const
+{
+  return _origin;
 }
 
-GraphTypes::node_id Edge::target()const{
+GraphTypes::node_id Edge::target()const
+{
   return _target;
 }

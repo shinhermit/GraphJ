@@ -1,6 +1,6 @@
 #include "Node.hpp"
 
-Node::Node(GraphTypes::node_id id):_id(id){}
+Node::Node(const GraphTypes::node_id & id):_id(id){}
 
 Node::Node(const Node & source):_id(source._id){}
 

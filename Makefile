@@ -28,7 +28,16 @@ Edge:
 WeightedEdge:
 	$(cmd_src)
 
-DiGraph:
+BasicGraphException:
+	$(cmd_src)
+
+InvalidNodeIDException:
+	$(cmd_src)
+
+TopologyIterator:
+	$(cmd_src)
+
+BaseGraph:
 	$(cmd_src)
 
 DirectableGraph:
@@ -40,7 +49,13 @@ PonderableGraph:
 NamedColor:
 	$(cmd_src)
 
-all_classes: GraphTypes Node WeightedNode Edge WeightedEdge DiGraph DirectableGraph PonderableGraph NamedColor
+all_classes: GraphTypes Node WeightedNode Edge WeightedEdge BasicGraphException InvalidNodeIDException TopologyIterator BaseGraph DirectableGraph PonderableGraph NamedColor
+
+
+#les validations
+
+BaseGraph_validation: BaseGraph Edge GraphTypes BasicGraphException InvalidNodeIDException TopologyIterator
+	$(cmd_exe)
 
 #les tests
 

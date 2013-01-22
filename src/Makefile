@@ -25,7 +25,16 @@ Edge:
 WeightedEdge:
 	$(cmd)
 
-DiGraph:
+BasicGraphException:
+	$(cmd)
+
+InvalidNodeIDException:
+	$(cmd)
+
+TopologyIterator:
+	$(cmd)
+
+BaseGraph:
 	$(cmd)
 
 DirectableGraph:

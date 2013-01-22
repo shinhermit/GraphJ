@@ -9,7 +9,16 @@ cc = g++
 cmd = $(cc) $(flags) $(paths) $@.cpp $(obj)/*.o -o ../$@.out
 
 
-##CIBLES
+########### CIBLES ###########
+
+#### Validations
+
+BaseGraph_validation:
+	$(cmd)
+
+
+
+#### Tests
 
 test_node:
 	$(cmd)

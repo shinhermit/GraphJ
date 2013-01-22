@@ -5,12 +5,12 @@
 
 class Edge{
 protected:
-  GraphTypes::node_id _source;
+  GraphTypes::node_id _origin;
   GraphTypes::node_id _target;
 
 public:
   Edge();
-  Edge(GraphTypes::node_id node1, GraphTypes::node_id node2);
+  Edge(const GraphTypes::node_id & origin, const GraphTypes::node_id & target);
   Edge(const Edge & source);
 
   bool operator==(const Edge & ref)const;
