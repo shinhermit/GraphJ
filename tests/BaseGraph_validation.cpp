@@ -78,6 +78,20 @@ int main(){
   catch(GraphException::InvalidNodeIDException & e){
   }
 
+  try{
+    graph.adjacents_begin(100);
+    assert("graph.adjacents_begin(100)" == "echec");
+  }
+  catch(GraphException::InvalidNodeIDException & e){
+  }
+
+  try{
+    graph.adjacents_end(1);
+    assert("graph.adjacents_end(1)" == "echec");
+  }
+  catch(GraphException::InvalidNodeIDException & e){
+  }
+
   //Composition avec les constructeurs
   graph.remove_node(1);
   graph.remove_edge(2,3);
@@ -117,6 +131,7 @@ int main(){
 
   assert( graph.successors_begin(1) == graph.successors_end(1) );
   assert( graph.predecessors_begin(1) == graph.predecessors_end(1) );
+  assert( graph.adjacents_begin(1) == graph.adjacents_end(1) );
 
 
   /******** remove_node ******/
@@ -193,6 +208,20 @@ int main(){
   catch(GraphException::InvalidNodeIDException & e){
   }
 
+  try{
+    graph.adjacents_begin(100);
+    assert("graph.adjacents_begin(100)" == "echec");
+  }
+  catch(GraphException::InvalidNodeIDException & e){
+  }
+
+  try{
+    graph.adjacents_end(1);
+    assert("graph.adjacents_end(1)" == "echec");
+  }
+  catch(GraphException::InvalidNodeIDException & e){
+  }
+
 
   /******** add_edge ******/
   graph.add_edge(1,2);
@@ -258,6 +287,27 @@ int main(){
   assert( *graph.predecessors_begin(4) == 3 );
   assert( ++graph.predecessors_begin(4) == graph.predecessors_end(4) );
 
+  assert( *graph.adjacents_begin(1) == *graph.successors_begin(1) );
+  assert( *graph.adjacents_begin(3) == *graph.successors_begin(3) );
+  assert( *graph.adjacents_begin(2) == *graph.predecessors_begin(2) );
+  assert( *graph.adjacents_begin(4) == *graph.predecessors_begin(4) );
+
+  assert(++graph.adjacents_begin(1) == graph.adjacents_end(1) );
+  assert(++graph.adjacents_begin(2) == graph.adjacents_end(2) );
+  assert(++graph.adjacents_begin(3) == graph.adjacents_end(3) );
+  assert(++graph.adjacents_begin(4) == graph.adjacents_end(4) );
+
+  assert(--graph.adjacents_end(1) == graph.adjacents_begin(1) );
+  assert(--graph.adjacents_end(2) == graph.adjacents_begin(2) );
+  assert(--graph.adjacents_end(3) == graph.adjacents_begin(3) );
+  assert(--graph.adjacents_end(4) == graph.adjacents_begin(4) );
+
+  graph.add_edge(2,3);
+  assert( *(--graph.adjacents_end(2)) == 3);
+  assert( *(-- --graph.adjacents_end(2)) == 1);
+  assert( -- --graph.adjacents_end(2) == graph.adjacents_begin(2) );
+  graph.remove_edge(2,3);
+
 
   /******** remove_edge ******/
   graph.remove_edge(1,2);
@@ -318,6 +368,17 @@ int main(){
 
   assert( *graph.predecessors_begin(4) == 3 );
   assert( ++graph.predecessors_begin(4) == graph.predecessors_end(4) );
+
+  assert( graph.adjacents_begin(1) == graph.adjacents_end(1) );
+  assert( graph.adjacents_begin(2) == graph.adjacents_end(2) );
+  assert( *graph.adjacents_begin(3) == *graph.successors_begin(3) );
+  assert( *graph.adjacents_begin(4) == *graph.predecessors_begin(4) );
+
+  assert(++graph.adjacents_begin(3) == graph.adjacents_end(3) );
+  assert(++graph.adjacents_begin(4) == graph.adjacents_end(4) );
+
+  assert(--graph.adjacents_end(3) == graph.adjacents_begin(3) );
+  assert(--graph.adjacents_end(4) == graph.adjacents_begin(4) );
 
 
   std::cout << std::endl << "You can trust your program !!" << std::endl << std::endl;

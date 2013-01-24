@@ -34,6 +34,9 @@ InvalidNodeIDException:
 TopologyIterator:
 	$(cmd)
 
+DoubleNodeListIterator:
+	$(cmd)
+
 BaseGraph:
 	$(cmd)
 

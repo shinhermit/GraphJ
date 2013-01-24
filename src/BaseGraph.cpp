@@ -267,6 +267,52 @@ BaseGraph::NodeIterator BaseGraph::predecessors_end(const GraphTypes::node_id & 
 
 }
 
+BaseGraph::AdjacentsIterator BaseGraph::adjacents_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException)
+{
+  std::set<GraphTypes::node_id>::iterator predecessors_begin;
+  std::set<GraphTypes::node_id>::iterator predecessors_end;
+  std::set<GraphTypes::node_id>::iterator successors_begin;
+  std::set<GraphTypes::node_id>::iterator successors_end;
+
+  if( _nodes.count(node) ){
+    predecessors_begin = _adjacent_begin(_reversed_topology, node);
+    predecessors_end = _adjacent_end(_reversed_topology, node);
+
+    successors_begin = _adjacent_begin(_topology, node);
+    successors_end = _adjacent_end(_topology, node);
+
+    return AdjacentsIterator(predecessors_begin, predecessors_end, successors_begin, successors_end, predecessors_begin, successors_begin);
+
+  }
+  else{
+    throw GraphException::InvalidNodeIDException(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::adjacents_begin(const GraphTypes::node_id&)");
+  }
+
+}
+
+BaseGraph::AdjacentsIterator BaseGraph::adjacents_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException)
+{
+  std::set<GraphTypes::node_id>::iterator predecessors_begin;
+  std::set<GraphTypes::node_id>::iterator predecessors_end;
+  std::set<GraphTypes::node_id>::iterator successors_begin;
+  std::set<GraphTypes::node_id>::iterator successors_end;
+
+  if( _nodes.count(node) ){
+    predecessors_begin = _adjacent_begin(_reversed_topology, node);
+    predecessors_end = _adjacent_end(_reversed_topology, node);
+
+    successors_begin = _adjacent_begin(_topology, node);
+    successors_end = _adjacent_end(_topology, node);
+
+    return AdjacentsIterator(predecessors_begin, predecessors_end, successors_begin, successors_end, predecessors_end, successors_end);
+
+  }
+  else{
+    throw GraphException::InvalidNodeIDException(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::adjacents_end(const GraphTypes::node_id&)");
+  }
+
+}
+
 BaseGraph::NodeIterator BaseGraph::nodes_begin()const
 {
   return _nodes.begin();

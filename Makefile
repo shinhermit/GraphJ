@@ -37,6 +37,9 @@ InvalidNodeIDException:
 TopologyIterator:
 	$(cmd_src)
 
+DoubleNodeListIterator:
+	$(cmd_src)
+
 BaseGraph:
 	$(cmd_src)
 
@@ -54,7 +57,12 @@ all_classes: GraphTypes Node WeightedNode Edge WeightedEdge BasicGraphException 
 
 #les validations
 
-BaseGraph_validation: BaseGraph Edge GraphTypes BasicGraphException InvalidNodeIDException TopologyIterator
+BaseGraph_depencies:  BaseGraph Edge GraphTypes BasicGraphException InvalidNodeIDException TopologyIterator
+
+BaseGraph_validation: BaseGraph_depencies
+	$(cmd_exe)
+
+DirectableGraph_validation1: BaseGraph_depencies DirectableGraph
 	$(cmd_exe)
 
 #les tests

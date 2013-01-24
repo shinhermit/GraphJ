@@ -15,6 +15,8 @@ public:
 
   typedef GraphIterator::TopologyIterator EdgeIterator;
 
+  typedef GraphIterator::DoubleNodeListIterator AdjacentsIterator;
+
 private:
   unsigned int _clean_topology(std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & topology,
 			     std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & relative_reversed,
@@ -64,6 +66,8 @@ public:
   NodeIterator successors_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
   NodeIterator predecessors_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
   NodeIterator predecessors_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
+  AdjacentsIterator adjacents_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
+  AdjacentsIterator adjacents_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
 
   NodeIterator nodes_begin()const;
   NodeIterator nodes_end()const;

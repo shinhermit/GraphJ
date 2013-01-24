@@ -16,6 +16,9 @@ cmd = $(cc) $(flags) $(paths) $@.cpp $(obj)/*.o -o ../$@.out
 BaseGraph_validation:
 	$(cmd)
 
+DirectableGraph_validation1:
+	$(cmd)
+
 
 
 #### Tests
