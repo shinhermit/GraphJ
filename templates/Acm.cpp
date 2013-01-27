@@ -80,7 +80,7 @@ Graph<> Acm<Type>::Kruskal(const Graph<Type> & graph) throw(GraphException::Inva
   _color_each_node(graph, color);
 
   sorted_edges.assign( graph.edges_begin(), graph.edges_end() );
-  std::sort( sorted_edges.begin(), sorted_edges.end() );
+  std::sort( sorted_edges.begin(), sorted_edges.end(), GraphFunctor::WeightedEdgeComparator<Type>(graph) );
 
   it = sorted_edges.begin();
 

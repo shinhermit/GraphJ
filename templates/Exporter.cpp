@@ -174,7 +174,7 @@ std::string Exporter<Type>::ToMathString(const Graph<Type> & graph, const std::m
 template<typename Type>
 void Exporter<Type>::ToStream(const Graph<Type> & graph, std::ostream & out)
 {
-  out << toString(graph) << std::endl;
+  out << ToString(graph) << std::endl;
 }
 
 template<typename Type>

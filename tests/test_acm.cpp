@@ -58,7 +58,7 @@ int main()
 #ifdef _SYSTEM
 
       system("dot -Tpng graph_res_route.graph -o graph_res_route.png");
-      system("dot -Tpng acm_prim.graph -o acm_kruskal.png");
+      system("dot -Tpng acm_kruskal.graph -o acm_kruskal.png");
       system("dot -Tpng acm_prim.graph -o acm_prim.png");
 
 #endif

@@ -12,9 +12,10 @@ int main()
   Graph<> translated_positive( graph.edgeType(), graph.edgeState(), graph.nodeType() );
   Graph<> reversed_order( graph.edgeType(), graph.edgeState(), graph.nodeType() );
   Graph<> involution( graph.edgeType(), graph.edgeState(), graph.nodeType() );
-  WeightsTransformer<> transformer;
-  Exporter<> exporte;
   GraphTypes::Cost offset;
+
+  typedef WeightsTransformer<> Transformer;
+  typedef Exporter<> Export;
 
   //construction
   graph.add_edge(1,2, 1);
@@ -22,20 +23,20 @@ int main()
   graph.add_edge(2,3, 4);
 
   //traitements
-  offset = transformer.get_zero_offset(graph);
-  negatived = transformer.invert_weights_signs(graph);
-  translated = transformer.translate_weights(graph, offset);
-  translated_positive = transformer.translate_weights(negatived);
-  reversed_order = transformer.reverse_weights_order(graph);
-  involution =  transformer.reverse_weights_order(reversed_order);
+  offset = Transformer::Get_zero_offset(graph);
+  negatived = Transformer::Invert_weights_signs(graph);
+  translated = Transformer::Translate_weights(graph, offset);
+  translated_positive = Transformer::Translate_weights(negatived);
+  reversed_order = Transformer::Reverse_weights_order(graph);
+  involution =  Transformer::Reverse_weights_order(reversed_order);
 
   //exports
-  exporte.toGraphviz(graph, "initial.graph");
-  exporte.toGraphviz(negatived, "negative_weights.graph");
-  exporte.toGraphviz(translated, "offset_translation.graph");
-  exporte.toGraphviz(translated_positive, "positive_translation.graph");
-  exporte.toGraphviz(reversed_order, "order_reversion.graph");
-  exporte.toGraphviz(involution, "reversion_involution.graph");
+  Export::ToGraphviz(graph, "initial.graph");
+  Export::ToGraphviz(negatived, "negative_weights.graph");
+  Export::ToGraphviz(translated, "offset_translation.graph");
+  Export::ToGraphviz(translated_positive, "positive_translation.graph");
+  Export::ToGraphviz(reversed_order, "order_reversion.graph");
+  Export::ToGraphviz(involution, "reversion_involution.graph");
 
   //compilations
   system("dot -Tpng initial.graph -o initial.png");

@@ -1,17 +1,13 @@
 #include <string>
 #include "Graph.hpp"
-#include "DefaultVisitor.hpp"
-#include "Traverse.hpp"
 #include "Exporter.hpp"
-#include "Acm.hpp"
-#include "Coloring.hpp"
 
 int main(){
   Graph<std::string> graph(GraphTypes::DIRECTED, GraphTypes::UNWEIGHTED, GraphTypes::CONTAINER);
-  Exporter<std::string> exporte;
-  std::map<GraphTypes::node_id, std::string> label_mapper;
   std::string nom, choix;
   GraphTypes::node_id id, id2;
+
+  typedef Exporter<std::string> Export;
 
   std::cout << std::endl << "------ Simulation de la relation \"fourni\" (ou \"vend à\") entre des entreprises ------" << std::endl << "Saisie du graphe: Entrez le nom d'une entreprise et son identifiant unique:" << std::endl;
 
@@ -21,7 +17,6 @@ int main(){
     std::cin >> nom >> id;
 
     graph.add_node(id, nom);
-    // label_mapper[id] = nom;
 
     std::cout << "Ajouter une autre entreprise? y/n ";
     std::cin >> choix;
@@ -43,10 +38,7 @@ int main(){
   std::cout << std::endl  << "Affichage du graphe:"<<std::endl;
 
   std::cout << "Affichage:"<<std::endl;
-  exporte.toStream(graph, std::cout);
-
-  std::cout << "Affichage par les noms:"<<std::endl;
-  std::cout << exporte.toString(graph) << std::endl;
+  Export::ToStream(graph, std::cout);
 
   return 0;
 }

@@ -1,5 +1,5 @@
 template<typename Type>
-Graph<Type>  WeightsTransformer<Type>::invert_weights_signs(const Graph<Type> & graph)
+Graph<Type>  WeightsTransformer<Type>::Invert_weights_signs(const Graph<Type> & graph)
 {
   typename Graph<Type>::EdgeIterator it;
   GraphTypes::node_id pred,succ;
@@ -15,7 +15,7 @@ Graph<Type>  WeightsTransformer<Type>::invert_weights_signs(const Graph<Type> & 
 }
 
 template<typename Type>
-GraphTypes::Cost WeightsTransformer<Type>::get_zero_offset(const Graph<Type> & graph)
+GraphTypes::Cost WeightsTransformer<Type>::Get_zero_offset(const Graph<Type> & graph)
 {
   typename Graph<Type>::EdgeIterator edge;
   GraphTypes::Cost cost, min_cost;
@@ -37,7 +37,7 @@ GraphTypes::Cost WeightsTransformer<Type>::get_zero_offset(const Graph<Type> & g
 }
 
 template<typename Type>
-Graph<Type> WeightsTransformer<Type>::translate_weights(const Graph<Type> & graph, const GraphTypes::Cost & offset)
+Graph<Type> WeightsTransformer<Type>::Translate_weights(const Graph<Type> & graph, const GraphTypes::Cost & offset)
 {
   typename Graph<Type>::EdgeIterator it;
   Edge edge;
@@ -54,14 +54,14 @@ Graph<Type> WeightsTransformer<Type>::translate_weights(const Graph<Type> & grap
 }
 
 template<typename Type>
-Graph<Type> WeightsTransformer<Type>::translate_weights(const Graph<Type> & graph)
+Graph<Type> WeightsTransformer<Type>::Translate_weights(const Graph<Type> & graph)
 {
   GraphTypes::Cost offset;
 
-  offset = get_zero_offset(graph);
+  offset = Get_zero_offset(graph);
 
   if(offset > 0){
-    return translate_weights(graph, offset);
+    return Translate_weights(graph, offset);
   }
   else{
     return Graph<Type>(graph);
@@ -69,21 +69,21 @@ Graph<Type> WeightsTransformer<Type>::translate_weights(const Graph<Type> & grap
 }
 
 template<typename Type>
-Graph<Type> WeightsTransformer<Type>::reverse_weights_order(const Graph<Type> & graph)
+Graph<Type> WeightsTransformer<Type>::Reverse_weights_order(const Graph<Type> & graph)
 {
   GraphTypes::Cost initial_offset, offset;
   Graph<Type> transformed;
 
-  initial_offset = get_zero_offset(graph);
-  transformed = invert_weights_signs(graph);
-  offset = get_zero_offset(transformed);
-  return translate_weights(transformed, offset - initial_offset);
+  initial_offset = Get_zero_offset(graph);
+  transformed = Invert_weights_signs(graph);
+  offset = Get_zero_offset(transformed);
+  return Translate_weights(transformed, offset - initial_offset);
 }
 
 
 template<typename Type>
 template<typename V>
-Graph<Type> WeightsTransformer<Type>::update_subgraph(const Graph<Type> & graph, const Graph<V> & subgraph)
+Graph<Type> WeightsTransformer<Type>::Update_subgraph(const Graph<Type> & graph, const Graph<V> & subgraph)
 {
   Graph<Type> updated;
   typename Graph<Type>::EdgeIterator it;

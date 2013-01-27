@@ -5,12 +5,14 @@
 #include "Acm.hpp"
 #include "Exporter.hpp"
 
-int main(){
+int main()
+{
   Graph<> graph(GraphTypes::UNDIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
   std::map<GraphTypes::node_id, std::string> label_mapper;
-  Graph<> min_tree( graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
-  Acm<> acm;
-  Exporter<> exporte;
+  Graph<> min_tree(GraphTypes::UNDIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
+
+  typedef Acm<> Acm;
+  typedef Exporter<> Export;
 
   //On ajoute les villes (noeuds)
   label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(1,"Artigueloutan") );
@@ -86,49 +88,67 @@ int main(){
   //Liaison Pau
   graph.add_edge(12,13,10.3);
 
-  try{
-    std::cout << exporte.toGraphviz(graph, label_mapper) << std::endl << std::endl;
-    // std::cout << exporte.toMathString(graph, label_mapper) << std::endl << std::endl;
+  try
+    {
+      std::cout << Export::ToGraphviz(graph, label_mapper) << std::endl << std::endl;
+      // std::cout << Export::ToMathString(graph, label_mapper) << std::endl << std::endl;
 
-    exporte.toGraphviz(graph, label_mapper, "reseau_routier.graph");
-    std::cout << "Le graphe a été exporté dans le fichier reseau_routier.graph" << std::endl << std::endl;
-    std::cout << "dot -Tpng reseau_routier.graph -o reseau_routier.png" << std::endl << std::endl;
+      Export::ToGraphviz(graph, label_mapper, "reseau_routier.graph");
+      std::cout << "Le graphe a été exporté dans le fichier reseau_routier.graph" << std::endl << std::endl;
+      std::cout << "dot -Tpng reseau_routier.graph -o reseau_routier.png" << std::endl << std::endl;
 
-    min_tree = acm.prim(graph);
-    std::cout << "Prim:" << std::endl;
-    std::cout << exporte.toGraphviz(min_tree, label_mapper) << std::endl;
-    std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
+      min_tree = Acm::Prim(graph);
+      std::cout << "Prim:" << std::endl;
+      std::cout << Export::ToGraphviz(min_tree, label_mapper) << std::endl;
+      std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
 
-    exporte.toGraphviz(min_tree, label_mapper, "acm_prim.graph");
-    std::cout << "L'arbre a été exporté dans le fichier acm_prim.graph" << std::endl;
-    std::cout << "dot -Tpng acm_prim.graph -o acm_prim.png" << std::endl << std::endl;
+      Export::ToGraphviz(min_tree, label_mapper, "acm_prim.graph");
+      std::cout << "L'arbre a été exporté dans le fichier acm_prim.graph" << std::endl;
+      std::cout << "dot -Tpng acm_prim.graph -o acm_prim.png" << std::endl << std::endl;
 
-    min_tree = acm.kruskal(graph);
-    std::cout << "Kruskal:" << std::endl;
-    std::cout << exporte.toGraphviz(min_tree, label_mapper) << std::endl;
-    std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
+      min_tree = Acm::Kruskal(graph);
+      std::cout << "Kruskal:" << std::endl;
+      std::cout << Export::ToGraphviz(min_tree, label_mapper) << std::endl;
+      std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
 
-    exporte.toGraphviz(min_tree, label_mapper, "acm_kruskal.graph");
-    std::cout << "L'arbre a été exporté dans le fichier acm_kruskal.graph" << std::endl;
-    std::cout << "dot -Tpng acm_kruskal.graph -o acm_kruskal.png" << std::endl << std::endl;
+      Export::ToGraphviz(min_tree, label_mapper, "acm_kruskal.graph");
+      std::cout << "L'arbre a été exporté dans le fichier acm_kruskal.graph" << std::endl;
+      std::cout << "dot -Tpng acm_kruskal.graph -o acm_kruskal.png" << std::endl << std::endl;
 
-    system("dot -Tpng reseau_routier.graph -o reseau_routier.png");
-    system("dot -Tpng acm_prim.graph -o acm_prim.png");
-    system("dot -Tpng acm_kruskal.graph -o acm_kruskal.png");
+#ifdef _SYSTEM
 
-  }
-  catch(std::invalid_argument & iv){
-    std::cout << "Caught invalid_argument exception:" << std::endl << iv.what() << std::endl;
-  }
-  catch(std::logic_error & le){
-    std::cout << "Caught logic_error exception:" << std::endl << le.what() << std::endl;
-  }
-  catch(std::exception & e){
-    std::cout << "Caught exception:" << std::endl << e.what() << std::endl;
-  }
-  catch(...){
-    std::cout << "Caught unexpected exception." << std::endl;
-  }
+      system("dot -Tpng reseau_routier.graph -o reseau_routier.png");
+      system("dot -Tpng acm_prim.graph -o acm_prim.png");
+      system("dot -Tpng acm_kruskal.graph -o acm_kruskal.png");
+
+#endif
+
+    }
+
+  catch(const GraphException::InvalidOperation & io)
+    {
+      std::cout << "Caught GraphException::InvalidOperation:" << std::endl << io.what() << std::endl;
+    }
+
+  catch(const GraphException::InvalidNodeID & in)
+    {
+      std::cout << "Caught GraphException::InvalidNodeID:" << std::endl << in.what() << std::endl;
+    }
+
+  catch(const GraphException::InvalidEdge & ie)
+    {
+      std::cout << "Caught GraphException::InvalidEdge:" << std::endl << ie.what() << std::endl;
+    }
+
+  catch(const std::exception & e)
+    {
+      std::cout << "Caught std::exception:" << std::endl << e.what() << std::endl;
+    }
+
+  catch(...)
+    {
+      std::cout << "Caught unexpected exception." << std::endl;
+    }
 
   return 0;
 }
