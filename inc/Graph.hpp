@@ -1,5 +1,5 @@
-#ifndef GRAPH
-#define GRAPH
+#ifndef _Graph
+#define _Graph
 
 #include "PonderableGraph.hpp"
 
@@ -10,28 +10,27 @@ protected:
   std::map<GraphTypes::node_id, Type> _contents;
 
 public:
-  Graph(GraphTypes::EdgeType edgeType=GraphTypes::UNDIRECTED, GraphTypes::EdgeState state=GraphTypes::WEIGHTED, GraphTypes::NodeType nodeType=GraphTypes::NOCONTENT);
+  Graph(const GraphTypes::EdgeType & edgeType=GraphTypes::UNDIRECTED, const GraphTypes::EdgeState & state=GraphTypes::WEIGHTED, const GraphTypes::NodeType & nodeType=GraphTypes::NOCONTENT);
   Graph(const Graph & source);
 
   Graph & operator=(const Graph & source);
 
   // Adaptation des prédicats
-  bool is_container();
+  bool is_container()const;
 
   // Adaptation des constructeurs
-  void add_node(GraphTypes::node_id id, Type content);
-  void add_node(GraphTypes::node_id id) throw(std::logic_error);
-  void remove_node(GraphTypes::node_id node_id);
-  void add_edge(GraphTypes::node_id src_node, Type content1, GraphTypes::node_id target_node, Type content2, GraphTypes::Cost cost=1.F);
-  void add_edge(GraphTypes::node_id existing_src, GraphTypes::node_id existing_target, GraphTypes::Cost cost=1.F) throw(std::invalid_argument);
-  void remove_edge(GraphTypes::node_id src_node, GraphTypes::node_id target_node);
+  void add_node(const GraphTypes::node_id & node, const Type & content);
+  void add_node(const GraphTypes::node_id & node) throw(GraphException::InvalidOperation);
+  void remove_node(const GraphTypes::node_id & node_id);
+  void add_edge(const GraphTypes::node_id & src_node, const Type & content1, const GraphTypes::node_id & target_node, const Type & content2, const GraphTypes::Cost & cost=0.F);
+  void add_edge(const GraphTypes::node_id & existing_src, const GraphTypes::node_id & existing_target, const GraphTypes::Cost & cost=0.F) throw(GraphException::InvalidOperation);
 
   // Adaptation des observateurs
   GraphTypes::NodeType nodeType()const;
 
   // Nouvelles opérations
-  void set_node_content(GraphTypes::node_id id, Type content) throw(std::logic_error, std::invalid_argument);
-  Type get_node_content(GraphTypes::node_id id) throw(std::logic_error, std::invalid_argument);
+  void set_node_content(const GraphTypes::node_id & node, const Type & content) throw(GraphException::InvalidOperation, GraphException::InvalidNodeID);
+  Type get_node_content(const GraphTypes::node_id & node)const throw(GraphException::InvalidOperation, GraphException::InvalidNodeID);
 };
 
 #include "Graph.cpp"

@@ -7,20 +7,22 @@
 
 template<typename Type=GraphTypes::Default>
 class Traverse{
+private:
+  static void _Breadth_once(Graph<Type> & graph, const GraphTypes::node_id & node, GraphFunctor::Visitor & visit, std::set<GraphTypes::node_id> & marker);
+
+  static void _Depth_once(Graph<Type> & graph, const GraphTypes::node_id & node, GraphFunctor::Visitor & visit, std::set<GraphTypes::node_id> & marker);
+
 public:
-  static void nodes(Graph<Type> & graph, Visitor<Type> & visitor);
+  static void Nodes(Graph<Type> & graph, GraphFunctor::Visitor & visit);
 
-  static void breadth_once(Graph<Type> & graph, GraphTypes::node_id node, Visitor<Type> & visitor, std::set<GraphTypes::node_id> & marker);
+  static void Breadth_once(Graph<Type> & graph, const GraphTypes::node_id & node, GraphFunctor::Visitor & visit);
 
-  static void breadth(Graph<Type> & graph, Visitor<Type> & visitor);
+  static void Breadth(Graph<Type> & graph, GraphFunctor::Visitor & visit);
 
-  static void depth_once(Graph<Type> & graph, GraphTypes::node_id node, Visitor<Type> & visitor, std::set<GraphTypes::node_id> & marker);
+  static void Depth_once(Graph<Type> & graph, const GraphTypes::node_id & node, GraphFunctor::Visitor & visit);
 
-  static void depth(Graph<Type> & graph, Visitor<Type> & visitor);
+  static void Depth(Graph<Type> & graph, GraphFunctor::Visitor & visit);
 
-  static void reverse_breadth_once(Graph<Type> & graph, GraphTypes::node_id node, Visitor<Type> & visitor, std::set<GraphTypes::node_id> & marker);
-
-  static void reverse_breadth(Graph<Type> & graph, Visitor<Type> & visitor);
 };
 
 #include "Traverse.cpp"

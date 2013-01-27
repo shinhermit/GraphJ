@@ -19,7 +19,7 @@ public:
   bool operator>=(const Node & ref)const;
   bool operator!=(const Node & ref)const;
 
-  GraphTypes::node_id id()const;
+  const GraphTypes::node_id & id()const;
 };
 
 #endif

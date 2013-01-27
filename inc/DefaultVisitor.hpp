@@ -1,27 +1,29 @@
-#ifndef DEFAULTVISITOR
-#define DEFAULTVISITOR
+#ifndef _DefaultVisitor
+#define _DefaultVisitor
 
 #include <string>
 #include <sstream>
 #include "Visitor.hpp"
 #include "GraphTypes.hpp"
 
-template<typename Type>
-class DefaultVisitor : public Visitor<Type>{
-private:
-  std::string _buffer;
-  std::set<GraphTypes::node_id> _visited;
+namespace GraphFunctor
+{
 
-public:
-  DefaultVisitor();
-  virtual ~DefaultVisitor();
+  template<typename Type>
+  class DefaultVisitor : public Visitor{
+  private:
+    const Graph<Type> & _graph;
+    std::string & _buffer;
+    std::set<GraphTypes::node_id> _visited;
 
-  //Attention: cette méthode a été spécialisée pour les std::string
-  virtual void treat(Graph<Type> & graph, GraphTypes::node_id node);
+  public:
+    DefaultVisitor(const Graph<Type> & graph, std::string & buffer);
 
-  std::string nodes_representation()const;
+    ~DefaultVisitor();
 
-  void flush();
+    void operator()(const GraphTypes::node_id & node);
+  };
+
 };
 
 #include "DefaultVisitor.cpp"

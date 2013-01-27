@@ -1,9 +1,10 @@
-#ifndef EDGE
-#define EDGE
+#ifndef _Edge
+#define _Edge
 
 #include "Node.hpp"
 
-class Edge{
+class Edge
+{
 protected:
   GraphTypes::node_id _origin;
   GraphTypes::node_id _target;
@@ -20,8 +21,8 @@ public:
   bool operator>=(const Edge & ref)const;
   bool operator!=(const Edge & ref)const;
 
-  GraphTypes::node_id source()const;
-  GraphTypes::node_id target()const;
+  const GraphTypes::node_id & source()const;
+  const GraphTypes::node_id & target()const;
 };
 
 #endif

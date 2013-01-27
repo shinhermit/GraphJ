@@ -6,8 +6,9 @@ tmp = ../templates
 paths = -I$(inc) -I$(tmp)
 flags = -Wall -g
 cc = g++
+sys = -D_SYSTEM
 cmd = $(cc) $(flags) $(paths) $@.cpp $(obj)/*.o -o ../$@.out
-
+cmd_sys = $(cmd) $(sys)
 
 ########### CIBLES ###########
 
@@ -16,7 +17,13 @@ cmd = $(cc) $(flags) $(paths) $@.cpp $(obj)/*.o -o ../$@.out
 BaseGraph_validation:
 	$(cmd)
 
-DirectableGraph_validation1:
+DirectableGraph_validation:
+	$(cmd)
+
+PonderableGraph_validation:
+	$(cmd)
+
+Graph_validation:
 	$(cmd)
 
 
@@ -24,49 +31,49 @@ DirectableGraph_validation1:
 #### Tests
 
 test_node:
-	$(cmd)
+	$(cmd_sys)
 
 test_directed:
-	$(cmd)
+	$(cmd_sys)
 
 test_acm_directed:
-	$(cmd)
+	$(cmd_sys)
 
 test_acm:
-	$(cmd)
+	$(cmd_sys)
 
 test_coloring:
-	$(cmd)
+	$(cmd_sys)
 
 test_dijkstra:
-	$(cmd)
+	$(cmd_sys)
 
 test_dijkstra_maximize:
-	$(cmd)
+	$(cmd_sys)
 
 test_dijkstra_negative:
-	$(cmd)
+	$(cmd_sys)
 
 test_bellman:
-	$(cmd)
+	$(cmd_sys)
 
 test_Xdijkstra:
-	$(cmd)
+	$(cmd_sys)
 
 test_Xbellman:
-	$(cmd)
+	$(cmd_sys)
 
 test_weights_transformations:
-	$(cmd)
+	$(cmd_sys)
 
 reseau_routier:
-	$(cmd)
+	$(cmd_sys)
 
 feux_tricolores:
-	$(cmd)
+	$(cmd_sys)
 
 gps:
-	$(cmd)
+	$(cmd_sys)
 
 gps_multichemin:
-	$(cmd)
+	$(cmd_sys)

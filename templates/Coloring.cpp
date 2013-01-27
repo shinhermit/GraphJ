@@ -9,7 +9,7 @@ std::set<WeightedNode> Coloring<Type>::_sort_nodes_by_degrees(Graph<Type> & grap
     {
       sorted_nodes.insert( WeightedNode(*node, graph.degree(*node)) );
 
-      node++;
+      ++node;
     }
 
   return sorted_nodes;
@@ -27,7 +27,7 @@ bool Coloring<Type>::_partite_compatible(Graph<Type> graph, GraphTypes::node_id 
       if( graph.has_edge(node, *it) )
 	compatible = false;
 
-      it++;
+      ++it;
     }
 
   return compatible;
@@ -70,12 +70,12 @@ std::map<GraphTypes::node_id, NamedColor::ColorName> Coloring<Type>::welsh(Graph
 	    }
 	  else
 	    {
-	      it_sn++;
+	      ++it_sn;
 	    }
 
 	}
 
-      it_color++;
+      ++it_color;
     }
 
   return color_mapper;

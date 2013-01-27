@@ -3,6 +3,7 @@
 
 #include <map>
 #include <set>
+#include <cassert>
 #include "Node.hpp"
 #include "Edge.hpp"
 #include "GraphTypes.hpp"
@@ -11,19 +12,17 @@
 
 class BaseGraph{
 public:
-  typedef std::set<GraphTypes::node_id>::const_iterator NodeIterator;
-
   typedef GraphIterator::TopologyIterator EdgeIterator;
 
-  typedef GraphIterator::DoubleNodeListIterator AdjacentsIterator;
+  typedef GraphIterator::DoubleNodeSetIterator NodeIterator;
 
 private:
   unsigned int _clean_topology(std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & topology,
-			     std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & relative_reversed,
-			     const GraphTypes::node_id & id);
+			       std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & relative_reversed,
+			       const GraphTypes::node_id & id);
 
-  NodeIterator _adjacent_begin(const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & topology_map, const GraphTypes::node_id & node)const;
-  NodeIterator _adjacent_end(const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & topology_map, const GraphTypes::node_id & node)const;
+  std::set<GraphTypes::node_id>::const_iterator _adjacent_begin(const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & topology_map, const GraphTypes::node_id & node)const;
+  std::set<GraphTypes::node_id>::const_iterator _adjacent_end(const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & topology_map, const GraphTypes::node_id & node)const;
 
 protected:
   std::set<GraphTypes::node_id> _nodes; /*!< id-sorted vector of all Nodes IDs*/
@@ -62,21 +61,21 @@ public:
   GraphTypes::EdgeType edgeType()const;
   GraphTypes::EdgeState edgeState()const;
 
-  NodeIterator successors_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
-  NodeIterator successors_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
-  NodeIterator predecessors_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
-  NodeIterator predecessors_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
-  AdjacentsIterator adjacents_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
-  AdjacentsIterator adjacents_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
+  NodeIterator predecessors_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation);
+  NodeIterator predecessors_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation);
+  NodeIterator successors_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation);
+  NodeIterator successors_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation);
+  NodeIterator adjacents_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID);
+  NodeIterator adjacents_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID);
 
   NodeIterator nodes_begin()const;
   NodeIterator nodes_end()const;
   EdgeIterator edges_begin()const;
   EdgeIterator edges_end()const;
 
-  unsigned long in_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
-  unsigned long out_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
-  unsigned long degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
+  unsigned long in_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID);
+  unsigned long out_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID);
+  unsigned long degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID);
 };
 
 #endif

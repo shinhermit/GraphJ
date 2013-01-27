@@ -36,12 +36,12 @@ bool Edge::operator!=(const Edge & ref)const
   return _origin != ref._origin || _target != ref._target;
 }
 
-GraphTypes::node_id Edge::source()const
+const GraphTypes::node_id & Edge::source()const
 {
   return _origin;
 }
 
-GraphTypes::node_id Edge::target()const
+const GraphTypes::node_id & Edge::target()const
 {
   return _target;
 }

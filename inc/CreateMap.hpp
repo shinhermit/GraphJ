@@ -1,5 +1,5 @@
-#ifndef CREATEMAP
-#define CREATEMAP
+#ifndef _CreateMap
+#define _CreateMap
 
 #include <map>
 
@@ -10,7 +10,8 @@
  *std::map<T,U> m = CreateMap<T,U>(T key1, U val1)(T key1, U val2)...(T key_n, U val_n)
  */
 template <typename T, typename U>
-class CreateMap{
+class CreateMap
+{
 private:
   std::map<T, U> m_map;
 

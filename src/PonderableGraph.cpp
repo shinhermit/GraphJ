@@ -1,6 +1,6 @@
 #include "PonderableGraph.hpp"
 
-PonderableGraph::PonderableGraph(GraphTypes::EdgeType edgeType, GraphTypes::EdgeState edgeState):DirectableGraph(edgeType), _edgeState(edgeState){}
+PonderableGraph::PonderableGraph(const GraphTypes::EdgeType & edgeType, const GraphTypes::EdgeState & edgeState):DirectableGraph(edgeType), _edgeState(edgeState){}
 
 PonderableGraph::PonderableGraph(const PonderableGraph & source):DirectableGraph(source), _edgeState(source._edgeState), _weights(source._weights){}
 
@@ -11,16 +11,16 @@ PonderableGraph & PonderableGraph::operator=(const PonderableGraph & source){
   return *this;
 }
 
-bool PonderableGraph::is_weighted(){
+bool PonderableGraph::is_weighted()const{
   return (_edgeState == GraphTypes::WEIGHTED);
 }
 
-void PonderableGraph::remove_node(GraphTypes::node_id id){
+void PonderableGraph::remove_node(const GraphTypes::node_id & node){
   std::map<Edge, float>::iterator it;
 
   it = _weights.begin();
   while( it != _weights.end() ){
-    if(it->first.source() == id || it->first.target() == id){
+    if(it->first.source() == node || it->first.target() == node){
       _weights.erase(it++);
     }
     else{
@@ -28,32 +28,44 @@ void PonderableGraph::remove_node(GraphTypes::node_id id){
     }
   }
 
-  DiGraph::remove_node(id);
+  DirectableGraph::remove_node(node);
 }
 
-void PonderableGraph::add_edge(GraphTypes::node_id id1, GraphTypes::node_id id2,GraphTypes::Cost cost){
+void PonderableGraph::add_edge(const GraphTypes::node_id & origin, const GraphTypes::node_id & target, const GraphTypes::Cost & cost){
   std::map<Edge,GraphTypes::Cost>::iterator it;
 
-  DirectableGraph::add_edge(id1, id2);
+  DirectableGraph::add_edge(origin, target);
+
   if(_edgeState == GraphTypes::WEIGHTED){
-    _weights.insert( std::pair<Edge,GraphTypes::Cost>(Edge(id1, id2), cost) );
+
+    if( (_edgeType == GraphTypes::DIRECTED) || ( origin < target ) ){
+      _weights.insert( std::pair<Edge,GraphTypes::Cost>(Edge(origin, target), cost) );
+    }
+    else{
+      _weights.insert( std::pair<Edge,GraphTypes::Cost>(Edge(target, origin), cost) );
+    }
+
   }
 }
 
-void PonderableGraph::remove_edge(GraphTypes::node_id id1, GraphTypes::node_id id2){
+void PonderableGraph::remove_edge(const GraphTypes::node_id & origin, const GraphTypes::node_id & target){
   std::map<Edge, GraphTypes::Cost>::iterator it;
 
-  DirectableGraph::remove_edge(id1, id2);
+  DirectableGraph::remove_edge(origin, target);
 
   if(_edgeState == GraphTypes::WEIGHTED){
-    it = _weights.find(Edge(id1, id2));
-    if( it == _weights.end() && _edgeType == GraphTypes::UNDIRECTED){
-      it = _weights.find(Edge(id2, id1));
+
+    if( (_edgeType == GraphTypes::DIRECTED) || ( origin < target ) ){
+      it = _weights.find( Edge(origin, target) );
+    }
+    else{
+      it = _weights.find(Edge(target, origin));
     }
 
     if( it != _weights.end() ){
       _weights.erase(it);
     }
+
   }
 }
 
@@ -61,68 +73,71 @@ GraphTypes::EdgeState PonderableGraph::edgeState()const{
   return _edgeState;
 }
 
-void PonderableGraph::setCost(GraphTypes::node_id node1, GraphTypes::node_id node2, GraphTypes::Cost cost) throw(std::invalid_argument, std::logic_error){
+void PonderableGraph::setCost(const GraphTypes::node_id & origin, const GraphTypes::node_id & target, const GraphTypes::Cost & cost) throw(GraphException::InvalidEdge, GraphException::InvalidOperation){
   std::map<Edge, GraphTypes::Cost>::iterator it;
 
-  if( !has_edge(node1, node2) ){
-    throw std::invalid_argument("PonderableGraph::setCost(node_id, node_id,Cost): given node_ids do not refer to a valid edge");
+  if( !has_edge(origin, target) ){
+    throw GraphException::InvalidEdge(origin, target, "Given node_ids do not refer to a valid edge", __LINE__, __FILE__, "PonderableGraph::setCost(const GraphTypes::node_id&, const GraphTypes::node_id&, const GraphTypes::Cost&)");
   }
   else if(_edgeState == GraphTypes::UNWEIGHTED){
-    throw std::logic_error("PonderableGraph::setCost(node_id, node_id,Cost): the graph is an unweighted Graph");
+    throw GraphException::InvalidOperation("The graph is unweighted", __LINE__, __FILE__, "PonderableGraph::setCost(const GraphTypes::node_id&, const GraphTypes::node_id&, const GraphTypes::Cost&)");
   }
   else{
-    it = _weights.find( Edge(node1, node2) );
-    if(it == _weights.end() && _edgeType == GraphTypes::UNDIRECTED){
-      it = _weights.find( Edge(node2, node1) );
-    }
 
-    if( it != _weights.end() ){
-      it->second = cost;
+    if( (_edgeType == GraphTypes::DIRECTED) || ( origin < target ) ){
+      it = _weights.find( Edge(origin, target) );
     }
     else{
-      _weights.insert( std::pair<Edge, GraphTypes::Cost>(Edge(node1, node2), cost) );
+      it = _weights.find( Edge(target, origin) );
     }
+
+    //Normally, every edge is inserted with a default weight
+    assert( it != _weights.end() );
+
+    it->second = cost;
   }
 }
 
-GraphTypes::Cost PonderableGraph::getCost(GraphTypes::node_id node1, GraphTypes::node_id node2) throw(std::invalid_argument, std::logic_error){
-  std::map<Edge, GraphTypes::Cost>::iterator it;
+GraphTypes::Cost PonderableGraph::getCost(const GraphTypes::node_id & origin, const GraphTypes::node_id & target)const throw(GraphException::InvalidEdge, GraphException::InvalidOperation){
+  std::map<Edge, GraphTypes::Cost>::const_iterator it;
 
   if(_edgeState == GraphTypes::WEIGHTED){
 
-    if( !has_edge(node1, node2) ){
-      throw std::invalid_argument("PonderableGraph::getCost(node_id, node_id): given arguments do not refer to a valid edge");
+    if( !has_edge(origin, target) ){
+    throw GraphException::InvalidEdge(origin, target, "Given node_ids do not refer to a valid edge", __LINE__, __FILE__, "PonderableGraph::getCost(const GraphTypes::node_id&, const GraphTypes::node_id&)");
     }
     else{
-      it = _weights.find( Edge(node1, node2) );
-      if( it == _weights.end() && _edgeType == GraphTypes::UNDIRECTED ){
-	it = _weights.find( Edge(node2, node1) );
-      }
 
-      if( it != _weights.end() ){
-	return it->second;
+      if( (_edgeType == GraphTypes::DIRECTED) || ( origin < target ) ){
+	it = _weights.find( Edge(origin, target) );
       }
       else{
-	throw std::logic_error("PonderableGraph::getCost(GraphTypes::node_id, GraphTypes::node_id)const : edge associated to no cost in a weighted graph");
+	it = _weights.find( Edge(target, origin) );
       }
+
+      //Normally, any edge is associated to a weight
+      assert( it != _weights.end() );
+
+      return it->second;
     }
+
   }
   else{
-    throw std::logic_error("PonderableGraph::getCost(GraphTypes::node_id, GraphTypes::node_id)const : the graph is an graphTypes::UNWEIGHTED graph");
+    throw GraphException::InvalidOperation("The graph is unweighted", __LINE__, __FILE__, "PonderableGraph::getCost(const GraphTypes::node_id&, const GraphTypes::node_id&)");
   }
 }
 
-GraphTypes::Cost PonderableGraph::getCost(const Edge & edge) throw(std::invalid_argument, std::logic_error)
+GraphTypes::Cost PonderableGraph::getCost(const Edge & edge)const throw(GraphException::InvalidEdge, GraphException::InvalidOperation)
 {
   return getCost( edge.source(), edge.target() );
 }
 
-GraphTypes::Cost PonderableGraph::cost() throw(std::logic_error){
-  std::map<Edge,GraphTypes::Cost>::iterator it;
+GraphTypes::Cost PonderableGraph::cost()const throw(GraphException::InvalidOperation){
+  std::map<Edge,GraphTypes::Cost>::const_iterator it;
   GraphTypes::Cost cost;
 
   if(_edgeState == GraphTypes::UNWEIGHTED){
-    throw std::logic_error("PonderableGraph::cost()const : the type of the graph is graphTypes::UNWEIGHTED");
+    throw GraphException::InvalidOperation("The graph is unweighted", __LINE__, __FILE__, "PonderableGraph::cost()");
   }
   else{
     cost = 0;

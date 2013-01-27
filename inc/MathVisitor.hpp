@@ -1,29 +1,33 @@
-#ifndef MATHVISITOR
-#define MATHVISITOR
+#ifndef _MathVisitor
+#define _MathVisitor
 
 #include "Visitor.hpp"
 #include <fstream>
 #include <sstream>
 #include <string>
 
-template<typename Type>
-class MathVisitor : public Visitor<Type>{
-private:
-  std::string _S_buffer; //vertices
-  std::string _A_buffer; //edges
-  std::string _C_buffer; //weights
+namespace GraphFunctor
+{
 
-  std::set<GraphTypes::node_id> _visited;
+  template<typename Type>
+  class MathVisitor : public Visitor
+  {
+  private:
+    const Graph<Type> & _graph;
+    std::string & _S_buffer; //vertices
+    std::string & _A_buffer; //edges
+    std::string & _C_buffer; //weights
 
-public:
-  MathVisitor();
-  virtual ~MathVisitor();
+    std::set<GraphTypes::node_id> _visited;
 
-  virtual void treat(Graph<Type> & graph, GraphTypes::node_id node);
+  public:
+    MathVisitor(const Graph<Type> & graph, std::string & S_buffer, std::string & A_buffer, std::string & C_buffer);
 
-  std::string math_representation()const;
+    ~MathVisitor();
 
-  void flush();
+    void operator()(const GraphTypes::node_id & node);
+  };
+
 };
 
 #include "MathVisitor.cpp"

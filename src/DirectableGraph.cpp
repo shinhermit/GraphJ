@@ -11,27 +11,37 @@ bool DirectableGraph::is_directed()const
 
 bool DirectableGraph::has_edge(const GraphTypes::node_id & origin, const GraphTypes::node_id & target)const
 {
-  return BaseGraph::has_edge(origin, target) || BaseGraph::has_edge(origin, target);
+  bool has = BaseGraph::has_edge(origin, target);
+
+  if(!has && _edgeType == GraphTypes::UNDIRECTED){
+    has = BaseGraph::has_edge(target, origin);
+  }
+
+  return has;
 }
 
 void DirectableGraph::add_edge(const GraphTypes::node_id & origin, const GraphTypes::node_id & target)
 {
 
-  if( BaseGraph::has_edge(target, origin) ){
+  if( (_edgeType == GraphTypes::DIRECTED) || (origin < target) ){
+
     BaseGraph::add_edge(origin, target);
   }
+  else{
+    BaseGraph::add_edge(target, origin);
+  }
+
 }
 
 void DirectableGraph::remove_edge(const GraphTypes::node_id & origin, const GraphTypes::node_id & target)
 {
-  unsigned int oldsize;
 
-  oldsize = _nb_of_edges;
+  if( (_edgeType == GraphTypes::DIRECTED) || (origin < target) ){
 
-  BaseGraph::remove_edge(origin,target);
-
-  if(_nb_of_edges == oldsize){
-    BaseGraph::remove_edge(target,origin);
+    BaseGraph::remove_edge(origin, target);
+  }
+  else{
+    BaseGraph::remove_edge(target, origin);
   }
 }
 
@@ -40,7 +50,55 @@ GraphTypes::EdgeType DirectableGraph::edgeType()const
   return _edgeType;
 }
 
-unsigned long DirectableGraph::in_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException)
+DirectableGraph::NodeIterator DirectableGraph::predecessors_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation)
+{
+
+  if(_edgeType == GraphTypes::DIRECTED){
+    return BaseGraph::predecessors_begin(node);
+  }
+  else{
+    throw GraphException::InvalidOperation("undirected graph: use adjacents_begin(const GraphTypes::node_id&)", __LINE__, __FILE__, "DirectableGraph::predecessors_begin(const GraphTypes::node_id&)");
+  }
+
+}
+
+DirectableGraph::NodeIterator DirectableGraph::predecessors_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation)
+{
+
+  if(_edgeType == GraphTypes::DIRECTED){
+    return BaseGraph::predecessors_end(node);
+  }
+  else{
+    throw GraphException::InvalidOperation("undirected graph: use adjacents_end(const GraphTypes::node_id&)", __LINE__, __FILE__, "DirectableGraph::predecessors_end(const GraphTypes::node_id&)");
+  }
+
+}
+
+DirectableGraph::NodeIterator DirectableGraph::successors_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation)
+{
+
+  if(_edgeType == GraphTypes::DIRECTED){
+    return BaseGraph::successors_begin(node);
+  }
+  else{
+    throw GraphException::InvalidOperation("undirected graph: use adjacents_begin(const GraphTypes::node_id&)", __LINE__, __FILE__, "DirectableGraph::successors_begin(const GraphTypes::node_id&)");
+  }
+
+}
+
+DirectableGraph::NodeIterator DirectableGraph::successors_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation)
+{
+
+  if(_edgeType == GraphTypes::DIRECTED){
+    return BaseGraph::successors_end(node);
+  }
+  else{
+    throw GraphException::InvalidOperation("undirected graph: use adjacents_end(const GraphTypes::node_id&)", __LINE__, __FILE__, "DirectableGraph::successors_end(const GraphTypes::node_id&)");
+  }
+
+}
+
+unsigned long DirectableGraph::in_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID)
 {
 
   if(_edgeType == GraphTypes::DIRECTED){
@@ -51,7 +109,7 @@ unsigned long DirectableGraph::in_degree(const GraphTypes::node_id & node)const 
   }  
 }
 
-unsigned long DirectableGraph::out_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException)
+unsigned long DirectableGraph::out_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID)
 {
 
   if(_edgeType == GraphTypes::DIRECTED){

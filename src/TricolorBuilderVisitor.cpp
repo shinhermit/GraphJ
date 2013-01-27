@@ -1,8 +1,12 @@
-TricolorBuilderVisitor::TricolorBuilderVisitor(long nb_roads):_nb_roads(nb_roads){}
+#include "TricolorBuilderVisitor.hpp"
+
+using namespace GraphFunctor;
+
+TricolorBuilderVisitor::TricolorBuilderVisitor(Graph<Edge> & graph, const long & nb_roads):_graph(graph), _nb_roads(nb_roads){}
 
 TricolorBuilderVisitor::~TricolorBuilderVisitor(){}
 
-long TricolorBuilderVisitor::_renumber(long asFirst, long oldNumber)
+long TricolorBuilderVisitor::_renumber(const long & asFirst, const long & oldNumber)const
 {
   long renum, delta;
 
@@ -15,7 +19,7 @@ long TricolorBuilderVisitor::_renumber(long asFirst, long oldNumber)
   return renum;
 }
 
-bool TricolorBuilderVisitor::_adjacent(Edge edge1, Edge edge2)
+bool TricolorBuilderVisitor::_adjacent(const Edge & edge1, const Edge & edge2)const
 {
   bool adjacent;
 
@@ -34,7 +38,7 @@ bool TricolorBuilderVisitor::_adjacent(Edge edge1, Edge edge2)
   return adjacent;
 }
 
-bool TricolorBuilderVisitor::_intersect(Edge edge1, Edge edge2)
+bool TricolorBuilderVisitor::_intersect(const Edge & edge1, const Edge & edge2)const
 {
   long asFirst, reSource1, reTarget1, reSource2, reTarget2, oldNumber;
   bool intersect;
@@ -65,28 +69,30 @@ bool TricolorBuilderVisitor::_intersect(Edge edge1, Edge edge2)
   return intersect;
 }
 
-void TricolorBuilderVisitor::treat(Graph<Edge> & graph, GraphTypes::node_id node)
+void TricolorBuilderVisitor::operator()(const GraphTypes::node_id & node)
 {
   Graph<Edge>::NodeIterator node2;
-  Edge current(0,0), candidate(0,0);
+  Edge current, candidate;
 
-  current = graph.get_node_content(node);
+  current = _graph.get_node_content(node);
 
-  node2 = graph.nodes_begin();
-  while( node2 != graph.nodes_end() ){
+  node2 = _graph.nodes_begin();
+  while( node2 != _graph.nodes_end() )
+    {
 
-    if(*node2 != node){
-      candidate = graph.get_node_content(*node2);
-
-      //arcs incompatibles si un sommet en commun ou se croisent
-      if( _adjacent(current, candidate) ||
-	  _intersect(current, candidate)
-	  )
+      if(*node2 != node)
 	{
-	  graph.add_edge(node, *node2);
-	}
-    }
+	  candidate = _graph.get_node_content(*node2);
 
-    node2++;
-  }
+	  //arcs incompatibles si un sommet en commun ou se croisent
+	  if( _adjacent(current, candidate) ||
+	      _intersect(current, candidate)
+	      )
+	    {
+	      _graph.add_edge(node, *node2);
+	    }
+	}
+
+      ++node2;
+    }
 }

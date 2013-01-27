@@ -1,3 +1,9 @@
+//tests
+template<typename T, typename V>
+void print(const std::pair<T,V> & p){std::cout << p.first << ", " << p.second <<std::endl;}
+
+template<typename T>
+void print(const Edge & e){std::cout << "(" << e.source() << "," << e.target() << ")" <<std::endl;}
 
 template<typename Type>
 void Acm<Type>::_color_each_node(const Graph<Type> & graph, std::map<GraphTypes::node_id, GraphTypes::Algorithms::Color> & color_mapper)
@@ -79,8 +85,19 @@ Graph<> Acm<Type>::Kruskal(const Graph<Type> & graph) throw(GraphException::Inva
 
   _color_each_node(graph, color);
 
+  //tests
+  std::cout << "Coloration initiale" << std::endl;
+  std::for_each(color.begin(), color.end(), print<GraphTypes::node_id, GraphTypes::Algorithms::Color>);
+
+  //tests
+  assert( GraphFunctor::WeightedEdgeComparator<Type>(graph)( Edge(1,8),Edge(2,3) ) );
+
   sorted_edges.assign( graph.edges_begin(), graph.edges_end() );
   std::sort( sorted_edges.begin(), sorted_edges.end() );
+
+  //tests
+  std::cout << "Tri des arêtes" << std::endl;
+  std::for_each(sorted_edges.begin(), sorted_edges.begin(), print<Edge>);
 
   it = sorted_edges.begin();
 
@@ -89,12 +106,24 @@ Graph<> Acm<Type>::Kruskal(const Graph<Type> & graph) throw(GraphException::Inva
       origin = it->source();
       target = it->target();
 
+      //tests
+      std::cout << "Considering edge" << "(" << origin << "," << target << ")" << std::endl;
+
       if( color[origin] != color[target] )
 	{
+	  //tests
+	  std::cout << "Node have different colors" << std::endl;
+
 	  _update_colors(acm, color, origin, target);
+
+	  //tests
+	  std::cout << "ReColoration" << std::endl;
+	  std::for_each(color.begin(), color.end(), print<GraphTypes::node_id, GraphTypes::Algorithms::Color>);
 
 	  acm.add_edge( origin, target, graph.getCost(origin, target) );
 	}
+	  //tests
+	  std::cout << "The nodes have the color" << std::endl;
 
       ++it;
     }
@@ -174,21 +203,43 @@ Graph<> Acm<Type>::Prim(const Graph<Type> & graph) throw(GraphException::Invalid
 
   _init_tables(graph, distance, predecessor);
 
+  //tests
+  std::cout << "Updating table:" << std::endl;
+  std::cout << "distances" << std::endl;
+  std::for_each(distance.begin(), distance.end(), print<GraphTypes::node_id, GraphTypes::Cost>);
+  std::cout << "prédécessurs" << std::endl;
+  std::for_each(predecessor.begin(), predecessor.end(), print<GraphTypes::node_id, GraphTypes::node_id>);
+
   allInfinite = false;
 
   while(distance.size() > 0 && !allInfinite )
     {
       closest = std::min_element( distance.begin(), distance.end(),
   				  GraphFunctor::MapValueComparator<GraphTypes::node_id, GraphTypes::Cost>() );
+      //tests
+      std::cout << "plus proche: " << closest->first << ", " << closest->second << std::endl;
 
       if( closest->second != GraphTypes::Algorithms::POSITIVE_INFINITY )
       	{
       	  target = closest->first;
       	  origin = predecessor[target];
 
+	  //tests
+	  std::cout << "adding edge: " << origin << ", " << target << std::endl;
+
       	  acm.add_edge( origin,target, graph.getCost(origin,target) );
 
+	  //tests
+	  assert( acm.has_node(origin) );
+
       	  _update_tables(graph, acm, target, distance, predecessor);
+
+	  //tests
+	  std::cout << "Updating table:" << std::endl;
+	  std::cout << "distances" << std::endl;
+	  std::for_each(distance.begin(), distance.end(), print<GraphTypes::node_id, GraphTypes::Cost>);
+	  std::cout << "prédécessurs" << std::endl;
+	  std::for_each(predecessor.begin(), predecessor.end(), print<GraphTypes::node_id, GraphTypes::node_id>);
       	}
 
       else

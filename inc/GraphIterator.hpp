@@ -3,6 +3,6 @@
 
 #include "TopologyIterator.hpp"
 
-#include "DoubleNodeListIterator.hpp"
+#include "DoubleNodeSetIterator.hpp"
 
 #endif

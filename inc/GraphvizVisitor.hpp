@@ -1,26 +1,29 @@
-#ifndef GRAPHVIZVISITOR
-#define GRAPHVIZVISITOR
+#ifndef _GraphvizVisitor
+#define _GraphvizVisitor
 
 #include "Visitor.hpp"
 #include <fstream>
 #include <sstream>
 #include <string>
 
-template<typename Type>
-class GraphvizVisitor : public Visitor<Type>{
-private:
-  std::string _buffer;
-  std::set<GraphTypes::node_id> _visited;
+namespace GraphFunctor
+{
 
-public:
-  GraphvizVisitor();
-  virtual ~GraphvizVisitor();
+  template<typename Type>
+  class GraphvizVisitor : public Visitor{
+  private:
+    const Graph<Type> & _graph;
+    std::string & _buffer;
+    std::set<GraphTypes::node_id> _visited;
 
-  virtual void treat(Graph<Type> & graph, GraphTypes::node_id node);
+  public:
+    GraphvizVisitor(const Graph<Type> & graph, std::string & _buffer);
 
-  std::string nodes_representation()const;
+    ~GraphvizVisitor();
 
-  void flush();
+    void operator()(const GraphTypes::node_id & node);
+  };
+
 };
 
 #include "GraphvizVisitor.cpp"

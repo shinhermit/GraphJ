@@ -1,38 +1,51 @@
 template<typename Type>
-Graph<Type> GraphConverter<Type>::toDirected(Graph<Type> & graph)
+void _copyNodes(const Graph<Type> & graph, Graph<Type> & convertion)
+{
+  typename Graph<Type>::NodeIterator node;
+
+  for(node = graph.nodes_begin(); node != graph.nodes_end(); ++node){
+
+    if( graph.is_container() ){
+      convertion.add_node( *node, graph.get_node_content(*node) );
+    }
+
+    else{
+      convertion.add_node(*node);
+    }
+
+  }
+}
+
+template<typename Type>
+Graph<Type> GraphConverter<Type>::toDirected(const Graph<Type> & graph)
 {
   Graph<Type> convertion(GraphTypes::DIRECTED, graph.edgeState(), graph.nodeType());
   typename Graph<Type>::NodeIterator node;
-  std::set<GraphTypes::node_id> adjacents;
-  std::set<GraphTypes::node_id>::iterator target;
+  typename Graph<Type>::EdgeIterator edge;
+  GraphTypes::node_id origin, target;
 
   if( !graph.is_directed() ){
-    node = graph.nodes_begin();
-    while( node != graph.nodes_end() ){
-      adjacents = graph.adjacents(*node);
 
-      for(target = adjacents.begin(); target != adjacents.end(); target++){
+    //nodes
+    _copyNodes(graph, convertion);
 
-	if( graph.is_weighted() && !graph.is_container() ){
-	  convertion.add_edge(*node, *target, graph.getCost(*node,*target));
-	}
-	else if( graph.is_weighted() && graph.is_container() ){
+    //edges
+    for(edge = graph.edges_begin(); edge != graph.edges_end(); ++edge){
+      origin = edge->source();
+      target = edge->target();
 
-	  convertion.add_edge(*node, graph.get_node_content(*node), *target, graph.get_node_content(*target), graph.getCost(*node,*target));
-	}
-	else if( !graph.is_weighted() && graph.is_container() ){
-	  
-	  convertion.add_edge(*node, graph.get_node_content(*node), *target, graph.get_node_content(*target));
-	}
-	else{
-	  
-	  convertion.add_edge(*node, *target);
-	}
+      if( graph.is_weighted() ){
+	convertion.add_edge(origin,target, graph.getCost(origin,target) );
+	convertion.add_edge(target,origin, graph.getCost(target,origin) );
       }
 
-      node++;
+      else{
+	convertion.add_edge(origin,target);
+	convertion.add_edge(target,origin);
+      }
     }
   }
+
   else{
     convertion = graph;
   }
@@ -41,40 +54,38 @@ Graph<Type> GraphConverter<Type>::toDirected(Graph<Type> & graph)
 }
 
 template<typename Type>
-Graph<Type> GraphConverter<Type>::toUndirected(Graph<Type> & graph)
+Graph<Type> GraphConverter<Type>::toUndirected(const Graph<Type> & graph)
 {
   Graph<Type> convertion(GraphTypes::UNDIRECTED, graph.edgeState(), graph.nodeType());
   typename Graph<Type>::NodeIterator node;
   typename Graph<Type>::EdgeIterator edge;
-  GraphTypes::node_id sourceNode, targetNode;
+  GraphTypes::node_id origin, target;
 
-  //nodes
-  for(node = graph.nodes_begin(); node != graph.nodes_end(); node++){
+  if( graph.is_directed() ){
 
-    if( graph.is_container() ){
+    //nodes
+    _copyNodes(graph, convertion);
 
-      convertion.add_node( *node, graph.get_node_content(*node) );
+    //edges
+    for(edge = graph.edges_begin(); edge != graph.edges_end(); ++edge){
+
+      origin = edge->source();
+      target = edge->target();
+
+      if( graph.is_weighted() ){
+	convertion.add_edge( origin, target, graph.getCost(origin, target) );
+      }
+
+      else{
+	convertion.add_edge(origin, target);
+      }
+
     }
-    else{
 
-      convertion.add_node( *node);
-    }
   }
 
-  //edges
-  for(edge = graph.edges_begin(); edge != graph.edges_end(); edge++){
-
-    sourceNode = edge->source();
-    targetNode = edge->target();
-
-    if( graph.is_weighted() ){
-
-      convertion.add_edge( sourceNode, targetNode, graph.getCost(sourceNode, targetNode) );
-    }
-    else{
-
-      convertion.add_edge(sourceNode, targetNode);
-    }
+  else{
+    convertion = graph;
   }
 
   return convertion;

@@ -1,18 +1,20 @@
+using namespace GraphFunctor;
+
 template<typename Type>
-MathVisitor<Type>::MathVisitor():_S_buffer(""), _A_buffer(""), _C_buffer(""){}
+MathVisitor<Type>::MathVisitor(const Graph<Type> & graph, std::string & S_buffer, std::string & A_buffer, std::string & C_buffer):_graph(graph), _S_buffer(S_buffer), _A_buffer(A_buffer), _C_buffer(C_buffer){}
 
 template<typename Type>
 MathVisitor<Type>::~MathVisitor(){}
 
 template<typename Type>
-void MathVisitor<Type>::treat(Graph<Type> & graph, GraphTypes::node_id node){
-  std::set<GraphTypes::node_id> successors;
-  std::set<GraphTypes::node_id>::iterator it;
+void MathVisitor<Type>::operator()(const GraphTypes::node_id & node)
+{
+  typename Graph<Type>::NodeIterator begin;
+  typename Graph<Type>::NodeIterator end;
+  typename Graph<Type>::NodeIterator it;
   std::ostringstream oss1;
   std::ostringstream oss2;
   std::ostringstream oss3;
-
-  _visited.insert(node);
 
   //Set S of vertices
   if( _S_buffer.size() > 0 )
@@ -23,44 +25,42 @@ void MathVisitor<Type>::treat(Graph<Type> & graph, GraphTypes::node_id node){
   _S_buffer += oss1.str();
 
   //Sets A of edges, and C of weights
-  successors = graph.successors(node);
-
-  for(it = successors.begin(); it != successors.end(); it++){
-
-    if( graph.is_directed() || (!graph.is_directed() && !_visited.count(*it)) ){
-
-      oss2 << "(";
-
-      oss2 << node << ", " << *it;
- 
-      oss2 << "), ";
-
-      if( graph.is_weighted() ){
-	oss3 << "coût(";
-	oss3 << node << ", " << *it;
-	oss3 << ")=" << graph.getCost(node, *it) << "; ";
-      }
+  if( _graph.is_directed() )
+    {
+      begin = _graph.successors_begin(node);
+      end = _graph.successors_end(node);
     }
-  }
+
+  else
+    {
+      begin = _graph.adjacents_begin(node);
+      end = _graph.adjacents_end(node);
+
+      _visited.insert(node);
+    }
+
+  for(it = begin; it != end; ++it)
+    {
+
+      if( _graph.is_directed() || ( !_visited.count(*it) ) )
+	{
+
+	  oss2 << "(";
+
+	  oss2 << node << ", " << *it;
+ 
+	  oss2 << "), ";
+
+	  if( _graph.is_weighted() )
+	    {
+	      oss3 << "coût(";
+	      oss3 << node << ", " << *it;
+	      oss3 << ")=" << _graph.getCost(node, *it) << "; ";
+	    }
+
+	}
+    }
 
   _A_buffer += oss2.str();
   _C_buffer += oss3.str();
-}
-
-template<typename Type>
-std::string MathVisitor<Type>::math_representation()const{
-  std::ostringstream oss;
-
-  oss << "S = {" << _S_buffer << "}" << std::endl;
-  oss << "A = {" << _A_buffer << "}" << std::endl;
-  oss << "Coûts:" << std::endl << _C_buffer;
-
-  return oss.str();
-}
-
-template<typename Type>
-void MathVisitor<Type>::flush(){
-  _S_buffer = "";
-  _A_buffer = "";
-  _C_buffer = "";
 }

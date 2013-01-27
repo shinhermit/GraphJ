@@ -1,15 +1,16 @@
-#ifndef WEIGHTEDNODE
-#define WEIGHTEDNODE
+#ifndef _WeightedNode
+#define _WeightedNode
 
 #include "Node.hpp"
 #include "GraphTypes.hpp"
 
-class WeightedNode : public Node{
+class WeightedNode : public Node
+{
 protected:
   GraphTypes::Cost _cost;
 
 public:
-  WeightedNode(GraphTypes::node_id id, GraphTypes::Cost cost);
+  WeightedNode(const GraphTypes::node_id & id, const GraphTypes::Cost & cost);
   WeightedNode(const WeightedNode & source);
 
   bool operator==(const WeightedNode & ref)const;
@@ -19,7 +20,7 @@ public:
   bool operator>=(const WeightedNode & ref)const;
   bool operator!=(const WeightedNode & ref)const;
 
-  GraphTypes::Cost cost()const;
+  const GraphTypes::Cost & cost()const;
 };
 
 #endif

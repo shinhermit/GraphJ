@@ -23,7 +23,7 @@ std::string BasicGraphException::_moreInfo()const
   return oss.str();
 }
 
-BasicGraphException::BasicGraphException(std::string message, int line, std::string file, std::string context, GraphTypes::Exceptions::Verbosity verbosity):std::runtime_error( message.c_str() ), _line(line), _file(file), _context(context), _verbosity(verbosity){}
+BasicGraphException::BasicGraphException(const std::string & message, const int & line, const std::string & file, const std::string & context, const GraphTypes::Exceptions::Verbosity & verbosity):std::runtime_error( message.c_str() ), _line(line), _file(file), _context(context), _verbosity(verbosity){}
 
 BasicGraphException::BasicGraphException(const BasicGraphException & source):std::runtime_error(source), _line(source._line), _file(source._file), _context(source._context), _verbosity(source._verbosity){}
 

@@ -31,13 +31,19 @@ WeightedEdge:
 BasicGraphException:
 	$(cmd_src)
 
-InvalidNodeIDException:
+InvalidNodeID:
+	$(cmd_src)
+
+InvalidEdge:
+	$(cmd_src)
+
+InvalidOperation:
 	$(cmd_src)
 
 TopologyIterator:
 	$(cmd_src)
 
-DoubleNodeListIterator:
+DoubleNodeSetIterator:
 	$(cmd_src)
 
 BaseGraph:
@@ -52,17 +58,32 @@ PonderableGraph:
 NamedColor:
 	$(cmd_src)
 
-all_classes: GraphTypes Node WeightedNode Edge WeightedEdge BasicGraphException InvalidNodeIDException TopologyIterator BaseGraph DirectableGraph PonderableGraph NamedColor
+Visitor:
+	$(cmd_src)
+
+ColorizingVisitor:
+	$(cmd_src)
+
+TricolorBuilderVisitor:
+	$(cmd_src)
+
+all_classes: GraphTypes Node WeightedNode Edge WeightedEdge BasicGraphException InvalidNodeID InvalidEdge InvalidOperation TopologyIterator DoubleNodeSetIterator BaseGraph DirectableGraph PonderableGraph NamedColor ColorizingVisitor Visitor TricolorBuilderVisitor
 
 
 #les validations
 
-BaseGraph_depencies:  BaseGraph Edge GraphTypes BasicGraphException InvalidNodeIDException TopologyIterator
+validation_dependencies:  BaseGraph DirectableGraph PonderableGraph Edge GraphTypes BasicGraphException InvalidNodeID  InvalidEdge InvalidOperation TopologyIterator DoubleNodeSetIterator
 
-BaseGraph_validation: BaseGraph_depencies
+BaseGraph_validation: validation_dependencies
 	$(cmd_exe)
 
-DirectableGraph_validation1: BaseGraph_depencies DirectableGraph
+DirectableGraph_validation: validation_dependencies
+	$(cmd_exe)
+
+PonderableGraph_validation: validation_dependencies
+	$(cmd_exe)
+
+Graph_validation: validation_dependencies
 	$(cmd_exe)
 
 #les tests

@@ -1,5 +1,5 @@
-#ifndef NAMEDCOLOR
-#define NAMEDCOLOR
+#ifndef _NamedColor
+#define _NamedColor
 
 #include <string>
 #include <map>
@@ -12,24 +12,41 @@ class NamedColor{
 public:
   enum ColorName {Red, Green, Blue, Yellow, Brown, Purple, Black, White, Orange, Gray, Pink, Bordeaux};
 
+  typedef std::map<NamedColor::ColorName, std::string>::const_iterator NameToStringIterator;
+
+  typedef std::map<NamedColor::ColorName, unsigned int>::const_iterator NameToHexaIterator;
+
 private:
   ColorName _col;
-  static std::map<ColorName, std::string> _toString;
-  static std::map<ColorName, int> _hexaValue;
+
+  static const std::map<ColorName, std::string> _toString;
+  static const std::map<ColorName, unsigned int> _hexaValue;
 
 public:
   NamedColor(ColorName col=Black);
+  NamedColor(const NamedColor & source);
+  NamedColor & operator=(const NamedColor & source);
 
-  NamedColor & operator>>(std::ostream & out);
+  void operator>>(std::ostream & out)const;
 
-  friend std::ostream & operator<<(std::ostream & out, NamedColor & col);
+  friend std::ostream & operator<<(std::ostream & out, const NamedColor & col);
 
-  std::string toString();
-  static std::string ToString(ColorName color);
+  bool operator==(const NamedColor & ref)const;
+  bool operator!=(const NamedColor & ref)const;
 
-  int hexaValue();
+  std::string toString()const;
 
-  static std::set<ColorName> AllNames();
+  int hexaValue()const;
+
+  static std::string ToString(const ColorName & color);
+
+  static NameToStringIterator Names2string_begin();
+
+  static NameToStringIterator Names2string_end();
+
+  static NameToHexaIterator Names2hexa_begin();
+
+  static NameToHexaIterator Names2hexa_end();
 };
 
 #endif

@@ -1,47 +1,46 @@
+using namespace GraphFunctor;
+
 template<typename Type>
-GraphvizVisitor<Type>::GraphvizVisitor(): _buffer(""){}
+GraphvizVisitor<Type>::GraphvizVisitor(const Graph<Type> & graph, std::string & buffer):_graph(graph), _buffer(buffer){}
 
 template<typename Type>
 GraphvizVisitor<Type>::~GraphvizVisitor(){}
 
 template<typename Type>
-void GraphvizVisitor<Type>::treat(Graph<Type> & graph, GraphTypes::node_id node){
-  std::set<GraphTypes::node_id> successors;
-  std::set<GraphTypes::node_id>::iterator it;
+void GraphvizVisitor<Type>::operator()(const GraphTypes::node_id & node)
+{
+  typename Graph<Type>::NodeIterator begin;
+  typename Graph<Type>::NodeIterator end;
+  typename Graph<Type>::NodeIterator it;
   std::ostringstream oss;
   std::string linkSymbol;
 
-  _visited.insert(node);
+  if( _graph.is_directed() ){
+    begin = _graph.successors_begin(node);
+    end = _graph.successors_end(node);
+  }
 
+  else{
+    begin = _graph.adjacents_begin(node);
+    end = _graph.adjacents_end(node);
 
-  successors = graph.successors(node);
+    _visited.insert(node);
+  }
+
+  linkSymbol = ( _graph.is_directed() ) ? " -> " : " -- " ;
     
-  if( graph.is_directed() )
-    linkSymbol = " -> " ;
-  else
-    linkSymbol = " -- " ;
-    
-  for(it = successors.begin(); it != successors.end(); it++){
+  for(it = begin; it != end; ++it){
 
-    if( graph.is_directed() || (!graph.is_directed() && !_visited.count(*it)) ){
+    if( _graph.is_directed() || ( !_visited.count(*it) ) ){
       oss << node << linkSymbol << *it;
 
-      if( graph.is_weighted() )
-	oss << " [label=\"" << graph.getCost(node, *it) << "\"]";
+      if( _graph.is_weighted() )
+	oss << " [label=\"" << _graph.getCost(node, *it) << "\"]";
 
       oss << std::endl;
     }
+
   }
 
   _buffer += oss.str();
-}
-
-template<typename Type>
-std::string GraphvizVisitor<Type>::nodes_representation()const{
-  return _buffer;
-}
-
-template<typename Type>
-void GraphvizVisitor<Type>::flush(){
-  _buffer = "";
 }

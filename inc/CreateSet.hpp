@@ -1,5 +1,5 @@
-#ifndef CREATESET
-#define CREATESET
+#ifndef _CreateSet
+#define _CreateSet
 
 #include <set>
 
@@ -11,7 +11,8 @@
  *you can insert from 1 to 3 values with on brace ()
  */
 template <typename T>
-class CreateSet{
+class CreateSet
+{
 private:
   std::set<T> _set;
 
@@ -146,7 +147,6 @@ CreateSet<T> & CreateSet<T>::operator()(const T& val1, const T& val2, const T& v
 template <typename T>
 CreateSet<T> & CreateSet<T>::operator()(const std::set<T> & v)
 {
-
   _set.insert(v.begin(), v.end());
   return *this;
 }

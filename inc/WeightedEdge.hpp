@@ -1,15 +1,16 @@
-#ifndef WEIGHTEDEDGE
-#define WEIGHTEDEDGE
+#ifndef _WeightedEdge
+#define _WeightedEdge
 
 #include "Edge.hpp"
 #include "GraphTypes.hpp"
 
-class WeightedEdge : public Edge{
+class WeightedEdge : public Edge
+{
 protected:
   GraphTypes::Cost _cost;
 
 public:
-  WeightedEdge(GraphTypes::node_id node1, GraphTypes::node_id node2, GraphTypes::Cost cost);
+  WeightedEdge(const GraphTypes::node_id & node1, const GraphTypes::node_id & node2, const GraphTypes::Cost & cost);
   WeightedEdge(const WeightedEdge & source);
 
   bool operator==(const WeightedEdge & ref)const;
@@ -19,7 +20,7 @@ public:
   bool operator>=(const WeightedEdge & ref)const;
   bool operator!=(const WeightedEdge & ref)const;
 
-  GraphTypes::Cost cost()const;
+  const GraphTypes::Cost & cost()const;
 };
 
 #endif

@@ -1,7 +1,9 @@
 ##VARIABLES
-paths = -I../inc
+inc = ../inc
 src = ../src
 obj = ../obj
+tmp = ../templates
+paths = -I$(inc) -I$(tmp)
 flags = -Wall -g
 cc = g++
 cmd = $(cc) -c $(flags) $(paths) $@.cpp -o $(obj)/$@.o
@@ -28,13 +30,19 @@ WeightedEdge:
 BasicGraphException:
 	$(cmd)
 
-InvalidNodeIDException:
+InvalidNodeID:
+	$(cmd)
+
+InvalidEdge:
+	$(cmd)
+
+InvalidOperation:
 	$(cmd)
 
 TopologyIterator:
 	$(cmd)
 
-DoubleNodeListIterator:
+DoubleNodeSetIterator:
 	$(cmd)
 
 BaseGraph:
@@ -47,4 +55,13 @@ PonderableGraph:
 	$(cmd)
 
 NamedColor:
+	$(cmd)
+
+Visitor:
+	$(cmd)
+
+ColorizingVisitor:
+	$(cmd)
+
+TricolorBuilderVisitor:
 	$(cmd)

@@ -1,19 +1,20 @@
-#ifndef VISITOR
-#define VISITOR
+#ifndef _Visitor
+#define _Visitor
 
-#include "Graph.hpp"
+#include <iostream>
+#include "GraphTypes.hpp"
 
-template<typename Type>
-class Visitor{
+namespace GraphFunctor
+{
 
-public:
+  struct Visitor{
+    Visitor();
 
-  Visitor();
-  virtual ~Visitor();
+    virtual ~Visitor();
 
-  virtual void treat(Graph<Type> & graph, GraphTypes::node_id node)=0;
+    virtual void operator()(const GraphTypes::node_id & node)=0;
+  };
+
 };
-
-#include "Visitor.cpp"
 
 #endif

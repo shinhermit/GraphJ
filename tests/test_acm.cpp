@@ -4,11 +4,13 @@
 #include "Acm.hpp"
 #include "Exporter.hpp"
 
-int main(){
+int main()
+{
   Graph<> graph(GraphTypes::UNDIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
   Graph<> min_tree( graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT );
-  Acm<> acm;
-  Exporter<> exporte;
+
+  typedef Acm<> Acm;
+  typedef Exporter<> Export;
 
   /*
     Graphe de l'annale: contrôle continu Novembre 2008
@@ -28,45 +30,65 @@ int main(){
   graph.add_edge(6,7, 10);
   graph.add_edge(7,8, 11);
 
-  try{
-    std::cout << exporte.toMathString(graph) << std::endl << std::endl;
+  try
+    {
+      std::cout << Export::ToMathString(graph) << std::endl << std::endl;
+      std::cout << Export::ToGraphviz(graph) << std::endl << std::endl;
+      std::cout << "Coût: " << graph.cost() << std::endl << std::endl;
 
-    exporte.toGraphviz(graph, "graph_res_route.graph");
-    std::cout << "Le graph a été exporté dans le fichier graph_res_route.graph" << std::endl << std::endl;
+      Export::ToGraphviz(graph, "graph_res_route.graph");
+      std::cout << "Le graph a été exporté dans le fichier graph_res_route.graph" << std::endl << std::endl;
 
-    min_tree = acm.prim(graph);
-    std::cout << "Prim:" << std::endl;
-    std::cout << exporte.toGraphviz(min_tree) << std::endl;
-    std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
+      min_tree = Acm::Prim(graph);
+      std::cout << "Prim:" << std::endl;
+      std::cout << Export::ToGraphviz(min_tree) << std::endl;
+      std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
 
-    exporte.toGraphviz(min_tree, "acm_kruskal.graph");
-    std::cout << "L'arbre couvrant a été exporté dans le fichier acm_kruskal.graph" << std::endl << std::endl;
+      Export::ToGraphviz(min_tree, "acm_prim.graph");
+      std::cout << "L'arbre couvrant a été exporté dans le fichier acm_prim.graph" << std::endl << std::endl;
 
-    min_tree = acm.kruskal(graph);
-    std::cout << "Kruskal:" << std::endl;
-    std::cout << exporte.toGraphviz(min_tree) << std::endl;
-    std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
+      min_tree = Acm::Kruskal(graph);
+      std::cout << "Kruskal:" << std::endl;
+      std::cout << Export::ToGraphviz(min_tree) << std::endl;
+      std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
 
-    exporte.toGraphviz(min_tree, "acm_prim.graph");
-    std::cout << "L'arbre couvrant a été exporté dans le fichier acm_prim.graph" << std::endl << std::endl;
+      Export::ToGraphviz(min_tree, "acm_kruskal.graph");
+      std::cout << "L'arbre couvrant a été exporté dans le fichier acm_kruskal.graph" << std::endl << std::endl;
 
-    system("dot -Tpng graph_res_route.graph -o graph_res_route.png");
-    system("dot -Tpng acm_prim.graph -o acm_kruskal.png");
-    system("dot -Tpng acm_prim.graph -o acm_prim.png");
+#ifdef _SYSTEM
 
-  }
-  catch(std::invalid_argument & iv){
-    std::cout << "Caught invalid_argument exception:" << std::endl << iv.what() << std::endl;
-  }
-  catch(std::logic_error & le){
-    std::cout << "Caught logic_error exception:" << std::endl << le.what() << std::endl;
-  }
-  catch(std::exception & e){
-    std::cout << "Caught exception:" << std::endl << e.what() << std::endl;
-  }
-  catch(...){
-    std::cout << "Caught unexpected exception." << std::endl;
-  }
+      system("dot -Tpng graph_res_route.graph -o graph_res_route.png");
+      system("dot -Tpng acm_prim.graph -o acm_kruskal.png");
+      system("dot -Tpng acm_prim.graph -o acm_prim.png");
+
+#endif
+
+    }
+
+  catch(const GraphException::InvalidEdge & ie)
+    {
+      std::cout << "Caught GraphException::InvalidEdge: " << std::endl << ie.what() << std::endl;
+    }
+
+  catch(const GraphException::InvalidOperation & io)
+    {
+      std::cout << "Caught GraphException::InvalidOperation: " << std::endl << io.what() << std::endl;
+    }
+
+  catch(const GraphException::InvalidNodeID & in)
+    {
+      std::cout << "Caught GraphException::InvalidNodeID: " << std::endl << in.what() << std::endl;
+    }
+
+  catch(const GraphException::BasicGraphException & be)
+    {
+      std::cout << "Caught GraphException::BasicGraphException: " << std::endl << be.what() << std::endl;
+    }
+
+  catch(...)
+    {
+      std::cout << "Caught unexpected exception." << std::endl;
+    }
 
   return 0;
 }

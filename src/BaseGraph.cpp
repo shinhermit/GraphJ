@@ -190,7 +190,7 @@ GraphTypes::EdgeState BaseGraph::edgeState()const
   return GraphTypes::UNWEIGHTED;
 }
 
-BaseGraph::NodeIterator BaseGraph::_adjacent_begin(const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & topology_map, const GraphTypes::node_id & node)const
+std::set<GraphTypes::node_id>::const_iterator BaseGraph::_adjacent_begin(const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & topology_map, const GraphTypes::node_id & node)const
 {
   std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::const_iterator it;
 
@@ -204,7 +204,7 @@ BaseGraph::NodeIterator BaseGraph::_adjacent_begin(const std::map<GraphTypes::no
   }
 }
 
-BaseGraph::NodeIterator BaseGraph::_adjacent_end(const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & topology_map, const GraphTypes::node_id & node)const
+std::set<GraphTypes::node_id>::const_iterator BaseGraph::_adjacent_end(const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & topology_map, const GraphTypes::node_id & node)const
 {
   std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::const_iterator it;
 
@@ -218,56 +218,56 @@ BaseGraph::NodeIterator BaseGraph::_adjacent_end(const std::map<GraphTypes::node
   }
 }
 
-BaseGraph::NodeIterator BaseGraph::successors_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException)
+BaseGraph::NodeIterator BaseGraph::predecessors_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation)
 {
   if( _nodes.count(node) ){
+    return NodeIterator( _adjacent_begin(_reversed_topology, node) );
 
-    return _adjacent_begin(_topology, node);
   }
   else{
-    throw GraphException::InvalidNodeIDException(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::successors_begin(const GraphTypes::node_id&)");
+    throw GraphException::InvalidNodeID(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::predecessors_begin(const GraphTypes::node_id&)");
   }
 
 }
 
-BaseGraph::NodeIterator BaseGraph::successors_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException)
+BaseGraph::NodeIterator BaseGraph::predecessors_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation)
 {
-
   if( _nodes.count(node) ){
-    return _adjacent_end(_topology, node);
+    return NodeIterator( _adjacent_end(_reversed_topology, node) );
 
   }
   else{
-    throw GraphException::InvalidNodeIDException(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::successors_end(const GraphTypes::node_id&)");
+    throw GraphException::InvalidNodeID(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::predecessors_end(const GraphTypes::node_id&)");
   }
 
 }
 
-BaseGraph::NodeIterator BaseGraph::predecessors_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException)
+BaseGraph::NodeIterator BaseGraph::successors_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation)
 {
   if( _nodes.count(node) ){
-    return _adjacent_begin(_reversed_topology, node);
 
+    return NodeIterator( _adjacent_begin(_topology, node) );
   }
   else{
-    throw GraphException::InvalidNodeIDException(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::predecessors_begin(const GraphTypes::node_id&)");
+    throw GraphException::InvalidNodeID(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::successors_begin(const GraphTypes::node_id&)");
   }
 
 }
 
-BaseGraph::NodeIterator BaseGraph::predecessors_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException)
+BaseGraph::NodeIterator BaseGraph::successors_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation)
 {
+
   if( _nodes.count(node) ){
-    return _adjacent_end(_reversed_topology, node);
+    return NodeIterator( _adjacent_end(_topology, node) );
 
   }
   else{
-    throw GraphException::InvalidNodeIDException(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::predecessors_end(const GraphTypes::node_id&)");
+    throw GraphException::InvalidNodeID(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::successors_end(const GraphTypes::node_id&)");
   }
 
 }
 
-BaseGraph::AdjacentsIterator BaseGraph::adjacents_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException)
+BaseGraph::NodeIterator BaseGraph::adjacents_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID)
 {
   std::set<GraphTypes::node_id>::iterator predecessors_begin;
   std::set<GraphTypes::node_id>::iterator predecessors_end;
@@ -281,16 +281,16 @@ BaseGraph::AdjacentsIterator BaseGraph::adjacents_begin(const GraphTypes::node_i
     successors_begin = _adjacent_begin(_topology, node);
     successors_end = _adjacent_end(_topology, node);
 
-    return AdjacentsIterator(predecessors_begin, predecessors_end, successors_begin, successors_end, predecessors_begin, successors_begin);
+    return NodeIterator(predecessors_begin, predecessors_end, successors_begin, successors_end, predecessors_begin, successors_begin);
 
   }
   else{
-    throw GraphException::InvalidNodeIDException(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::adjacents_begin(const GraphTypes::node_id&)");
+    throw GraphException::InvalidNodeID(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::adjacents_begin(const GraphTypes::node_id&)");
   }
 
 }
 
-BaseGraph::AdjacentsIterator BaseGraph::adjacents_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException)
+BaseGraph::NodeIterator BaseGraph::adjacents_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID)
 {
   std::set<GraphTypes::node_id>::iterator predecessors_begin;
   std::set<GraphTypes::node_id>::iterator predecessors_end;
@@ -304,23 +304,23 @@ BaseGraph::AdjacentsIterator BaseGraph::adjacents_end(const GraphTypes::node_id 
     successors_begin = _adjacent_begin(_topology, node);
     successors_end = _adjacent_end(_topology, node);
 
-    return AdjacentsIterator(predecessors_begin, predecessors_end, successors_begin, successors_end, predecessors_end, successors_end);
+    return NodeIterator(predecessors_begin, predecessors_end, successors_begin, successors_end, predecessors_end, successors_end);
 
   }
   else{
-    throw GraphException::InvalidNodeIDException(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::adjacents_end(const GraphTypes::node_id&)");
+    throw GraphException::InvalidNodeID(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::adjacents_end(const GraphTypes::node_id&)");
   }
 
 }
 
 BaseGraph::NodeIterator BaseGraph::nodes_begin()const
 {
-  return _nodes.begin();
+  return NodeIterator( _nodes.begin() );
 }
 
 BaseGraph::NodeIterator BaseGraph::nodes_end()const
 {
-  return _nodes.end();
+  return NodeIterator( _nodes.end() );
 }
 
 BaseGraph::EdgeIterator BaseGraph::edges_begin()const
@@ -333,47 +333,47 @@ BaseGraph::EdgeIterator BaseGraph::edges_end()const
   return EdgeIterator( _topology.begin(), _topology.end(), _topology.end() );
 }
 
-unsigned long BaseGraph::in_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException)
+unsigned long BaseGraph::in_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID)
 {
   std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::const_iterator it;
-  unsigned int degree;
+  unsigned int deg;
 
   if( _nodes.count(node) ){
-    degree = 0;
+    deg = 0;
     it = _reversed_topology.find(node);
 
     if( it != _reversed_topology.end() ){
-      degree = it->second.size();
+      deg = it->second.size();
     }
 
-    return degree;
+    return deg;
   }
   else{
-    throw GraphException::InvalidNodeIDException(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::in_degree(const GraphTypes::node_id&)");
+    throw GraphException::InvalidNodeID(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::in_degree(const GraphTypes::node_id&)");
   }
 }
 
-unsigned long BaseGraph::out_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException)
+unsigned long BaseGraph::out_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID)
 {
   std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::const_iterator it;
-  unsigned int degree;
+  unsigned int deg;
 
   if( _nodes.count(node) > 0){
-    degree = 0;
+    deg = 0;
 
     it = _topology.find(node);
     if( it != _topology.end() ){
-      degree = it->second.size();
+      deg = it->second.size();
     }
 
-    return degree;
+    return deg;
   }
   else{
-    throw GraphException::InvalidNodeIDException(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::out_degree(const GraphTypes::node_id&)");
+    throw GraphException::InvalidNodeID(node, "Invalid node ID", __LINE__, __FILE__, "BaseGraph::out_degree(const GraphTypes::node_id&)");
   }
 }
 
-unsigned long BaseGraph::degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException)
+unsigned long BaseGraph::degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID)
 {
   return out_degree(node) + in_degree(node);
 }

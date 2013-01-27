@@ -1,64 +1,46 @@
+using namespace GraphFunctor;
+
 template<typename Type>
-DefaultVisitor<Type>::DefaultVisitor():_buffer(""){}
+DefaultVisitor<Type>::DefaultVisitor(const Graph<Type> & graph, std::string & buffer):_graph(graph), _buffer(buffer){}
 
 template<typename Type>
 DefaultVisitor<Type>::~DefaultVisitor(){}
 
-//Attention: cette méthode a été spécialisée pour les std::string
 template<typename Type>
-void DefaultVisitor<Type>::treat(Graph<Type> & graph, GraphTypes::node_id node){
-  std::set<GraphTypes::node_id> successors;
-  std::set<GraphTypes::node_id>::iterator it;
-  std::ostringstream oss;
-
-  successors = graph.successors(node);
-
-  oss << "n" << node << ": ";
-
-  for(it = successors.begin(); it != successors.end(); it++){
-    if( graph.is_directed() || (!graph.is_directed() && !_visited.count(*it)) ){
-
-      oss << "n" << *it << " ";
-    }
-  }
-
-  oss << std::endl;
-
-  _buffer += oss.str();
-}
-
-//Spécialisation pour les std::string
-template<>
-void DefaultVisitor<std::string>::treat(Graph<std::string> & graph, GraphTypes::node_id node){
-  std::set<GraphTypes::node_id> successors;
-  std::set<GraphTypes::node_id>::iterator it;
+void DefaultVisitor<Type>::operator()(const GraphTypes::node_id & node)
+{
+  typename Graph<Type>::NodeIterator it;
+  typename Graph<Type>::NodeIterator begin;
+  typename Graph<Type>::NodeIterator end;
   std::ostringstream oss;
   std::string linkSymbol;
 
-  linkSymbol = graph.is_directed() ? " -> " : " -- ";
+  linkSymbol = _graph.is_directed() ? " -> " : " -- ";
 
-  successors = graph.successors(node);
+  oss << "n" << node << linkSymbol;
 
-  oss << graph.get_node_content(node) << linkSymbol;
+  if( _graph.is_directed() ){
+    begin = _graph.successors_begin(node);
+    end = _graph.successors_end(node);
+  }
 
-  for(it = successors.begin(); it != successors.end(); it++){
-    if( graph.is_directed() || (!graph.is_directed() && !_visited.count(*it)) ){
+  else{
+    begin = _graph.adjacents_begin(node);
+    end = _graph.adjacents_end(node);
 
-      oss << graph.get_node_content(*it) << "; ";
+    _visited.insert(node);
+  }
+
+  for(it = begin; it != end; ++it){
+
+    if( _graph.is_directed() || !_visited.count(*it) ){
+
+      oss << "n" << *it << " ";
     }
+
   }
 
   oss << std::endl;
 
   _buffer += oss.str();
-}
-
-template<typename Type>
-std::string DefaultVisitor<Type>::nodes_representation()const{
-  return _buffer;
-}
-
-template<typename Type>
-void DefaultVisitor<Type>::flush(){
-  _buffer = "";
 }

@@ -22,8 +22,20 @@ public:
 
   enum Default{DEFAULT};
 
+  struct Exceptions
+  {
+    enum Verbosity{BRIEVE, VERBOSE};
+  };
+
+  struct Iterator
+  {
+    enum Type{SIMPLE, DOUBLE};
+  };
+
   struct Algorithms
   {
+    typedef unsigned int Color;
+
     enum SearchAlgorithm{DIJKSTRA, BELLMAN};
 
     enum AlgorithmicClass{GREEDY, DYNAMIC};
@@ -34,11 +46,6 @@ public:
 
     static const float POSITIVE_INFINITY;
     static const float NEGATIVE_INFINITY;
-  };
-
-  struct Exceptions
-  {
-    enum Verbosity{BRIEVE, VERBOSE};
   };
 
 };

@@ -1,5 +1,5 @@
-#ifndef PONDERABLEGRAPH
-#define PONDERABLEGRAPH
+#ifndef _PonderableGraph
+#define _PonderableGraph
 
 #include "DirectableGraph.hpp"
 
@@ -10,27 +10,27 @@ protected:
   std::map<Edge,GraphTypes::Cost> _weights;
 
 public:
-  PonderableGraph(GraphTypes::EdgeType edgeType=GraphTypes::UNDIRECTED, GraphTypes::EdgeState state=GraphTypes::WEIGHTED);
+  PonderableGraph(const GraphTypes::EdgeType & edgeType=GraphTypes::UNDIRECTED, const GraphTypes::EdgeState & state=GraphTypes::WEIGHTED);
   PonderableGraph(const PonderableGraph & source);
 
   PonderableGraph & operator=(const PonderableGraph & source);
 
   // Adaptation des prédicats
-  bool is_weighted();
+  bool is_weighted()const;
 
   // Adaptation des constructeurs
-  void remove_node(GraphTypes::node_id id);
-  void add_edge(GraphTypes::node_id id1, GraphTypes::node_id id2, GraphTypes::Cost cost=1.F);
-  void remove_edge(GraphTypes::node_id id1, GraphTypes::node_id id2);
+  void remove_node(const GraphTypes::node_id & node);
+  void add_edge(const GraphTypes::node_id & origin, const GraphTypes::node_id & target, const GraphTypes::Cost & cost=0.F);
+  void remove_edge(const GraphTypes::node_id & origin, const GraphTypes::node_id & target);
 
   // Adaptation des observateurs
   GraphTypes::EdgeState edgeState()const;
 
   // Nouvelles opérations
-  void setCost(GraphTypes::node_id node1, GraphTypes::node_id node2, GraphTypes::Cost cost) throw(std::invalid_argument, std::logic_error);
-  GraphTypes::Cost getCost(GraphTypes::node_id node1, GraphTypes::node_id node2) throw(std::invalid_argument, std::logic_error);
-  GraphTypes::Cost getCost(const Edge & edge) throw(std::invalid_argument, std::logic_error);
-  GraphTypes::Cost cost() throw(std::logic_error);
+  void setCost(const GraphTypes::node_id & origin, const GraphTypes::node_id & target, const GraphTypes::Cost & cost) throw(GraphException::InvalidEdge, GraphException::InvalidOperation);
+  GraphTypes::Cost getCost(const GraphTypes::node_id & origin, const GraphTypes::node_id & target)const throw(GraphException::InvalidEdge, GraphException::InvalidOperation);
+  GraphTypes::Cost getCost(const Edge & edge)const throw(GraphException::InvalidEdge, GraphException::InvalidOperation);
+  GraphTypes::Cost cost()const throw(GraphException::InvalidOperation);
 
 };
 

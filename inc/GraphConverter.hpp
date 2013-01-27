@@ -6,10 +6,13 @@
 template<typename Type=GraphTypes::Default>
 class GraphConverter
 {
-public:
-  static Graph<Type> toDirected(Graph<Type> & graph);
+private:
+  static void _copyNodes(const Graph<Type> & graph, Graph<Type> & convertion);
 
-  static Graph<Type> toUndirected(Graph<Type> & graph);
+public:
+  static Graph<Type> toDirected(const Graph<Type> & graph);
+
+  static Graph<Type> toUndirected(const Graph<Type> & graph);
 };
 
 #include "GraphConverter.cpp"

@@ -23,8 +23,13 @@ public:
   // Adaptation des observateurs
   GraphTypes::EdgeType edgeType()const;
 
-  unsigned long in_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
-  unsigned long out_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeIDException);
+  NodeIterator predecessors_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation);
+  NodeIterator predecessors_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation);
+  NodeIterator successors_begin(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation);
+  NodeIterator successors_end(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID, GraphException::InvalidOperation);
+
+  unsigned long in_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID);
+  unsigned long out_degree(const GraphTypes::node_id & node)const throw(GraphException::InvalidNodeID);
 };
 
 #endif

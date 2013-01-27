@@ -28,6 +28,6 @@ bool Node::operator!=(const Node & ref)const{
   return !operator==(ref);
 }
 
-GraphTypes::node_id Node::id()const{
+const GraphTypes::node_id & Node::id()const{
   return _id;
 }

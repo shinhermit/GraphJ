@@ -1,8 +1,8 @@
-#ifndef TRICOLORBUILDERVISITOR
-#define TRICOLORBUILDERVISITOR
+#ifndef _TricolorBuilderVisitor
+#define _TricolorBuilderVisitor
 
 #include "Visitor.hpp"
-#include "Edge.hpp"
+#include "Graph.hpp"
 #include <sstream>
 #include <string>
 
@@ -26,21 +26,28 @@
 	       il en va de même de id(x) et id(y)
    */
 
-class TricolorBuilderVisitor : public Visitor<Edge>{
-private:
-  long _nb_roads;
+namespace GraphFunctor
+{
 
-  long _renumber(long asFirst, long oldNumber);
-  bool _adjacent(Edge edge1, Edge edge2);
-  bool _intersect(Edge edge1, Edge edge2);
+  class TricolorBuilderVisitor : public Visitor
+  {
+  private:
+    Graph<Edge> & _graph;
 
-public:
-  TricolorBuilderVisitor(long nb_roads);
-  virtual ~TricolorBuilderVisitor();
+    long _nb_roads;
 
-  virtual void treat(Graph<Edge> & graph, GraphTypes::node_id node);
+    long _renumber(const long & asFirst, const long & oldNumber)const;
+    bool _adjacent(const Edge & edge1, const Edge & edge2)const;
+    bool _intersect(const Edge & edge1, const Edge & edge2)const;
+
+  public:
+    TricolorBuilderVisitor(Graph<Edge> & graph, const long & nb_roads);
+
+    ~TricolorBuilderVisitor();
+
+    void operator()(const GraphTypes::node_id & node);
+  };
+
 };
-
-#include "TricolorBuilderVisitor.cpp"
 
 #endif

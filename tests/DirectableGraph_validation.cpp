@@ -1,23 +1,21 @@
 #include <cassert>
 #include <iostream>
 #include <string>
-#include "BaseGraph.hpp"
 #include "DirectableGraph.hpp"
 #include "PonderableGraph.hpp"
 #include "Graph.hpp"
 
 int main(){
-  // BaseGraph graph;
-  // DirectableGraph graph(GraphTypes::DIRECTED);
-  // PonderableGraph graph(GraphTypes::DIRECTED, GraphTypes::UNWEIGHTED);
-  Graph<> graph(GraphTypes::DIRECTED, GraphTypes::UNWEIGHTED, GraphTypes::NOCONTENT);
+  // DirectableGraph graph(GraphTypes::UNDIRECTED);
+  // PonderableGraph graph(GraphTypes::UNDIRECTED, GraphTypes::UNWEIGHTED);
+  Graph<> graph(GraphTypes::UNDIRECTED, GraphTypes::UNWEIGHTED, GraphTypes::NOCONTENT);
 
   /*********** Constructeur initial *****************/
   //Les prédicats
   assert( graph.is_empty() );
   assert( !graph.has_node(1) );
   assert( !graph.has_edge(1,2) );
-  assert( graph.is_directed() );
+  assert( !graph.is_directed() );
   assert( !graph.is_weighted() );
   assert( !graph.is_container() );
 
@@ -27,7 +25,7 @@ int main(){
 
   //les caractéristiques du graphe
   assert( graph.nodeType() == GraphTypes::NOCONTENT );
-  assert( graph.edgeType() == GraphTypes::DIRECTED );
+  assert( graph.edgeType() == GraphTypes::UNDIRECTED );
   assert( graph.edgeState() == GraphTypes::UNWEIGHTED );
 
   //les métriques
@@ -60,28 +58,28 @@ int main(){
     graph.successors_begin(100);
     assert("graph.successors_begin(100)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
+  catch(const GraphException::InvalidOperationException & e){
   }
 
   try{
     graph.successors_end(1);
     assert("graph.successors_end(1)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
+  catch(const GraphException::InvalidOperationException & e){
   }
 
   try{
     graph.predecessors_begin(100);
     assert("graph.predecessors_begin(100)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
+  catch(const GraphException::InvalidOperationException & e){
   }
 
   try{
     graph.predecessors_end(1);
     assert("graph.predecessors_end(1)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
+  catch(const GraphException::InvalidOperationException & e){
   }
 
   try{
@@ -112,7 +110,7 @@ int main(){
   assert( graph.has_node(1) );
   assert( !graph.has_edge(1,1) );
   assert( !graph.has_edge(1,2) );
-  assert( graph.is_directed() );
+  assert( !graph.is_directed() );
   assert( !graph.is_weighted() );
   assert( !graph.is_container() );
 
@@ -122,7 +120,7 @@ int main(){
 
   //les caractéristiques du graphe
   assert( graph.nodeType() == GraphTypes::NOCONTENT );
-  assert( graph.edgeType() == GraphTypes::DIRECTED );
+  assert( graph.edgeType() == GraphTypes::UNDIRECTED );
   assert( graph.edgeState() == GraphTypes::UNWEIGHTED );
 
   //les métriques
@@ -135,8 +133,21 @@ int main(){
   assert( ++graph.nodes_begin() == graph.nodes_end() );
   assert( graph.edges_begin() == graph.edges_end() );
 
-  assert( graph.successors_begin(1) == graph.successors_end(1) );
-  assert( graph.predecessors_begin(1) == graph.predecessors_end(1) );
+  try{
+    graph.successors_begin(1);
+    assert("graph.successors_begin(1)" == "echec");
+  }
+  catch(const GraphException::InvalidOperationException & e){
+  }
+
+
+  try{
+    graph.predecessors_begin(1);
+    assert("graph.predecessors_begin(1)" == "echec");
+  }
+  catch(const GraphException::InvalidOperationException & e){
+  }
+
   assert( graph.adjacents_begin(1) == graph.adjacents_end(1) );
 
 
@@ -157,7 +168,7 @@ int main(){
 
   //les caractéristiques du graphe
   assert( graph.nodeType() == GraphTypes::NOCONTENT );
-  assert( graph.edgeType() == GraphTypes::DIRECTED );
+  assert( graph.edgeType() == GraphTypes::UNDIRECTED );
   assert( graph.edgeState() == GraphTypes::UNWEIGHTED );
 
   //les métriques
@@ -190,28 +201,28 @@ int main(){
     graph.successors_begin(100);
     assert("graph.successors_begin(100)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
+  catch(const GraphException::InvalidOperationException & e){
   }
 
   try{
     graph.successors_end(1);
     assert("graph.successors_end(1)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
+  catch(const GraphException::InvalidOperationException & e){
   }
 
   try{
     graph.predecessors_begin(100);
     assert("graph.predecessors_begin(100)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
+  catch(const GraphException::InvalidOperationException & e){
   }
 
   try{
     graph.predecessors_end(1);
     assert("graph.predecessors_end(1)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
+  catch(const GraphException::InvalidOperationException & e){
   }
 
   try{
@@ -245,11 +256,11 @@ int main(){
   assert( !graph.has_edge(1,1) );
   assert( !graph.has_edge(1,3) );
   assert( graph.has_edge(1,2) );
+  assert( graph.has_edge(2,1) );
   assert( graph.has_edge(3,4) );
-  assert( !graph.has_edge(2,1) );
-  assert( !graph.has_edge(4,3) );
+  assert( graph.has_edge(4,3) );
 
-  assert( graph.is_directed() );
+  assert( !graph.is_directed() );
   assert( !graph.is_weighted() );
   assert( !graph.is_container() );
 
@@ -259,22 +270,22 @@ int main(){
 
   //les caractéristiques du graphe
   assert( graph.nodeType() == GraphTypes::NOCONTENT );
-  assert( graph.edgeType() == GraphTypes::DIRECTED );
+  assert( graph.edgeType() == GraphTypes::UNDIRECTED );
   assert( graph.edgeState() == GraphTypes::UNWEIGHTED );
 
   //les métriques
-  assert( graph.in_degree(1) == 0 );
+  assert( graph.in_degree(1) == 1 );
   assert( graph.in_degree(2) == 1 );
-  assert( graph.in_degree(3) == 0 );
+  assert( graph.in_degree(3) == 1 );
   assert( graph.in_degree(4) == 1 );
 
   assert( graph.out_degree(1) == 1 );
-  assert( graph.out_degree(2) == 0 );
+  assert( graph.out_degree(2) == 1 );
   assert( graph.out_degree(3) == 1 );
-  assert( graph.out_degree(4) == 0 );
+  assert( graph.out_degree(4) == 1 );
 
   assert( graph.degree(1) == 1 );
-  assert( graph.degree(2) == 1 );
+  assert( graph.degree(4) == 1 );
 
   //les itérateurs
   assert( *graph.nodes_begin() == 1 );
@@ -289,16 +300,10 @@ int main(){
   assert( *(-- --graph.edges_end()) == Edge(1,2) );
   assert( -- --graph.edges_end() == graph.edges_begin() );
 
-  assert( *graph.successors_begin(1) == 2 );
-  assert( ++graph.successors_begin(1) == graph.successors_end(1) );
-
-  assert( *graph.predecessors_begin(4) == 3 );
-  assert( ++graph.predecessors_begin(4) == graph.predecessors_end(4) );
-
-  assert( *graph.adjacents_begin(1) == *graph.successors_begin(1) );
-  assert( *graph.adjacents_begin(3) == *graph.successors_begin(3) );
-  assert( *graph.adjacents_begin(2) == *graph.predecessors_begin(2) );
-  assert( *graph.adjacents_begin(4) == *graph.predecessors_begin(4) );
+  assert( *graph.adjacents_begin(1) == 2 );
+  assert( *graph.adjacents_begin(3) == 4 );
+  assert( *graph.adjacents_begin(2) == 1 );
+  assert( *graph.adjacents_begin(4) == 3 );
 
   assert(++graph.adjacents_begin(1) == graph.adjacents_end(1) );
   assert(++graph.adjacents_begin(2) == graph.adjacents_end(2) );
@@ -311,8 +316,21 @@ int main(){
   assert(--graph.adjacents_end(4) == graph.adjacents_begin(4) );
 
   graph.add_edge(2,3);
-  assert( *(--graph.adjacents_end(2)) == 3);
-  assert( *(-- --graph.adjacents_end(2)) == 1);
+  GraphTypes::node_id adj1 = *graph.adjacents_begin(2);
+  GraphTypes::node_id adj2 = *(++graph.adjacents_begin(2));
+  assert( graph.degree(2) == graph.degree(3) && graph.degree(3) == 2 );
+  assert( adj1 == 1 || adj1 == 3);
+  assert( adj2 == 1 || adj2 == 3);
+  assert( ( !(adj1 == 1) ) || (adj2 == 3 ) );
+  assert( ( !(adj1 == 3) ) || (adj2 == 1 ) );
+  assert( ++ ++graph.adjacents_begin(2) == graph.adjacents_end(2) );
+
+  adj1 = *(--graph.adjacents_end(2));
+  adj2 = *(-- --graph.adjacents_end(2));
+  assert( adj1 == 1 || adj1 == 3);
+  assert( adj2 == 1 || adj2 == 3);
+  assert( ( !(adj1 == 1) ) || (adj2 == 3 ) );
+  assert( ( !(adj1 == 3) ) || (adj2 == 1 ) );
   assert( -- --graph.adjacents_end(2) == graph.adjacents_begin(2) );
   graph.remove_edge(2,3);
 
@@ -332,9 +350,9 @@ int main(){
   assert( !graph.has_edge(1,2) );
   assert( !graph.has_edge(2,1) );
   assert( graph.has_edge(3,4) );
-  assert( !graph.has_edge(4,3) );
+  assert( graph.has_edge(4,3) );
 
-  assert( graph.is_directed() );
+  assert( !graph.is_directed() );
   assert( !graph.is_weighted() );
   assert( !graph.is_container() );
 
@@ -344,19 +362,19 @@ int main(){
 
   //les caractéristiques du graphe
   assert( graph.nodeType() == GraphTypes::NOCONTENT );
-  assert( graph.edgeType() == GraphTypes::DIRECTED );
+  assert( graph.edgeType() == GraphTypes::UNDIRECTED );
   assert( graph.edgeState() == GraphTypes::UNWEIGHTED );
 
   //les métriques
   assert( graph.in_degree(1) == 0 );
   assert( graph.in_degree(2) == 0 );
-  assert( graph.in_degree(3) == 0 );
+  assert( graph.in_degree(3) == 1 );
   assert( graph.in_degree(4) == 1 );
 
   assert( graph.out_degree(1) == 0 );
   assert( graph.out_degree(2) == 0 );
   assert( graph.out_degree(3) == 1 );
-  assert( graph.out_degree(4) == 0 );
+  assert( graph.out_degree(4) == 1 );
 
   assert( graph.degree(1) == 0 );
   assert( graph.degree(2) == 0 );
@@ -374,15 +392,10 @@ int main(){
   assert( *(--graph.edges_end()) == Edge(3,4) );
   assert( --graph.edges_end() == graph.edges_begin() );
 
-  assert( graph.successors_begin(1) == graph.successors_end(1) );
-
-  assert( *graph.predecessors_begin(4) == 3 );
-  assert( ++graph.predecessors_begin(4) == graph.predecessors_end(4) );
-
   assert( graph.adjacents_begin(1) == graph.adjacents_end(1) );
   assert( graph.adjacents_begin(2) == graph.adjacents_end(2) );
-  assert( *graph.adjacents_begin(3) == *graph.successors_begin(3) );
-  assert( *graph.adjacents_begin(4) == *graph.predecessors_begin(4) );
+  assert( *graph.adjacents_begin(3) == 4 );
+  assert( *graph.adjacents_begin(4) == 3 );
 
   assert(++graph.adjacents_begin(3) == graph.adjacents_end(3) );
   assert(++graph.adjacents_begin(4) == graph.adjacents_end(4) );

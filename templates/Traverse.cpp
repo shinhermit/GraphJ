@@ -1,151 +1,125 @@
-template<typename Type>
-void Traverse<Type>::nodes(Graph<Type> & graph, Visitor<Type> & visitor){
-  typename Graph<Type>::NodeIterator nodeIt;
-
-  nodeIt = graph.nodes_begin();
-
-  while( nodeIt != graph.nodes_end() ){
-    visitor.treat(graph, *nodeIt);
-
-    nodeIt++;
-  }
-}
 
 template<typename Type>
-void Traverse<Type>::breadth_once(Graph<Type> & graph, GraphTypes::node_id node, Visitor<Type> & visitor, std::set<GraphTypes::node_id> & marker){
-  GraphTypes::node_id son, grand_son;
-  std::deque<GraphTypes::node_id> waiters, grand_successors;
-  std::set<GraphTypes::node_id> nodes_set;
+void Traverse<Type>::_Breadth_once(Graph<Type> & graph, const GraphTypes::node_id & node, GraphFunctor::Visitor & visit, std::set<GraphTypes::node_id> & marker){
+  typename Graph<Type>::NodeIterator begin;
+  typename Graph<Type>::NodeIterator end;
+  typename Graph<Type>::NodeIterator it;
+  GraphTypes::node_id son;
+  std::deque<GraphTypes::node_id> waiters;
 
   waiters.push_back(node);
 
   while( waiters.size() > 0 ){
     son = waiters.front();
     waiters.pop_front();
-    visitor.treat(graph, son);
+    visit(son);
     marker.insert(son);
 
-    nodes_set = graph.successors(son);
-    grand_successors.assign(nodes_set.begin(), nodes_set.end());
-    nodes_set.clear();
+    if( graph.is_directed() ){
+      begin = graph.successors_begin(son);
+      end = graph.successors_end(son);
+    }
 
-    while( grand_successors.size() > 0 ){
-      grand_son = grand_successors.front();
-      if( !marker.count(grand_son) ){
-	marker.insert(grand_son);
-	waiters.push_back(grand_son);
+    else{
+      begin = graph.adjacents_begin(son);
+      end = graph.adjacents_end(son);
+    }
+
+    for(it = begin; it != end; ++it){
+
+      if( !marker.count(*it) ){
+	marker.insert(*it);
+	waiters.push_back(*it);
       }
-
-      grand_successors.pop_front();
     }
+
   }
 }
 
 template<typename Type>
-void Traverse<Type>::breadth(Graph<Type> & graph, Visitor<Type> & visitor){
-  typename Graph<Type>::NodeIterator nodeIt;
-  std::set<GraphTypes::node_id> marker;
-
-  if( graph.nodes_size() > 0){
-    *nodeIt = graph.nodes_begin();
-
-    while( nodeIt != graph.at_nodes_end() ){
-      if( !marker.count(*nodeIt) )
-	breadth_once(graph, *nodeIt, visitor, marker);
-
-      *nodeIt++;
-    }
-  }
-
-}
-
-template<typename Type>
-void Traverse<Type>::depth_once(Graph<Type> & graph, GraphTypes::node_id node, Visitor<Type> & visitor, std::set<GraphTypes::node_id> & marker){
+void Traverse<Type>::_Depth_once(Graph<Type> & graph, const GraphTypes::node_id & node, GraphFunctor::Visitor & visit, std::set<GraphTypes::node_id> & marker){
+  typename Graph<Type>::NodeIterator begin;
+  typename Graph<Type>::NodeIterator end;
+  typename Graph<Type>::NodeIterator it;
   GraphTypes::node_id curr_node;
-  std::deque<GraphTypes::node_id> successors;
-  std::set<GraphTypes::node_id> nodes_set;
 
-  visitor.treat(graph, node);
+  visit(node);
   marker.insert(node);
 
-  nodes_set = graph.successors(node);
-  successors.assign( nodes_set.begin(), nodes_set.end() );
-  nodes_set.clear();
+  if( graph.is_directed() ){
+    begin = graph.successors_begin(node);
+    end = graph.successors_end(node);
+  }
 
-  while( successors.size() > 0 ){
-    curr_node = successors.front();
+  else{
+    begin = graph.adjacents_begin(node);
+    end = graph.adjacents_end(node);
+  }
 
-    if( !marker.count(curr_node) ){
-      depth_once(graph, curr_node, visitor, marker);
+  for(it=begin; it != end; ++it){
+
+    if( !marker.count(*it) ){
+      depth_once(graph, *it, visit, marker);
     }
 
-    successors.pop_front();
   }
 }
 
 template<typename Type>
-void Traverse<Type>::depth(Graph<Type> & graph, Visitor<Type> & visitor){
+void Traverse<Type>::Nodes(Graph<Type> & graph, GraphFunctor::Visitor & visit){
+  typename Graph<Type>::NodeIterator nodeIt;
+
+  nodeIt = graph.nodes_begin();
+
+  while( nodeIt != graph.nodes_end() ){
+    visit(*nodeIt);
+
+    ++nodeIt;
+  }
+}
+
+template<typename Type>
+void Traverse<Type>::Breadth_once(Graph<Type> & graph, const GraphTypes::node_id & node, GraphFunctor::Visitor & visit)
+{
+  std::set<GraphTypes::node_id> marker;
+  _Breadth_once(graph, node, visit, marker);
+}
+
+template<typename Type>
+void Traverse<Type>::Breadth(Graph<Type> & graph, GraphFunctor::Visitor & visit){
   typename Graph<Type>::NodeIterator nodeIt;
   std::set<GraphTypes::node_id> marker;
 
-  if( graph.nodes_size() > 0 ){
+  nodeIt = graph.nodes_begin();
 
-    *nodeIt = graph.nodes_begin();
+  while( nodeIt != graph.at_nodes_end() ){
+    if( !marker.count(*nodeIt) )
+      _Breadth_once(graph, *nodeIt, visit, marker);
 
-    while( nodeIt != graph.nodes_end() ){
-      if( !marker.count(*nodeIt) )
-	depth_once(graph, *nodeIt, visitor, marker);
-
-      *nodeIt++;
-    }
+    ++nodeIt;
   }
 
 }
 
 template<typename Type>
-void Traverse<Type>::reverse_breadth_once(Graph<Type> & graph, GraphTypes::node_id node, Visitor<Type> & visitor, std::set<GraphTypes::node_id> & marker){
-  GraphTypes::node_id father, grand_father;
-  std::deque<GraphTypes::node_id> waiters, grand_predecessors;
-  std::set<GraphTypes::node_id> nodes_set;
-
-  waiters.push_back(node);
-
-  while( waiters.size() > 0 ){
-    father = waiters.front();
-    waiters.pop_front();
-    visitor.treat(graph, father);
-    marker.insert(father);
-
-    nodes_set = graph.predecessors(father);
-    grand_predecessors.assign(nodes_set.begin(), nodes_set.end());
-    nodes_set.clear();
-
-    while( grand_predecessors.size() > 0 ){
-      grand_father = grand_predecessors.front();
-      if( !marker.count(grand_father) ){
-	marker.insert(grand_father);
-	waiters.push_back(grand_father);
-      }
-
-      grand_predecessors.pop_front();
-    }
-  }
+void Traverse<Type>::Depth_once(Graph<Type> & graph, const GraphTypes::node_id & node, GraphFunctor::Visitor & visit)
+{
+  std::set<GraphTypes::node_id> marker;
+  _Depth_once(graph, node, visit, marker);
 }
 
 template<typename Type>
-void Traverse<Type>::reverse_breadth(Graph<Type> & graph, Visitor<Type> & visitor){
+void Traverse<Type>::Depth(Graph<Type> & graph, GraphFunctor::Visitor & visit){
   typename Graph<Type>::NodeIterator nodeIt;
   std::set<GraphTypes::node_id> marker;
 
-  if( graph.nodes_size() > 0){
-    *nodeIt = graph.nodes_begin();
+  nodeIt = graph.nodes_begin();
 
-    while( nodeIt != graph.at_nodes_end() ){
-      if( !marker.count(*nodeIt) )
-	reverse_breadth_once(graph, *nodeIt, visitor, marker);
+  while( nodeIt != graph.nodes_end() ){
+    if( !marker.count(*nodeIt) )
+      _Depth_once(graph, *nodeIt, visit, marker);
 
-      *nodeIt++;
-    }
+    ++nodeIt;
   }
 
 }
