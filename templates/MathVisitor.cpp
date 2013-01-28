@@ -1,7 +1,14 @@
 using namespace GraphFunctor;
 
 template<typename Type>
-MathVisitor<Type>::MathVisitor(const Graph<Type> & graph, std::string & S_buffer, std::string & A_buffer, std::string & C_buffer):_graph(graph), _S_buffer(S_buffer), _A_buffer(A_buffer), _C_buffer(C_buffer){}
+MathVisitor<Type>::MathVisitor(const Graph<Type> & graph,
+			       std::string & S_buffer,
+			       std::string & A_buffer,
+			       std::string & C_buffer):
+  _graph(graph),
+  _S_buffer(S_buffer),
+  _A_buffer(A_buffer),
+  _C_buffer(C_buffer){}
 
 template<typename Type>
 MathVisitor<Type>::~MathVisitor(){}

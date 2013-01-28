@@ -19,7 +19,11 @@ namespace GraphException
     std::string _moreInfo()const;
 
   public:
-    BasicGraphException(const std::string & message="BasicGraphException", const int & line=-1, const std::string & file="", const std::string & context="", const GraphTypes::Exceptions::Verbosity & verbosity=GraphTypes::Exceptions::VERBOSE);
+    BasicGraphException(const std::string & message="BasicGraphException",
+			const int & line=-1,
+			const std::string & file="",
+			const std::string & context="",
+			const GraphTypes::Exceptions::Verbosity & verbosity=GraphTypes::Exceptions::VERBOSE);
 
     BasicGraphException(const BasicGraphException & source);
 

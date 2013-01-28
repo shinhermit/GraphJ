@@ -6,7 +6,8 @@
 #include "PonderableGraph.hpp"
 #include "Graph.hpp"
 
-int main(){
+int main()
+{
   // BaseGraph graph;
   // DirectableGraph graph(GraphTypes::DIRECTED);
   // PonderableGraph graph(GraphTypes::DIRECTED, GraphTypes::UNWEIGHTED);
@@ -31,72 +32,81 @@ int main(){
   assert( graph.edgeState() == GraphTypes::UNWEIGHTED );
 
   //les métriques
-  try{
-    graph.in_degree(100);
-    assert( "graph.in_degree(100)" == "echec" );
-  }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  try
+    {
+      graph.in_degree(100);
+      assert( "graph.in_degree(100)" == "echec" );
+    }
 
-  try{
-    graph.out_degree(1);
-    assert("graph.out_degree(1)" == "echec");
-  }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  catch(const GraphException::InvalidNodeIDException & e){}
 
-  try{
-    graph.degree(2);
-    assert("graph.degree(2)" == "echec");
-  }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  try
+    {
+      graph.out_degree(1);
+      assert("graph.out_degree(1)" == "echec");
+    }
+
+  catch(const GraphException::InvalidNodeIDException & e){}
+
+  try
+    {
+      graph.degree(2);
+      assert("graph.degree(2)" == "echec");
+    }
+
+  catch(const GraphException::InvalidNodeIDException & e){}
 
   //les itérateurs
   assert( graph.nodes_begin() == graph.nodes_end() );
   assert( graph.edges_begin() == graph.edges_end() );
 
-  try{
+  try
+    {
     graph.successors_begin(100);
     assert("graph.successors_begin(100)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  
+  catch(const GraphException::InvalidNodeIDException & e){}
 
-  try{
+  try
+    {
     graph.successors_end(1);
     assert("graph.successors_end(1)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  
+  catch(const GraphException::InvalidNodeIDException & e){}
 
-  try{
+  try
+    {
     graph.predecessors_begin(100);
     assert("graph.predecessors_begin(100)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  
+  catch(const GraphException::InvalidNodeIDException & e){}
 
-  try{
+  try
+    {
     graph.predecessors_end(1);
     assert("graph.predecessors_end(1)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  
+  catch(const GraphException::InvalidNodeIDException & e){}
 
-  try{
+  try
+    {
     graph.adjacents_begin(100);
     assert("graph.adjacents_begin(100)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  
+  catch(const GraphException::InvalidNodeIDException & e){}
 
-  try{
+  try
+    {
     graph.adjacents_end(1);
     assert("graph.adjacents_end(1)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  
+  catch(const GraphException::InvalidNodeIDException & e){}
 
   //Composition avec les constructeurs
   graph.remove_node(1);
@@ -161,72 +171,81 @@ int main(){
   assert( graph.edgeState() == GraphTypes::UNWEIGHTED );
 
   //les métriques
-  try{
+  try
+    {
     graph.in_degree(1);
     assert("graph.in_degree(1)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  
+  catch(const GraphException::InvalidNodeIDException & e){}
 
-  try{
+  try
+    {
     graph.out_degree(1);
     assert("graph.out_degree(1)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  
+  catch(const GraphException::InvalidNodeIDException & e){}
 
-  try{
+  try
+    {
     graph.degree(2);
     assert("graph.degree(2)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  
+  catch(const GraphException::InvalidNodeIDException & e){}
 
   //les itérateurs
   assert( graph.nodes_begin() == graph.nodes_end() );
   assert( graph.edges_begin() == graph.edges_end() );
 
-  try{
+  try
+    {
     graph.successors_begin(100);
     assert("graph.successors_begin(100)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  
+  catch(const GraphException::InvalidNodeIDException & e){}
 
-  try{
+  try
+    {
     graph.successors_end(1);
     assert("graph.successors_end(1)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  
+  catch(const GraphException::InvalidNodeIDException & e){}
 
-  try{
+  try
+    {
     graph.predecessors_begin(100);
     assert("graph.predecessors_begin(100)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  
+  catch(const GraphException::InvalidNodeIDException & e){}
 
-  try{
+  try
+    {
     graph.predecessors_end(1);
     assert("graph.predecessors_end(1)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  
+  catch(const GraphException::InvalidNodeIDException & e){}
 
-  try{
+  try
+    {
     graph.adjacents_begin(100);
     assert("graph.adjacents_begin(100)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  
+  catch(const GraphException::InvalidNodeIDException & e){}
 
-  try{
+  try
+    {
     graph.adjacents_end(1);
     assert("graph.adjacents_end(1)" == "echec");
   }
-  catch(const GraphException::InvalidNodeIDException & e){
-  }
+  
+  catch(const GraphException::InvalidNodeIDException & e){}
 
 
   /******** add_edge ******/

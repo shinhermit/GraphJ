@@ -7,7 +7,8 @@ void print_element(T t)
 
 
 template<typename Type>
-void Coloring<Type>::_discard_incompatibles(const Graph<Type> & graph, std::list<GraphTypes::node_id> & candidates)
+void Coloring<Type>::_discard_incompatibles(const Graph<Type> & graph,
+					    std::list<GraphTypes::node_id> & candidates)
 {
 
   for(std::list<GraphTypes::node_id>::iterator candidate = candidates.begin();

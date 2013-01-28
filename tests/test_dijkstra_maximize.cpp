@@ -44,6 +44,8 @@ int main()
   source = 1;
   target = 6;
 
+try
+  {
   allPaths_dijkstra = lookup.dijkstra(reversed, source);
   paths_dijkstra_between = lookup.paths_to(allPaths_dijkstra, target);
 
@@ -60,12 +62,16 @@ int main()
   Export::ToGraphviz(graph, paths_bellman_between, "bellman_maximize.graph");
   Export::ToGraphviz(allPaths_bellman, "paths_bellman_maximize.graph");
 
+#ifdef _SYSTEM
+
   //compilation dot
   system("dot -Tpng dijkstra_maximize.graph -o dijkstra_maximize.png");
   system("dot -Tpng paths_dijkstra_maximize.graph -o paths_dijkstra_maximize.png");
 
   system("dot -Tpng bellman_maximize.graph -o bellman_maximize.png");
   system("dot -Tpng paths_bellman_maximize.graph -o paths_bellman_maximize.png");
+
+#endif
 
   //affichages
   std::cout << "DIJKSTRA: " << std::endl;
@@ -88,6 +94,37 @@ int main()
   std::cout << "Le graphe a été exporté dans le fichier bellman_maximize.png" << std::endl;
   std::cout << "L'arbre des chemins a été exporté dans le fichier bellman_maximize.png" << std::endl << std::endl;
 
+  }
+
+  catch(const GraphException::InvalidOperation & io)
+    {
+      std::cout << "Caught GraphException::InvalidOperation:" << std::endl << io.what() << std::endl;
+    }
+
+  catch(const GraphException::InvalidNodeID & in)
+    {
+      std::cout << "Caught GraphException::InvalidNodeID:" << std::endl << in.what() << std::endl;
+    }
+
+  catch(const GraphException::InvalidEdge & ie)
+    {
+      std::cout << "Caught GraphException::InvalidEdge:" << std::endl << ie.what() << std::endl;
+    }
+
+  catch(const GraphException::BasicGraphException & bge)
+    {
+      std::cout << "Caught GraphException::BasicGraphException:" << std::endl << bge.what() << std::endl;
+    }
+
+  catch(const std::exception & e)
+    {
+      std::cout << "Caught exception:" << std::endl << e.what() << std::endl;
+    }
+
+  catch(...)
+    {
+      std::cout << "Caught unexpected exception." << std::endl;
+    }
 
   return 0;
 }

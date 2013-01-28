@@ -5,11 +5,14 @@
 
 namespace GraphFunctor
 {
+
   template<typename T, typename V>
   struct MapValueComparator
   {
-    bool operator()(const std::pair<T,V> & pair_min, const std::pair<T,V> & pair_max)const;
+    bool operator()(const std::pair<T,V> & pair_min,
+		    const std::pair<T,V> & pair_max)const;
   };
+
 };
 
 #include "MapValueComparator.cpp"

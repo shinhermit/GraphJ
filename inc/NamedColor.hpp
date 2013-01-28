@@ -29,7 +29,8 @@ public:
 
   void operator>>(std::ostream & out)const;
 
-  friend std::ostream & operator<<(std::ostream & out, const NamedColor & col);
+  friend std::ostream & operator<<(std::ostream & out,
+				   const NamedColor & col);
 
   bool operator==(const NamedColor & ref)const;
   bool operator!=(const NamedColor & ref)const;

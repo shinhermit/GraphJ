@@ -95,75 +95,94 @@ int main(){
   //Liaison Pau
   graph.add_edge(12,13,10.3);
 
-  try{
-    //traitements
-    sourceNode = 2;//Billères
-    targetNode = 1;//Sendet
+  try
+    {
+      //traitements
+      sourceNode = 2;//Billères
+      targetNode = 1;//Sendet
 
-    //tests
-    Export::ToGraphviz(graph, label_mapper, "undirected_before.graph");
-    system("dot -Tpng undirected_before.graph -o undirected_before.png");
+      //tests
+      Export::ToGraphviz(graph, label_mapper, "undirected_before.graph");
+      system("dot -Tpng undirected_before.graph -o undirected_before.png");
 
-    graph = Convert::ToDirected(graph);
+      graph = Convert::ToDirected(graph);
 
-    allPaths_dijkstra = lookup.Xdijkstra(graph, sourceNode);
-    allPaths_bellman = lookup.Xbellman(graph, sourceNode);
+      allPaths_dijkstra = lookup.Xdijkstra(graph, sourceNode);
+      allPaths_bellman = lookup.Xbellman(graph, sourceNode);
 
-    dijkstra_between = lookup.paths_to(allPaths_dijkstra, targetNode);
-    bellman_between = lookup.paths_to(allPaths_bellman, targetNode);
+      dijkstra_between = lookup.paths_to(allPaths_dijkstra, targetNode);
+      bellman_between = lookup.paths_to(allPaths_bellman, targetNode);
 
-    //tests
-    Export::ToGraphviz(Convert::ToUndirected(graph), label_mapper, "undirected_after.graph");
-    system("dot -Tpng undirected_after.graph -o undirected_after.png");
+      //tests
+      Export::ToGraphviz(Convert::ToUndirected(graph), label_mapper, "undirected_after.graph");
+      system("dot -Tpng undirected_after.graph -o undirected_after.png");
 
-    //exports
-    // std::cout << Export::ToMathString(graph, label_mapper) << std::endl << std::endl;
-    Export::ToGraphviz(graph, label_mapper, "reseau_routier.graph");
+      //exports
+      // std::cout << Export::ToMathString(graph, label_mapper) << std::endl << std::endl;
+      Export::ToGraphviz(graph, label_mapper, "reseau_routier.graph");
 
-    Export::ToGraphviz(allPaths_dijkstra, label_mapper, "chemins_dijkstra.graph");
-    Export::ToGraphviz(allPaths_bellman, label_mapper, "chemins_bellman.graph");
+      Export::ToGraphviz(allPaths_dijkstra, label_mapper, "chemins_dijkstra.graph");
+      Export::ToGraphviz(allPaths_bellman, label_mapper, "chemins_bellman.graph");
 
-    Export::ToGraphviz(graph, label_mapper, dijkstra_between, "highlight_dijkstra.graph");
-    Export::ToGraphviz(graph, label_mapper, bellman_between, "highlight_bellman.graph");
+      Export::ToGraphviz(graph, label_mapper, dijkstra_between, "highlight_dijkstra.graph");
+      Export::ToGraphviz(graph, label_mapper, bellman_between, "highlight_bellman.graph");
 
-    //compilations dot
-    system("dot -Tpng reseau_routier.graph -o reseau_routier.png");
+      //compilations dot
+      system("dot -Tpng reseau_routier.graph -o reseau_routier.png");
 
-    system("dot -Tpng chemins_dijkstra.graph -o chemins_dijkstra.png");
-    system("dot -Tpng chemins_bellman.graph -o chemins_bellman.png");
+      system("dot -Tpng chemins_dijkstra.graph -o chemins_dijkstra.png");
+      system("dot -Tpng chemins_bellman.graph -o chemins_bellman.png");
 
-    system("dot -Tpng highlight_dijkstra.graph -o highlight_dijkstra.png");
-    system("dot -Tpng highlight_bellman.graph -o highlight_bellman.png");
+      system("dot -Tpng highlight_dijkstra.graph -o highlight_dijkstra.png");
+      system("dot -Tpng highlight_bellman.graph -o highlight_bellman.png");
 
-    //affichages
-    std::cout << "Le graphe du réseau routier a été exporté dans le fichier reseau_routier.graph" << std::endl;
-    std::cout << "dot -Tpng reseau_routier.graph -o reseau_routier.png" << std::endl << std::endl;
+      //affichages
+      std::cout << "Le graphe du réseau routier a été exporté dans le fichier reseau_routier.graph" << std::endl;
+      std::cout << "dot -Tpng reseau_routier.graph -o reseau_routier.png" << std::endl << std::endl;
 
-    std::cout << "dot -Tpng chemins_dijkstra.graph -o chemins_dijkstra.png" << std::endl;
-    std::cout << "Le graphe des chemins par Dijkstra a été exporté dans le fichier chemins_dijkstra.graph" << std::endl << std::endl;
+      std::cout << "dot -Tpng chemins_dijkstra.graph -o chemins_dijkstra.png" << std::endl;
+      std::cout << "Le graphe des chemins par Dijkstra a été exporté dans le fichier chemins_dijkstra.graph" << std::endl << std::endl;
 
-    std::cout << "dot -Tpng chemins_bellman.graph -o chemins_bellman.png" << std::endl;
-    std::cout << "Le graphe des chemins par Bellman a été exporté dans le fichier chemins_bellman.graph" << std::endl;
+      std::cout << "dot -Tpng chemins_bellman.graph -o chemins_bellman.png" << std::endl;
+      std::cout << "Le graphe des chemins par Bellman a été exporté dans le fichier chemins_bellman.graph" << std::endl;
 
-    std::cout << "dot -Tpng highlight_dijkstra.graph -o highlight_dijkstra.png" << std::endl;
-    std::cout << "Les chemins optimaux entre les deux villes sont visibles sur l'image highlight_dijkstra.png" << std::endl << std::endl;
+      std::cout << "dot -Tpng highlight_dijkstra.graph -o highlight_dijkstra.png" << std::endl;
+      std::cout << "Les chemins optimaux entre les deux villes sont visibles sur l'image highlight_dijkstra.png" << std::endl << std::endl;
 
-    std::cout << "dot -Tpng highlight_bellman.graph -o highlight_bellman.png" << std::endl;
-    std::cout << "Les chemins optimaux entre les deux villes sont visibles sur l'image highlight_bellman.png" << std::endl;
+      std::cout << "dot -Tpng highlight_bellman.graph -o highlight_bellman.png" << std::endl;
+      std::cout << "Les chemins optimaux entre les deux villes sont visibles sur l'image highlight_bellman.png" << std::endl;
 
-  }
-  catch(std::invalid_argument & iv){
-    std::cout << "Caught invalid_argument exception:" << std::endl << iv.what() << std::endl;
-  }
-  catch(std::logic_error & le){
-    std::cout << "Caught logic_error exception:" << std::endl << le.what() << std::endl;
-  }
-  catch(std::exception & e){
-    std::cout << "Caught exception:" << std::endl << e.what() << std::endl;
-  }
-  catch(...){
-    std::cout << "Caught unexpected exception." << std::endl;
-  }
+    }
+
+  catch(const GraphException::InvalidOperation & io)
+    {
+      std::cout << "Caught GraphException::InvalidOperation:" << std::endl << io.what() << std::endl;
+    }
+
+  catch(const GraphException::InvalidNodeID & in)
+    {
+      std::cout << "Caught GraphException::InvalidNodeID:" << std::endl << in.what() << std::endl;
+    }
+
+  catch(const GraphException::InvalidEdge & ie)
+    {
+      std::cout << "Caught GraphException::InvalidEdge:" << std::endl << ie.what() << std::endl;
+    }
+
+  catch(const GraphException::BasicGraphException & bge)
+    {
+      std::cout << "Caught GraphException::BasicGraphException:" << std::endl << bge.what() << std::endl;
+    }
+
+  catch(std::exception & e)
+    {
+      std::cout << "Caught exception:" << std::endl << e.what() << std::endl;
+    }
+
+  catch(...)
+    {
+      std::cout << "Caught unexpected exception." << std::endl;
+    }
 
   return 0;
 }

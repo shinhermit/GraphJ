@@ -15,7 +15,8 @@ namespace GraphFunctor
   public:
     GreaterDegreeComparator(const Graph<Type> & graph);
 
-    bool operator()(const GraphTypes::node_id & node1, const GraphTypes::node_id & node2);
+    bool operator()(const GraphTypes::node_id & node1,
+		    const GraphTypes::node_id & node2);
   };
 
 };

@@ -36,12 +36,18 @@ namespace GraphFunctor
 
     long _nb_roads;
 
-    long _renumber(const long & asFirst, const long & oldNumber)const;
-    bool _adjacent(const Edge & edge1, const Edge & edge2)const;
-    bool _intersect(const Edge & edge1, const Edge & edge2)const;
+    long _renumber(const long & asFirst,
+		   const long & oldNumber)const;
+
+    bool _adjacent(const Edge & edge1,
+		   const Edge & edge2)const;
+
+    bool _intersect(const Edge & edge1,
+		    const Edge & edge2)const;
 
   public:
-    TricolorBuilderVisitor(Graph<Edge> & graph, const long & nb_roads);
+    TricolorBuilderVisitor(Graph<Edge> & graph,
+			   const long & nb_roads);
 
     ~TricolorBuilderVisitor();
 

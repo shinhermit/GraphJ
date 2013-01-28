@@ -3,7 +3,8 @@
 #include <string>
 #include "Graph.hpp"
 
-int main(){
+int main()
+{
   Graph<std::string> graph(GraphTypes::UNDIRECTED, GraphTypes::WEIGHTED, GraphTypes::CONTAINER);
 
   /********** Générateur initial **********/
@@ -14,22 +15,24 @@ int main(){
   // Les observateurs
   assert( graph.nodeType() == GraphTypes::CONTAINER );
 
-  try{
-    graph.get_node_content(0);
-    assert("graph.get_node_content(0)" == "echec");
-  }
-  catch(const GraphException::InvalidNodeID & e){
-  }
+  try
+    {
+      graph.get_node_content(0);
+      assert("graph.get_node_content(0)" == "echec");
+    }
+
+  catch(const GraphException::InvalidNodeID & e){}
 
 
   /********** add_node **********/
 
-  try{
-    graph.add_node(1);
-    assert("graph.add_node(1)" == "echec");
-  }
-  catch(const GraphException::InvalidOperation & e){
-  }
+  try
+    {
+      graph.add_node(1);
+      assert("graph.add_node(1)" == "echec");
+    }
+
+  catch(const GraphException::InvalidOperation & e){}
 
   graph.add_node(1, "1");
   
@@ -39,18 +42,19 @@ int main(){
   // Les observateurs
   assert( graph.nodeType() == GraphTypes::CONTAINER );
 
-  try{
-    graph.get_node_content(2);
-    assert("graph.get_node_content(2)" == "echec");
-  }
-  catch(const GraphException::InvalidNodeID & e){
-  }
+  try
+    {
+      graph.get_node_content(2);
+      assert("graph.get_node_content(2)" == "echec");
+    }
+
+  catch(const GraphException::InvalidNodeID & e){}
 
   assert( graph.get_node_content(1) == "1" );
 
 
   /********** graph.remove_node **********/
-   graph.remove_node(1);
+  graph.remove_node(1);
   
   // Les prédicats
   assert( graph.is_container() );
@@ -58,19 +62,23 @@ int main(){
   // Les observateurs
   assert( graph.nodeType() == GraphTypes::CONTAINER );
 
-  try{
-    graph.get_node_content(1);
-    assert("graph.get_node_content(1)" == "echec");
-  }
+  try
+    {
+      graph.get_node_content(1);
+      assert("graph.get_node_content(1)" == "echec");
+    }
+
   catch(const GraphException::InvalidNodeID & e){}
 
 
   /********** add_edge **********/
 
-  try{
-    graph.add_edge(1,2, 1);
-    assert("graph.add_edge(1,2, 1)" == "echec");
-  }
+  try
+    {
+      graph.add_edge(1,2, 1);
+      assert("graph.add_edge(1,2, 1)" == "echec");
+    }
+
   catch(const GraphException::InvalidOperation & e){}
 
   graph.add_edge(1,"1", 2,"2", 1);

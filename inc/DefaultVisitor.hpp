@@ -17,7 +17,8 @@ namespace GraphFunctor
     std::set<GraphTypes::node_id> _visited;
 
   public:
-    DefaultVisitor(const Graph<Type> & graph, std::string & buffer);
+    DefaultVisitor(const Graph<Type> & graph,
+		   std::string & buffer);
 
     ~DefaultVisitor();
 

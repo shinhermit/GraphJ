@@ -31,15 +31,18 @@ std::string Exporter<Type>::_graphviz_node_label_mapping(const Graph<Type> & gra
   std::ostringstream oss;
 
   node = graph.nodes_begin();
-  while( node != graph.nodes_end() ){
+  while( node != graph.nodes_end() )
+    {
 
-    label_it = label_mapper.find(*node);
-    if( label_it != label_mapper.end() ){
-      oss << *node <<" [label=\"" << label_it->second << "\"]" << std::endl;
+      label_it = label_mapper.find(*node);
+
+      if( label_it != label_mapper.end() )
+	{
+	  oss << *node <<" [label=\"" << label_it->second << "\"]" << std::endl;
+	}
+
+      ++node;
     }
-
-    ++node;
-  }
 
   return oss.str();
 }
@@ -53,15 +56,17 @@ std::string Exporter<Type>::_graphviz_node_color_mapping(const Graph<Type> & gra
   std::ostringstream oss;
 
   node = graph.nodes_begin();
-  while( node != graph.nodes_end() ){
+  while( node != graph.nodes_end() )
+    {
 
-    color_it = color_mapper.find(*node);
-    if( color_it != color_mapper.end() ){
-      oss << *node <<" [color=" << NamedColor::ToString(color_it->second) << "]" << std::endl;
+      color_it = color_mapper.find(*node);
+      if( color_it != color_mapper.end() )
+	{
+	  oss << *node <<" [color=" << NamedColor::ToString(color_it->second) << "]" << std::endl;
+	}
+
+      ++node;
     }
-
-    ++node;
-  }
 
   return oss.str();
 }
@@ -77,32 +82,36 @@ std::string Exporter<Type>::_graphviz_paths_highlighting(const Graph<Type> & gra
   std::ostringstream oss;
 
   col = NamedColor::NamesToString_begin();
-  for(path = paths_highlight.begin(); path != paths_highlight.end(); ++path){
+  for(path = paths_highlight.begin(); path != paths_highlight.end(); ++path)
+    {
 
-    oss << "{" << std::endl << "node [color=" << col->second << ", style=\"filled\"]" << std::endl;
-    oss << "edge [color=" << col->second << "]" << std::endl;
+      oss << "{" << std::endl << "node [color=" << col->second << ", style=\"filled\"]" << std::endl;
+      oss << "edge [color=" << col->second << "]" << std::endl;
 
-    node = path->begin();
+      node = path->begin();
 
-    while( node!= path->end() ){
-      sourceNode = *node;
-      ++node;
+      while( node!= path->end() )
+	{
+	  sourceNode = *node;
+	  ++node;
 
-      if( node != path->end() ){
-	oss << sourceNode << "->" << *node;
+	  if( node != path->end() )
+	    {
+	      oss << sourceNode << "->" << *node;
 
-	if( graph.is_weighted() ){
-	  oss << "[label=\"" << graph.getCost(sourceNode, *node) << "\", fontcolor=" << col->second << "]";
+	      if( graph.is_weighted() )
+		{
+		  oss << "[label=\"" << graph.getCost(sourceNode, *node) << "\", fontcolor=" << col->second << "]";
+		}
+
+	      oss << std::endl;
+	    }
 	}
 
-	oss << std::endl;
-      }
+      oss << "}" << std::endl;
+
+      ++col; if( col == NamedColor::NamesToString_end() ) col = NamedColor::NamesToString_begin();
     }
-
-    oss << "}" << std::endl;
-
-    ++col; if( col == NamedColor::NamesToString_end() ) col = NamedColor::NamesToString_begin();
-  }
 
   return oss.str();
 }
@@ -117,13 +126,14 @@ std::string Exporter<Type>::_graphviz_node_meta_mapping(const Graph<Type> & grap
   typename Graph<Type>::NodeIterator nodeIt;
 
   nodeIt = graph.nodes_begin();
-  while( nodeIt != graph.nodes_end() ){
-    stringColor = NamedColor::ToString( color_mapper.find(*nodeIt)->second );
+  while( nodeIt != graph.nodes_end() )
+    {
+      stringColor = NamedColor::ToString( color_mapper.find(*nodeIt)->second );
 
-    oss << *nodeIt <<" [label=\"" << label_mapper.find(*nodeIt)->second << "\", color=" << stringColor << "]" << std::endl;
+      oss << *nodeIt <<" [label=\"" << label_mapper.find(*nodeIt)->second << "\", color=" << stringColor << "]" << std::endl;
 
-    ++nodeIt;
-  }
+      ++nodeIt;
+    }
 
   return oss.str();
 }
@@ -170,9 +180,11 @@ std::string Exporter<Type>::ToMathString(const Graph<Type> & graph,
   std::map<GraphTypes::node_id, std::string>::const_iterator it;
   std::ostringstream oss;
 
-  for(it = label_mapper.begin(); it != label_mapper.end(); ++it){
-    oss << "s" << it->first << " |--> " << it->second << std::endl;
-  }
+  for(it = label_mapper.begin(); it != label_mapper.end(); ++it)
+    {
+      oss << "s" << it->first << " |--> " << it->second << std::endl;
+    }
+
   oss << toMathString(graph);
 
   return oss.str();

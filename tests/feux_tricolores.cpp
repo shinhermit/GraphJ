@@ -101,9 +101,13 @@ int main()
   std::cout << "Le graphe a été exporté dans le fichier coloration.graph" << std::endl << std::endl;
   std::cout << "dot -Tpng coloration.graph -o coloration.png" << std::endl << std::endl;
 
+#ifdef _SYSTEM
+
   system("dot -Tpng franchissements.graph -o franchissements.png");
   system("dot -Tpng incompatibles.graph -o incompatibles.png");
   system("dot -Tpng coloration.graph -o coloration.png");
+
+#endif
 
   return 0;
 }

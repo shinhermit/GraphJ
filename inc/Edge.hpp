@@ -11,7 +11,10 @@ protected:
 
 public:
   Edge();
-  Edge(const GraphTypes::node_id & origin, const GraphTypes::node_id & target);
+
+  Edge(const GraphTypes::node_id & origin,
+       const GraphTypes::node_id & target);
+
   Edge(const Edge & source);
 
   bool operator==(const Edge & ref)const;

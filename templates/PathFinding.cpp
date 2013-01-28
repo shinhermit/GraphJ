@@ -82,6 +82,7 @@ const GraphTypes::node_id & PathFinding<Type>::_closest(const std::list<GraphTyp
   d_closest = distance_from_source.find(*closest)->second;
 
   ++node;
+
   while( node != candidates.end() )
     {
 

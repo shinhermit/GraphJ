@@ -1,13 +1,7 @@
-//tests
-template<typename T>
-void print_element(T t)
-{
-  std::cout << t << " ";
-}
-
 
 template<typename Type>
-void Coloring<Type>::_discard_incompatibles(const Graph<Type> & graph, std::list<GraphTypes::node_id> & candidates)
+void Coloring<Type>::_discard_incompatibles(const Graph<Type> & graph,
+					    std::list<GraphTypes::node_id> & candidates)
 {
 
   for(std::list<GraphTypes::node_id>::iterator candidate = candidates.begin();
@@ -58,17 +52,6 @@ std::map<GraphTypes::node_id, NamedColor::ColorName> Coloring<Type>::Welsh(const
 
   sorted_nodes.assign( graph.nodes_begin(), graph.nodes_end() );
   std::sort( sorted_nodes.begin(), sorted_nodes.end(), GraphFunctor::GreaterDegreeComparator<Type>(graph) );
-
-  //tests
-  assert( sorted_nodes.size() > 0 );
-
-  //tests
-  std::cout << "Sorted Vector:" << std::endl;
-  std::for_each(sorted_nodes.begin(), sorted_nodes.end(), print_element<GraphTypes::node_id>);
-  std::cout << std::endl;
-
-  // //tests
-  // assert( false );
 
   color = NamedColor::NamesToString_begin();
 

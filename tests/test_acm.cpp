@@ -65,24 +65,29 @@ int main()
 
     }
 
-  catch(const GraphException::InvalidEdge & ie)
-    {
-      std::cout << "Caught GraphException::InvalidEdge: " << std::endl << ie.what() << std::endl;
-    }
-
   catch(const GraphException::InvalidOperation & io)
     {
-      std::cout << "Caught GraphException::InvalidOperation: " << std::endl << io.what() << std::endl;
+      std::cout << "Caught GraphException::InvalidOperation:" << std::endl << io.what() << std::endl;
     }
 
   catch(const GraphException::InvalidNodeID & in)
     {
-      std::cout << "Caught GraphException::InvalidNodeID: " << std::endl << in.what() << std::endl;
+      std::cout << "Caught GraphException::InvalidNodeID:" << std::endl << in.what() << std::endl;
     }
 
-  catch(const GraphException::BasicGraphException & be)
+  catch(const GraphException::InvalidEdge & ie)
     {
-      std::cout << "Caught GraphException::BasicGraphException: " << std::endl << be.what() << std::endl;
+      std::cout << "Caught GraphException::InvalidEdge:" << std::endl << ie.what() << std::endl;
+    }
+
+  catch(const GraphException::BasicGraphException & bge)
+    {
+      std::cout << "Caught GraphException::BasicGraphException:" << std::endl << bge.what() << std::endl;
+    }
+
+  catch(const std::exception & e)
+    {
+      std::cout << "Caught exception:" << std::endl << e.what() << std::endl;
     }
 
   catch(...)

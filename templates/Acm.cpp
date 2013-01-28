@@ -1,6 +1,7 @@
 
 template<typename Type>
-void Acm<Type>::_color_each_node(const Graph<Type> & graph, std::map<GraphTypes::node_id, GraphTypes::Algorithms::Color> & color_mapper)
+void Acm<Type>::_color_each_node(const Graph<Type> & graph,
+				 std::map<GraphTypes::node_id, GraphTypes::Algorithms::Color> & color_mapper)
 {
   GraphTypes::Algorithms::Color color;
   typename Graph<Type>::NodeIterator nodeIt;
@@ -21,7 +22,10 @@ void Acm<Type>::_color_each_node(const Graph<Type> & graph, std::map<GraphTypes:
 }
 
 template<typename Type>
-void Acm<Type>::_update_colors(const Graph<> & acm, std::map<GraphTypes::node_id, GraphTypes::Algorithms::Color> & color_mapper, const GraphTypes::node_id & node1, const GraphTypes::node_id & node2)
+void Acm<Type>::_update_colors(const Graph<> & acm,
+			       std::map<GraphTypes::node_id, GraphTypes::Algorithms::Color> & color_mapper,
+			       const GraphTypes::node_id & node1,
+			       const GraphTypes::node_id & node2)
 {
   GraphTypes::Algorithms::Color col1, col2, master_col;
   bool has1, has2;
@@ -63,7 +67,8 @@ void Acm<Type>::_update_colors(const Graph<> & acm, std::map<GraphTypes::node_id
 }
 
 template<typename Type>
-Graph<> Acm<Type>::Kruskal(const Graph<Type> & graph) throw(GraphException::InvalidOperation, GraphException::InvalidEdge, GraphException::InvalidNodeID)
+Graph<> Acm<Type>::Kruskal(const Graph<Type> & graph)
+  throw(GraphException::InvalidOperation, GraphException::InvalidEdge,GraphException::InvalidNodeID)
 {
 
   Graph<> acm(GraphTypes::UNDIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
@@ -103,7 +108,9 @@ Graph<> Acm<Type>::Kruskal(const Graph<Type> & graph) throw(GraphException::Inva
 }
 
 template<typename Type>
-void Acm<Type>::_init_tables(const Graph<Type> & graph, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance, std::map<GraphTypes::node_id, GraphTypes::node_id> & predecessor)
+void Acm<Type>::_init_tables(const Graph<Type> & graph,
+			     std::map<GraphTypes::node_id, GraphTypes::Cost> & distance,
+			     std::map<GraphTypes::node_id,GraphTypes::node_id> & predecessor)
 {
   typename Graph<Type>::NodeIterator node;
   GraphTypes::node_id premier;
@@ -128,7 +135,11 @@ void Acm<Type>::_init_tables(const Graph<Type> & graph, std::map<GraphTypes::nod
 }
 				      
 template<typename Type>
-void Acm<Type>::_update_tables(const Graph<Type> & graph, const Graph<Type> & acm, const GraphTypes::node_id & closest, std::map<GraphTypes::node_id, GraphTypes::Cost> & distance, std::map<GraphTypes::node_id, GraphTypes::node_id> & predecessor)
+void Acm<Type>::_update_tables(const Graph<Type> & graph,
+			       const Graph<Type> & acm,
+			       const GraphTypes::node_id & closest,
+			       std::map<GraphTypes::node_id, GraphTypes::Cost> & distance,
+			       std::map<GraphTypes::node_id, GraphTypes::node_id> & predecessor)
 {
 
   GraphTypes::Cost new_distance;
@@ -157,7 +168,8 @@ void Acm<Type>::_update_tables(const Graph<Type> & graph, const Graph<Type> & ac
 }
 
 template<typename Type>
-Graph<> Acm<Type>::Prim(const Graph<Type> & graph) throw(GraphException::InvalidOperation, GraphException::InvalidEdge, GraphException::InvalidNodeID)
+Graph<> Acm<Type>::Prim(const Graph<Type> & graph)
+  throw(GraphException::InvalidOperation, GraphException::InvalidEdge, GraphException::InvalidNodeID)
 {
 
   Graph<> acm(GraphTypes::UNDIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);

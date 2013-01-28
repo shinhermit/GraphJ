@@ -1,7 +1,10 @@
 using namespace GraphFunctor;
 
 template<typename Type>
-DefaultVisitor<Type>::DefaultVisitor(const Graph<Type> & graph, std::string & buffer):_graph(graph), _buffer(buffer){}
+DefaultVisitor<Type>::DefaultVisitor(const Graph<Type> & graph, std::string & buffer):
+  _graph(graph),
+  _buffer(buffer)
+{}
 
 template<typename Type>
 DefaultVisitor<Type>::~DefaultVisitor(){}
@@ -19,26 +22,30 @@ void DefaultVisitor<Type>::operator()(const GraphTypes::node_id & node)
 
   oss << "n" << node << linkSymbol;
 
-  if( _graph.is_directed() ){
-    begin = _graph.successors_begin(node);
-    end = _graph.successors_end(node);
-  }
-
-  else{
-    begin = _graph.adjacents_begin(node);
-    end = _graph.adjacents_end(node);
-
-    _visited.insert(node);
-  }
-
-  for(it = begin; it != end; ++it){
-
-    if( _graph.is_directed() || !_visited.count(*it) ){
-
-      oss << "n" << *it << " ";
+  if( _graph.is_directed() )
+    {
+      begin = _graph.successors_begin(node);
+      end = _graph.successors_end(node);
     }
 
-  }
+  else
+    {
+      begin = _graph.adjacents_begin(node);
+      end = _graph.adjacents_end(node);
+
+      _visited.insert(node);
+    }
+
+  for(it = begin; it != end; ++it)
+    {
+
+      if( _graph.is_directed() || !_visited.count(*it) )
+	{
+
+	  oss << "n" << *it << " ";
+	}
+
+    }
 
   oss << std::endl;
 

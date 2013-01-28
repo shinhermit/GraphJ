@@ -2,9 +2,23 @@
 
 using namespace GraphException;
 
-InvalidNodeID::InvalidNodeID(const GraphTypes::node_id & badID, const std::string & message, const int & line, const std::string & file, const std::string & context, const GraphTypes::Exceptions::Verbosity & verbosity):BasicGraphException(message, line, file, context, verbosity), _badID(badID){}
+InvalidNodeID::InvalidNodeID(const GraphTypes::node_id & badID,
+			     const std::string & message,
+			     const int & line,
+			     const std::string & file,
+			     const std::string & context,
+			     const GraphTypes::Exceptions::Verbosity & verbosity):
+  BasicGraphException(message,
+		      line,
+		      file,
+		      context,
+		      verbosity),
+  _badID(badID)
+{}
 
-InvalidNodeID::InvalidNodeID(const InvalidNodeID & source):BasicGraphException(source), _badID(source._badID){}
+InvalidNodeID::InvalidNodeID(const InvalidNodeID & source):
+  BasicGraphException(source),
+  _badID(source._badID){}
 
 InvalidNodeID & InvalidNodeID::operator=(const InvalidNodeID & source)
 {

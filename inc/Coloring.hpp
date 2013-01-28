@@ -12,7 +12,8 @@
 template<typename Type=GraphTypes::Default>
 class Coloring{
 private:
-  static void _discard_incompatibles(const Graph<Type> & graph, std::list<GraphTypes::node_id> & candidates);
+  static void _discard_incompatibles(const Graph<Type> & graph,
+				     std::list<GraphTypes::node_id> & candidates);
 
   static void _colorize_remove_compatibles(std::list<GraphTypes::node_id> & candidates,
 				    std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper,

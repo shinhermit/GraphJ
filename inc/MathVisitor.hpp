@@ -21,7 +21,10 @@ namespace GraphFunctor
     std::set<GraphTypes::node_id> _visited;
 
   public:
-    MathVisitor(const Graph<Type> & graph, std::string & S_buffer, std::string & A_buffer, std::string & C_buffer);
+    MathVisitor(const Graph<Type> & graph,
+		std::string & S_buffer,
+		std::string & A_buffer,
+		std::string & C_buffer);
 
     ~MathVisitor();
 

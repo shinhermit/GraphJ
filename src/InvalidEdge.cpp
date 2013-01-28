@@ -2,9 +2,27 @@
 
 using namespace GraphException;
 
-InvalidEdge::InvalidEdge(const GraphTypes::node_id & origin, const GraphTypes::node_id & target, const std::string & message, const int & line, const std::string & file, const std::string & context, const GraphTypes::Exceptions::Verbosity & verbosity):BasicGraphException(message, line, file, context, verbosity), _origin(origin), _target(target){}
+InvalidEdge::InvalidEdge(const GraphTypes::node_id & origin,
+			 const GraphTypes::node_id & target,
+			 const std::string & message,
+			 const int & line,
+			 const std::string & file,
+			 const std::string & context,
+			 const GraphTypes::Exceptions::Verbosity & verbosity):
+  BasicGraphException(message,
+		      line,
+		      file,
+		      context,
+		      verbosity),
+  _origin(origin),
+  _target(target)
+{}
 
-InvalidEdge::InvalidEdge(const InvalidEdge & source):BasicGraphException(source), _origin(source._origin), _target(source._target){}
+InvalidEdge::InvalidEdge(const InvalidEdge & source):
+  BasicGraphException(source),
+  _origin(source._origin),
+  _target(source._target)
+{}
 
 InvalidEdge & InvalidEdge::operator=(const InvalidEdge & source)
 {

@@ -2,7 +2,11 @@
 
 using namespace GraphFunctor;
 
-ColorizingVisitor::ColorizingVisitor(std::map<GraphTypes::node_id, GraphTypes::Algorithms::Color> & color_mapper, const GraphTypes::Algorithms::Color & color):_color_mapper(color_mapper), _color(color){}
+ColorizingVisitor::ColorizingVisitor(std::map<GraphTypes::node_id, GraphTypes::Algorithms::Color> & color_mapper,
+				     const GraphTypes::Algorithms::Color & color):
+  _color_mapper(color_mapper),
+  _color(color)
+{}
 
 ColorizingVisitor::~ColorizingVisitor(){}
 

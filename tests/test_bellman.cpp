@@ -13,7 +13,7 @@ int main()
 
   /*
     exemple du cours, exemple n°1, page 83 (attention, celui la page 82 est différent)
-   */
+  */
   graph.add_edge(1,2, 10);
   graph.add_edge(1,3, 3);
   graph.add_edge(1,5, 6);
@@ -28,29 +28,67 @@ int main()
   graph.add_edge(6,2, 1);
   graph.add_edge(6,5, 1);
 
-  paths_greedy = lookup.bellman(graph, 1, GraphTypes::Algorithms::GREEDY);
-  paths_dynamic = lookup.bellman(graph, 1, GraphTypes::Algorithms::DYNAMIC);
+  try
+    {
+      paths_greedy = lookup.bellman(graph, 1, GraphTypes::Algorithms::GREEDY);
+      paths_dynamic = lookup.bellman(graph, 1, GraphTypes::Algorithms::DYNAMIC);
 
-  //Exports
-  Export::ToGraphviz(graph, "test_bellman.graph");
-  Export::ToGraphviz(paths_greedy, "greedy_bellman.graph");
-  Export::ToGraphviz(paths_dynamic, "dynamic_bellman.graph");
+      //Exports
+      Export::ToGraphviz(graph, "test_bellman.graph");
+      Export::ToGraphviz(paths_greedy, "greedy_bellman.graph");
+      Export::ToGraphviz(paths_dynamic, "dynamic_bellman.graph");
 
-  //compilation dot
-  system("dot -Tpng test_bellman.graph -o test_bellman.png");
-  system("dot -Tpng greedy_bellman.graph -o greedy_bellman.png");
-  system("dot -Tpng dynamic_bellman.graph -o dynamic_bellman.png");
+#ifdef _SYSTEM
 
-  //affichages
-  std::cout << "Graph a été exporté dans le fichier test_bellman.graph" << std::endl;
-  std::cout << "Bellman Glouton: Arbre des chemins a été exporté dans le fichier greedy_bellman.graph" << std::endl;
-  std::cout << "Bellman Dynamique: Arbre des chemins a été exporté dans le fichier dynamic_bellman.graph" << std::endl;
+      //compilation dot
+      system("dot -Tpng test_bellman.graph -o test_bellman.png");
+      system("dot -Tpng greedy_bellman.graph -o greedy_bellman.png");
+      system("dot -Tpng dynamic_bellman.graph -o dynamic_bellman.png");
 
-  std::cout << std::endl << "dot -Tpng test_bellman.graph -o test_bellman.png" << std::endl;
-  std::cout << "Graph a été compilé dans le fichier test_bellman.png" << std::endl;
-  std::cout << std::endl << "dot -Tpng paths_bellman.graph -o paths_bellman.png" << std::endl;
-  std::cout << "Bellman glouton: arbre des chemins a été compilé dans le fichier greedy_bellman.png" << std::endl;
-  std::cout << "Bellman dynamique: arbre des chemins a été compilé dans le fichier dynamic_bellman.png" << std::endl;
+#endif
+
+      //affichages
+      std::cout << "Graph a été exporté dans le fichier test_bellman.graph" << std::endl;
+      std::cout << "Bellman Glouton: Arbre des chemins a été exporté dans le fichier greedy_bellman.graph" << std::endl;
+      std::cout << "Bellman Dynamique: Arbre des chemins a été exporté dans le fichier dynamic_bellman.graph" << std::endl;
+
+      std::cout << std::endl << "dot -Tpng test_bellman.graph -o test_bellman.png" << std::endl;
+      std::cout << "Graph a été compilé dans le fichier test_bellman.png" << std::endl;
+      std::cout << std::endl << "dot -Tpng paths_bellman.graph -o paths_bellman.png" << std::endl;
+      std::cout << "Bellman glouton: arbre des chemins a été compilé dans le fichier greedy_bellman.png" << std::endl;
+      std::cout << "Bellman dynamique: arbre des chemins a été compilé dans le fichier dynamic_bellman.png" << std::endl;
+
+    }
+
+  catch(const GraphException::InvalidOperation & io)
+    {
+      std::cout << "Caught GraphException::InvalidOperation:" << std::endl << io.what() << std::endl;
+    }
+
+  catch(const GraphException::InvalidNodeID & in)
+    {
+      std::cout << "Caught GraphException::InvalidNodeID:" << std::endl << in.what() << std::endl;
+    }
+
+  catch(const GraphException::InvalidEdge & ie)
+    {
+      std::cout << "Caught GraphException::InvalidEdge:" << std::endl << ie.what() << std::endl;
+    }
+
+  catch(const GraphException::BasicGraphException & bge)
+    {
+      std::cout << "Caught GraphException::BasicGraphException:" << std::endl << bge.what() << std::endl;
+    }
+
+  catch(const std::exception & e)
+    {
+      std::cout << "Caught exception:" << std::endl << e.what() << std::endl;
+    }
+
+  catch(...)
+    {
+      std::cout << "Caught unexpected exception." << std::endl;
+    }
 
   return 0;
 }

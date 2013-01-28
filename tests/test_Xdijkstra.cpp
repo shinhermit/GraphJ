@@ -17,12 +17,12 @@ int main()
     modifié pour avoir des chemins équivalents
 
     modifications:
-      -graph.add_edge(1,5, 5);//coût modifié: 6 en 5
-       pour avoir 2 chemins équivalents arrivant en S5 (marche)
+    -graph.add_edge(1,5, 5);//coût modifié: 6 en 5
+    pour avoir 2 chemins équivalents arrivant en S5 (marche)
 
-      -graph.add_edge(1,2, 5);//coût modifié: 10 en 5
-       pour avoir 2 chemins équivalents arrivant en S2
-   */
+    -graph.add_edge(1,2, 5);//coût modifié: 10 en 5
+    pour avoir 2 chemins équivalents arrivant en S2
+  */
 
   graph.add_edge(1,2, 5);//coût modifié: 10 en 5
   graph.add_edge(1,3, 3);
@@ -42,27 +42,65 @@ int main()
   graph.add_edge(6,1, 2);
   graph.add_edge(6,2, 1);
 
-  //Recherche des chemins
-  allPaths = lookup.Xdijkstra(graph, 1);
-  paths_between = lookup.paths_to(allPaths, 5);
+  try
+    {
+      //Recherche des chemins
+      allPaths = lookup.Xdijkstra(graph, 1);
+      paths_between = lookup.paths_to(allPaths, 5);
 
-  //Exports
-  Export::ToGraphviz(graph, paths_between, "test_Xdijkstra.graph");
-  Export::ToGraphviz(allPaths, "paths_Xdijkstra.graph");
+      //Exports
+      Export::ToGraphviz(graph, paths_between, "test_Xdijkstra.graph");
+      Export::ToGraphviz(allPaths, "paths_Xdijkstra.graph");
 
-  //compilation dot
-  system("dot -Tpng test_Xdijkstra.graph -o test_Xdijkstra.png");
-  system("dot -Tpng paths_Xdijkstra.graph -o paths_Xdijkstra.png");
+#ifdef _SYSTEM
 
-  //affichages
-  std::cout << "Graph a été exporté dans le fichier test_Xdijkstra.graph" << std::endl;
-  std::cout << "Arbre des chemins a été exporté dans le fichier paths_Xdijkstra.graph" << std::endl;
+      //compilation dot
+      system("dot -Tpng test_Xdijkstra.graph -o test_Xdijkstra.png");
+      system("dot -Tpng paths_Xdijkstra.graph -o paths_Xdijkstra.png");
 
-  std::cout << std::endl << "dot -Tpng test_Xdijkstra.graph -o test_Xdijkstra.png" << std::endl;
-  std::cout << "Graph a été compilé dans le fichier test_Xdijkstra.png" << std::endl;
+#endif
 
-  std::cout << std::endl << "dot -Tpng paths_Xdijkstra.graph -o paths_dijkstra.png" << std::endl;
-  std::cout << "Arbre des chemins a été compilé dans le fichier paths_Xdijkstra.png" << std::endl;
+      //affichages
+      std::cout << "Graph a été exporté dans le fichier test_Xdijkstra.graph" << std::endl;
+      std::cout << "Arbre des chemins a été exporté dans le fichier paths_Xdijkstra.graph" << std::endl;
+
+      std::cout << std::endl << "dot -Tpng test_Xdijkstra.graph -o test_Xdijkstra.png" << std::endl;
+      std::cout << "Graph a été compilé dans le fichier test_Xdijkstra.png" << std::endl;
+
+      std::cout << std::endl << "dot -Tpng paths_Xdijkstra.graph -o paths_dijkstra.png" << std::endl;
+      std::cout << "Arbre des chemins a été compilé dans le fichier paths_Xdijkstra.png" << std::endl;
+
+    }
+
+  catch(const GraphException::InvalidOperation & io)
+    {
+      std::cout << "Caught GraphException::InvalidOperation:" << std::endl << io.what() << std::endl;
+    }
+
+  catch(const GraphException::InvalidNodeID & in)
+    {
+      std::cout << "Caught GraphException::InvalidNodeID:" << std::endl << in.what() << std::endl;
+    }
+
+  catch(const GraphException::InvalidEdge & ie)
+    {
+      std::cout << "Caught GraphException::InvalidEdge:" << std::endl << ie.what() << std::endl;
+    }
+
+  catch(const GraphException::BasicGraphException & bge)
+    {
+      std::cout << "Caught GraphException::BasicGraphException:" << std::endl << bge.what() << std::endl;
+    }
+
+  catch(const std::exception & e)
+    {
+      std::cout << "Caught exception:" << std::endl << e.what() << std::endl;
+    }
+
+  catch(...)
+    {
+      std::cout << "Caught unexpected exception." << std::endl;
+    }
 
   return 0;
 }

@@ -22,16 +22,20 @@ namespace GraphIterator
 
   public:
     TopologyIterator();
+
     TopologyIterator(const TopologyIterator & source);
+
     TopologyIterator(const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::const_iterator & topology_begin,
 		     const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::const_iterator & topology_end,
 		     const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::const_iterator & current_pair,
 		     const std::set<GraphTypes::node_id>::const_iterator & second
 		     );
+
     TopologyIterator(const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::const_iterator & topology_begin,
 		     const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::const_iterator & topology_end,
 		     const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::const_iterator & current_pair
 		     );
+
     TopologyIterator & operator=(const TopologyIterator & source);
 
     const Edge & operator*()const;

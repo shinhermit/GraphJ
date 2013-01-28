@@ -16,9 +16,11 @@ TopologyIterator::TopologyIterator(const std::map<GraphTypes::node_id, std::set<
   _second(second)
 {
 
-  if(_current_pair != _topology_end){
-    _edge = Edge(_current_pair->first, *_second);
-  }
+  if(_current_pair != _topology_end)
+    {
+      _edge = Edge(_current_pair->first, *_second);
+    }
+
 }
 
 TopologyIterator::TopologyIterator(const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> >::const_iterator & topology_begin,
@@ -28,10 +30,13 @@ TopologyIterator::TopologyIterator(const std::map<GraphTypes::node_id, std::set<
   _topology_end(topology_end),
   _current_pair(current_pair)
 {
-  if(_current_pair != _topology_end){
-    _second = _current_pair->second.begin();
-    _edge = Edge(_current_pair->first, *_second);
-  }
+
+  if(_current_pair != _topology_end)
+    {
+      _second = _current_pair->second.begin();
+      _edge = Edge(_current_pair->first, *_second);
+    }
+
 }
 
 TopologyIterator & TopologyIterator::operator=(const TopologyIterator & source)

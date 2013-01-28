@@ -14,7 +14,7 @@ int main()
   /*
     Construction du graphe
     exemple du cours page 43.
-   */
+  */
   graph.add_edge(1,2, 10);
   graph.add_edge(1,3, 3);
   graph.add_edge(1,5, 6);
@@ -33,27 +33,66 @@ int main()
   graph.add_edge(6,1, 2);
   graph.add_edge(6,2, 1);
 
-  //Recherche des chemins
-  allPaths = lookup.dijkstra(graph, 1);
-  paths_between = lookup.paths_to(allPaths, 6);
+  try
+    {
 
-  //Exports
-  Export::ToGraphviz(graph, paths_between, "test_dijkstra.graph");
-  Export::ToGraphviz(allPaths, "paths_dijkstra.graph");
+      //Recherche des chemins
+      allPaths = lookup.dijkstra(graph, 1);
+      paths_between = lookup.paths_to(allPaths, 6);
 
-  //compilation dot
-  system("dot -Tpng test_dijkstra.graph -o test_dijkstra.png");
-  system("dot -Tpng paths_dijkstra.graph -o paths_dijkstra.png");
+      //Exports
+      Export::ToGraphviz(graph, paths_between, "test_dijkstra.graph");
+      Export::ToGraphviz(allPaths, "paths_dijkstra.graph");
 
-  //affichages
-  std::cout << "Le graphe a été exporté dans le fichier test_dijkstra.graph" << std::endl;
-  std::cout << "L'arbre des chemins a été exporté dans le fichier paths_dijkstra.graph" << std::endl << std::endl;
+#ifdef _SYSTEM
 
-  std::cout << std::endl << "dot -Tpng test_dijkstra.graph -o test_dijkstra.png" << std::endl;
-  std::cout << std::endl << "dot -Tpng paths_dijkstra.graph -o paths_dijkstra.png" << std::endl << std::endl;
+      //compilation dot
+      system("dot -Tpng test_dijkstra.graph -o test_dijkstra.png");
+      system("dot -Tpng paths_dijkstra.graph -o paths_dijkstra.png");
 
-  std::cout << "Le graphe a été exporté dans le fichier test_dijkstra.png" << std::endl;
-  std::cout << "L'arbre des chemins a été exporté dans le fichier paths_dijkstra.png" << std::endl << std::endl;
+#endif
+
+      //affichages
+      std::cout << "Le graphe a été exporté dans le fichier test_dijkstra.graph" << std::endl;
+      std::cout << "L'arbre des chemins a été exporté dans le fichier paths_dijkstra.graph" << std::endl << std::endl;
+
+      std::cout << std::endl << "dot -Tpng test_dijkstra.graph -o test_dijkstra.png" << std::endl;
+      std::cout << std::endl << "dot -Tpng paths_dijkstra.graph -o paths_dijkstra.png" << std::endl << std::endl;
+
+      std::cout << "Le graphe a été exporté dans le fichier test_dijkstra.png" << std::endl;
+      std::cout << "L'arbre des chemins a été exporté dans le fichier paths_dijkstra.png" << std::endl << std::endl;
+
+    }
+
+  catch(const GraphException::InvalidOperation & io)
+    {
+      std::cout << "Caught GraphException::InvalidOperation:" << std::endl << io.what() << std::endl;
+    }
+
+  catch(const GraphException::InvalidNodeID & in)
+    {
+      std::cout << "Caught GraphException::InvalidNodeID:" << std::endl << in.what() << std::endl;
+    }
+
+  catch(const GraphException::InvalidEdge & ie)
+    {
+      std::cout << "Caught GraphException::InvalidEdge:" << std::endl << ie.what() << std::endl;
+    }
+
+  catch(const GraphException::BasicGraphException & bge)
+    {
+      std::cout << "Caught GraphException::BasicGraphException:" << std::endl << bge.what() << std::endl;
+    }
+
+  catch(const std::exception & e)
+    {
+      std::cout << "Caught exception:" << std::endl << e.what() << std::endl;
+    }
+
+  catch(...)
+    {
+      std::cout << "Caught unexpected exception." << std::endl;
+    }
 
   return 0;
 }

@@ -140,6 +140,11 @@ int main()
       std::cout << "Caught GraphException::InvalidEdge:" << std::endl << ie.what() << std::endl;
     }
 
+  catch(const GraphException::BasicGraphException & bge)
+    {
+      std::cout << "Caught GraphException::BasicGraphException:" << std::endl << bge.what() << std::endl;
+    }
+
   catch(const std::exception & e)
     {
       std::cout << "Caught std::exception:" << std::endl << e.what() << std::endl;

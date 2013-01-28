@@ -9,8 +9,14 @@ namespace GraphException
   {
   private:
     GraphTypes::node_id _badID;
+
   public:
-    InvalidNodeID(const GraphTypes::node_id & badID, const std::string & message="InvalidNodeID", const int & line=-1, const std::string & file="", const std::string & context="", const GraphTypes::Exceptions::Verbosity & verbosity=GraphTypes::Exceptions::VERBOSE);
+    InvalidNodeID(const GraphTypes::node_id & badID,
+		  const std::string & message="InvalidNodeID",
+		  const int & line=-1,
+		  const std::string & file="",
+		  const std::string & context="",
+		  const GraphTypes::Exceptions::Verbosity & verbosity=GraphTypes::Exceptions::VERBOSE);
 
     InvalidNodeID(const InvalidNodeID & source);
 

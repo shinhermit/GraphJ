@@ -2,7 +2,8 @@
 #include "Graph.hpp"
 #include "Exporter.hpp"
 
-int main(){
+int main()
+{
   Graph<std::string> graph(GraphTypes::DIRECTED, GraphTypes::UNWEIGHTED, GraphTypes::CONTAINER);
   std::string nom, choix;
   GraphTypes::node_id id, id2;

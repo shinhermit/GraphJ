@@ -10,14 +10,16 @@ namespace GraphFunctor
 {
 
   template<typename Type>
-  class GraphvizVisitor : public Visitor{
+  class GraphvizVisitor : public Visitor
+  {
   private:
     const Graph<Type> & _graph;
     std::string & _buffer;
     std::set<GraphTypes::node_id> _visited;
 
   public:
-    GraphvizVisitor(const Graph<Type> & graph, std::string & _buffer);
+    GraphvizVisitor(const Graph<Type> & graph,
+		    std::string & _buffer);
 
     ~GraphvizVisitor();
 

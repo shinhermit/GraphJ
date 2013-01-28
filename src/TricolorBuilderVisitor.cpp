@@ -2,11 +2,16 @@
 
 using namespace GraphFunctor;
 
-TricolorBuilderVisitor::TricolorBuilderVisitor(Graph<Edge> & graph, const long & nb_roads):_graph(graph), _nb_roads(nb_roads){}
+TricolorBuilderVisitor::TricolorBuilderVisitor(Graph<Edge> & graph,
+					       const long & nb_roads):
+  _graph(graph),
+  _nb_roads(nb_roads)
+{}
 
 TricolorBuilderVisitor::~TricolorBuilderVisitor(){}
 
-long TricolorBuilderVisitor::_renumber(const long & asFirst, const long & oldNumber)const
+long TricolorBuilderVisitor::_renumber(const long & asFirst,
+				       const long & oldNumber)const
 {
   long renum, delta;
 
@@ -19,7 +24,8 @@ long TricolorBuilderVisitor::_renumber(const long & asFirst, const long & oldNum
   return renum;
 }
 
-bool TricolorBuilderVisitor::_adjacent(const Edge & edge1, const Edge & edge2)const
+bool TricolorBuilderVisitor::_adjacent(const Edge & edge1,
+				       const Edge & edge2)const
 {
   bool adjacent;
 

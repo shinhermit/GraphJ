@@ -16,7 +16,8 @@ namespace GraphFunctor
     const GraphTypes::Algorithms::Color & _color;
 
   public:
-    ColorizingVisitor(std::map<GraphTypes::node_id, GraphTypes::Algorithms::Color> & color_mapper, const GraphTypes::Algorithms::Color & col);
+    ColorizingVisitor(std::map<GraphTypes::node_id, GraphTypes::Algorithms::Color> & color_mapper,
+		      const GraphTypes::Algorithms::Color & col);
 
     ~ColorizingVisitor();
 

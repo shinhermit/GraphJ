@@ -2,9 +2,16 @@
 
 Edge::Edge(){}
 
-Edge::Edge(const GraphTypes::node_id & origin, const GraphTypes::node_id & target):_origin(origin), _target(target){}
+Edge::Edge(const GraphTypes::node_id & origin,
+	   const GraphTypes::node_id & target):
+  _origin(origin),
+  _target(target)
+{}
 
-Edge::Edge(const Edge & source):_origin(source._origin), _target(source._target){}
+Edge::Edge(const Edge & source):
+  _origin(source._origin),
+  _target(source._target)
+{}
 
 bool Edge::operator==(const Edge & ref)const
 {
