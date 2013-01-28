@@ -1,12 +1,15 @@
 #ifndef _DoubleNodeSetIterator
 #define _DoubleNodeSetIterator
 
+#include <iterator>
 #include <set>
 #include "GraphTypes.hpp"
 
 namespace GraphIterator
 {
-  class DoubleNodeSetIterator : std::iterator<std::bidirectional_iterator_tag, GraphTypes::node_id>
+  typedef std::iterator<std::bidirectional_iterator_tag, GraphTypes::node_id> NodeIterator;
+
+  class DoubleNodeSetIterator : public NodeIterator
   {
   private:
     GraphTypes::Iterator::Type _type;

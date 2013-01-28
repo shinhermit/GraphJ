@@ -40,13 +40,13 @@ public:
 
   static std::string ToString(const ColorName & color);
 
-  static NameToStringIterator Names2string_begin();
+  static NameToStringIterator NamesToString_begin();
 
-  static NameToStringIterator Names2string_end();
+  static NameToStringIterator NamesToString_end();
 
-  static NameToHexaIterator Names2hexa_begin();
+  static NameToHexaIterator NamesToHexa_begin();
 
-  static NameToHexaIterator Names2hexa_end();
+  static NameToHexaIterator NamesToHexa_end();
 };
 
 #endif

@@ -9,14 +9,15 @@ int main()
 {
   Graph<> franchissements(GraphTypes::DIRECTED, GraphTypes::UNWEIGHTED, GraphTypes::NOCONTENT);
   Graph<Edge> incompatibles(GraphTypes::UNDIRECTED, GraphTypes::UNWEIGHTED, GraphTypes::CONTAINER);
-  Coloring<Edge> color;
-  Traverse<Edge> traverse;
-  TricolorBuilderVisitor edgeBuilder(6); //intersection à 6 points
-  Exporter<> convert;
-  Exporter<Edge> exporte;
+  TricolorBuilderVisitor edgeBuilder(incompatibles, 6); //intersection à 6 points
 
   std::map<GraphTypes::node_id, std::string> labels1, labels2;
   std::map<GraphTypes::node_id, NamedColor::ColorName> color_map;
+
+  typedef Coloring<Edge> Coloring;
+  typedef Traverse<Edge> Traverse;
+  typedef Exporter<> Convert;
+  typedef Exporter<Edge> Export;
 
   //graphe de la relations "il existe un franchissement"
   // Nous faisons coïncider l'ordre lexico-graphique et l'ordre numérique
@@ -41,10 +42,10 @@ int main()
   franchissements.add_edge(5,4);
 
   std::cout << "Graphe des franchissements" << std::endl;
-  std::cout << convert.toGraphviz(franchissements, labels1) << std::endl;
-  // std::cout << convert.toMathString(franchissements, labels1);
+  std::cout << Convert::ToGraphviz(franchissements, labels1) << std::endl;
+  // std::cout << Convert::ToMathString(franchissements, labels1);
 
-  convert.toGraphviz(franchissements, labels1, "franchissements.graph");
+  Convert::ToGraphviz(franchissements, labels1, "franchissements.graph");
   std::cout << "Le graphe a été exporté dans le fichier franchissements.graph" << std::endl << std::endl;
   std::cout << "dot -Tpng franchissements.graph -o franchissements.png" << std::endl << std::endl;
 
@@ -76,7 +77,7 @@ int main()
 
   //construction des arêtes du graphe d'incomatibilité
   // voir les commentaires dans TricolorBuilderVisitor.hpp
-  traverse.nodes(incompatibles, edgeBuilder);
+  Traverse::Nodes(incompatibles, edgeBuilder);
 
   // afichage des degrés
   // Graph<Edge>::NodeIterator it_n;
@@ -85,18 +86,18 @@ int main()
   // }
 
   std::cout << "Graphe des incompatibilités de franchissement" << std::endl;
-  std::cout << exporte.toGraphviz(incompatibles, labels2) << std::endl;
-  // std::cout << exporte.toMathString(incompatibles, labels2) << std::endl;
+  std::cout << Export::ToGraphviz(incompatibles, labels2) << std::endl;
+  // std::cout << Export::ToMathString(incompatibles, labels2) << std::endl;
 
-  exporte.toGraphviz(incompatibles, labels2, "incompatibles.graph");
+  Export::ToGraphviz(incompatibles, labels2, "incompatibles.graph");
   std::cout << "Le graphe a été exporté dans le fichier incompatibles.graph" << std::endl << std::endl;
   std::cout << "dot -Tpng incompatibles.graph -o incompatibles.png" << std::endl << std::endl;
 
   std::cout << "Coloration des franchissements compatibles" << std::endl;
-  color_map = color.welsh(incompatibles);
-  std::cout << exporte.toGraphviz(incompatibles, labels2, color_map) << std::endl;
+  color_map = Coloring::Welsh(incompatibles);
+  std::cout << Export::ToGraphviz(incompatibles, labels2, color_map) << std::endl;
 
-  exporte.toGraphviz(incompatibles, labels2, color_map, "coloration.graph");
+  Export::ToGraphviz(incompatibles, labels2, color_map, "coloration.graph");
   std::cout << "Le graphe a été exporté dans le fichier coloration.graph" << std::endl << std::endl;
   std::cout << "dot -Tpng coloration.graph -o coloration.png" << std::endl << std::endl;
 

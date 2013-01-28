@@ -9,8 +9,6 @@
 
 namespace GraphIterator
 {
-  typedef std::iterator<std::bidirectional_iterator_tag, GraphTypes::node_id> NodeIterator;
-
   typedef std::iterator<std::bidirectional_iterator_tag, Edge> EdgeIterator;
 
   class TopologyIterator : public EdgeIterator
@@ -44,12 +42,7 @@ namespace GraphIterator
     TopologyIterator operator--(int);
 
     bool operator==(const TopologyIterator & ref)const;
-    bool operator<(const TopologyIterator & ref)const;
-
     bool operator!=(const TopologyIterator & ref)const;
-    bool operator>(const TopologyIterator & ref)const;
-    bool operator<=(const TopologyIterator & ref)const;
-    bool operator>=(const TopologyIterator & ref)const;
   };
 };
 

@@ -52,22 +52,22 @@ std::string NamedColor::ToString(const NamedColor::ColorName & color)
   return _toString.find(color)->second;
 }
 
-NamedColor::NameToStringIterator NamedColor::Names2string_begin()
+NamedColor::NameToStringIterator NamedColor::NamesToString_begin()
 {
   return _toString.begin();
 }
 
-NamedColor::NameToStringIterator NamedColor::Names2string_end()
+NamedColor::NameToStringIterator NamedColor::NamesToString_end()
 {
   return _toString.end();
 }
 
-NamedColor::NameToHexaIterator NamedColor::Names2hexa_begin()
+NamedColor::NameToHexaIterator NamedColor::NamesToHexa_begin()
 {
   return _hexaValue.begin();
 }
 
-NamedColor::NameToHexaIterator NamedColor::Names2hexa_end()
+NamedColor::NameToHexaIterator NamedColor::NamesToHexa_end()
 {
   return _hexaValue.end();
 }

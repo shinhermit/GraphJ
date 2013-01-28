@@ -4,6 +4,7 @@
 #include "Visitor.hpp"
 #include "MapValueComparator.hpp"
 #include "WeightedEdgeComparator.hpp"
+#include "GreaterDegreeComparator.hpp"
 
 #include "ColorizingVisitor.hpp"
 #include "DefaultVisitor.hpp"

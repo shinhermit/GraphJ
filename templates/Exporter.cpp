@@ -73,7 +73,7 @@ std::string Exporter<Type>::_graphviz_paths_highlighting(const Graph<Type> & gra
   GraphTypes::node_id sourceNode;
   std::ostringstream oss;
 
-  col = NamedColor::Names2string_begin();
+  col = NamedColor::NamesToString_begin();
   for(path = paths_highlight.begin(); path != paths_highlight.end(); ++path){
 
     oss << "{" << std::endl << "node [color=" << col->second << ", style=\"filled\"]" << std::endl;
@@ -97,7 +97,7 @@ std::string Exporter<Type>::_graphviz_paths_highlighting(const Graph<Type> & gra
 
     oss << "}" << std::endl;
 
-    ++col; if( col == NamedColor::Names2string_end() ) col = NamedColor::Names2string_begin();
+    ++col; if( col == NamedColor::NamesToString_end() ) col = NamedColor::NamesToString_begin();
   }
 
   return oss.str();
