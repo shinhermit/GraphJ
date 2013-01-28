@@ -8,7 +8,8 @@ int main()
   Graph<> allPaths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
   std::list<GraphTypes::Path> paths_between;
   XPathFinding<> lookup;
-  Exporter<> exporte;
+
+  typedef Exporter<> Export;
 
   /*
     Construction du graphe
@@ -46,8 +47,8 @@ int main()
   paths_between = lookup.paths_to(allPaths, 5);
 
   //Exports
-  exporte.toGraphviz(graph, paths_between, "test_Xdijkstra.graph");
-  exporte.toGraphviz(allPaths, "paths_Xdijkstra.graph");
+  Export::ToGraphviz(graph, paths_between, "test_Xdijkstra.graph");
+  Export::ToGraphviz(allPaths, "paths_Xdijkstra.graph");
 
   //compilation dot
   system("dot -Tpng test_Xdijkstra.graph -o test_Xdijkstra.png");

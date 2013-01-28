@@ -498,7 +498,7 @@ std::list<GraphTypes::Path> PathFinding<Type>::paths_to(const Graph<> & allPaths
 
   if( !allPaths.is_directed() )
     {
-      throw GraphException::InvalidOperation("PathFinding<Type>::paths_to(Graph<>&, GraphTypes::node_id) is designed for directed graphs.", __LINE__, __FILE__, "PathFinding<Type>::paths_to(const Graph<>&,const GraphTypes::node_id&");
+      throw GraphException::InvalidOperation("This method is designed for directed graphs.", __LINE__, __FILE__, "PathFinding<Type>::paths_to(const Graph<>&,const GraphTypes::node_id&");
     }
 
   if( allPaths.has_node(target) )
@@ -506,18 +506,13 @@ std::list<GraphTypes::Path> PathFinding<Type>::paths_to(const Graph<> & allPaths
 
       pred = allPaths.predecessors_begin(target);
 
-      if( pred != allPaths.predecessors_end(target) )
+      while( pred != allPaths.predecessors_end(target) )
 	{
+	  until_pred = paths_to(allPaths, *pred);
 
-	  while( pred != allPaths.predecessors_end(target) )
-	    {
-	      until_pred = paths_to(allPaths, *pred);
+	  paths.insert(paths.begin(), until_pred.begin(), until_pred.end() );
 
-	      paths.insert(paths.begin(), until_pred.begin(), until_pred.end() );
-
-	      ++pred;
-	    }
-
+	  ++pred;
 	}
 
       if( paths.size() > 0 )
@@ -534,6 +529,7 @@ std::list<GraphTypes::Path> PathFinding<Type>::paths_to(const Graph<> & allPaths
 	{
 
 	  paths.push_back( std::list<GraphTypes::node_id>() );
+
 	  onePath = paths.begin();
 	  onePath->push_back(target);
 

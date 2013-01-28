@@ -8,7 +8,8 @@ int main()
   Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
   std::list<GraphTypes::Path> paths_between;
   XPathFinding<> lookup;
-  Exporter<> exporte;
+
+  typedef Exporter<> Export;
 
   /*
     exemple du cours, exemple n°1, page 83 (attention, celui la page 82 est différent)
@@ -34,8 +35,8 @@ int main()
   paths_between = lookup.paths_to(paths, 5);
 
   //Exports
-  exporte.toGraphviz(graph, paths_between, "test_Xbellman.graph");
-  exporte.toGraphviz(paths, "paths_Xbellman.graph");
+  Export::ToGraphviz(graph, paths_between, "test_Xbellman.graph");
+  Export::ToGraphviz(paths, "paths_Xbellman.graph");
 
   //compilation dot
   system("dot -Tpng test_Xbellman.graph -o test_Xbellman.png");
