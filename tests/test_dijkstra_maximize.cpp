@@ -10,9 +10,10 @@ int main()
   Graph<> allPaths_bellman(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
   std::list<GraphTypes::Path> paths_dijkstra_between, paths_bellman_between;
   GraphTypes::node_id source, target;
-  WeightsTransformer<> transformer;
   PathFinding<> lookup;
-  Exporter<> exporte;
+
+  typedef WeightsTransformer<> Transformer;
+  typedef Exporter<> Export;
 
   /*
     Construction du graphe
@@ -37,7 +38,7 @@ int main()
   graph.add_edge(6,2, 1);
 
   //inversion de l'ordre des poids
-  Graph<> reversed = transformer.reverse_weights_order(graph);
+  Graph<> reversed = Transformer::Reverse_weights_order(graph);
 
   //Recherche des chemins
   source = 1;
@@ -46,18 +47,18 @@ int main()
   allPaths_dijkstra = lookup.dijkstra(reversed, source);
   paths_dijkstra_between = lookup.paths_to(allPaths_dijkstra, target);
 
-  allPaths_bellman = lookup.bellman(graph, source, GraphTypes::DYNAMIC, GraphTypes::MAXIMIZE);
+  allPaths_bellman = lookup.bellman(graph, source, GraphTypes::Algorithms::DYNAMIC, GraphTypes::Algorithms::MAXIMIZE);
   paths_bellman_between = lookup.paths_to(allPaths_bellman, target);
 
   //remettre les vrais poids dans l'arbre des chemins
-  allPaths_dijkstra = transformer.update_subgraph(graph, allPaths_dijkstra);
+  allPaths_dijkstra = Transformer::Update_subgraph(graph, allPaths_dijkstra);
 
   //Exports
-  exporte.toGraphviz(graph, paths_dijkstra_between, "dijkstra_maximize.graph");
-  exporte.toGraphviz(allPaths_dijkstra, "paths_dijkstra_maximize.graph");
+  Export::ToGraphviz(graph, paths_dijkstra_between, "dijkstra_maximize.graph");
+  Export::ToGraphviz(allPaths_dijkstra, "paths_dijkstra_maximize.graph");
 
-  exporte.toGraphviz(graph, paths_bellman_between, "bellman_maximize.graph");
-  exporte.toGraphviz(allPaths_bellman, "paths_bellman_maximize.graph");
+  Export::ToGraphviz(graph, paths_bellman_between, "bellman_maximize.graph");
+  Export::ToGraphviz(allPaths_bellman, "paths_bellman_maximize.graph");
 
   //compilation dot
   system("dot -Tpng dijkstra_maximize.graph -o dijkstra_maximize.png");

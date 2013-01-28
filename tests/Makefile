@@ -51,9 +51,6 @@ test_dijkstra:
 test_dijkstra_maximize:
 	$(cmd_sys)
 
-test_dijkstra_negative:
-	$(cmd_sys)
-
 test_bellman:
 	$(cmd_sys)
 

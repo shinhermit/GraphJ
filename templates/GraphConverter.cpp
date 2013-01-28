@@ -1,5 +1,6 @@
 template<typename Type>
-void _copyNodes(const Graph<Type> & graph, Graph<Type> & convertion)
+void GraphConverter<Type>::_copyNodes(const Graph<Type> & graph,
+				      Graph<Type> & convertion)
 {
   typename Graph<Type>::NodeIterator node;
 
@@ -17,7 +18,7 @@ void _copyNodes(const Graph<Type> & graph, Graph<Type> & convertion)
 }
 
 template<typename Type>
-Graph<Type> GraphConverter<Type>::toDirected(const Graph<Type> & graph)
+Graph<Type> GraphConverter<Type>::ToDirected(const Graph<Type> & graph)
 {
   Graph<Type> convertion(GraphTypes::DIRECTED, graph.edgeState(), graph.nodeType());
   typename Graph<Type>::NodeIterator node;
@@ -54,7 +55,7 @@ Graph<Type> GraphConverter<Type>::toDirected(const Graph<Type> & graph)
 }
 
 template<typename Type>
-Graph<Type> GraphConverter<Type>::toUndirected(const Graph<Type> & graph)
+Graph<Type> GraphConverter<Type>::ToUndirected(const Graph<Type> & graph)
 {
   Graph<Type> convertion(GraphTypes::UNDIRECTED, graph.edgeState(), graph.nodeType());
   typename Graph<Type>::NodeIterator node;

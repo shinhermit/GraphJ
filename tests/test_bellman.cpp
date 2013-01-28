@@ -8,7 +8,8 @@ int main()
   Graph<> paths_greedy(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
   Graph<> paths_dynamic(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
   PathFinding<> lookup;
-  Exporter<> exporte;
+
+  typedef Exporter<> Export;
 
   /*
     exemple du cours, exemple n°1, page 83 (attention, celui la page 82 est différent)
@@ -27,13 +28,13 @@ int main()
   graph.add_edge(6,2, 1);
   graph.add_edge(6,5, 1);
 
-  paths_greedy = lookup.bellman(graph, 1, GraphTypes::GREEDY);
-  paths_dynamic = lookup.bellman(graph, 1, GraphTypes::DYNAMIC);
+  paths_greedy = lookup.bellman(graph, 1, GraphTypes::Algorithms::GREEDY);
+  paths_dynamic = lookup.bellman(graph, 1, GraphTypes::Algorithms::DYNAMIC);
 
   //Exports
-  exporte.toGraphviz(graph, "test_bellman.graph");
-  exporte.toGraphviz(paths_greedy, "greedy_bellman.graph");
-  exporte.toGraphviz(paths_dynamic, "dynamic_bellman.graph");
+  Export::ToGraphviz(graph, "test_bellman.graph");
+  Export::ToGraphviz(paths_greedy, "greedy_bellman.graph");
+  Export::ToGraphviz(paths_dynamic, "dynamic_bellman.graph");
 
   //compilation dot
   system("dot -Tpng test_bellman.graph -o test_bellman.png");
