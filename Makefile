@@ -88,13 +88,7 @@ Graph_validation: validation_dependencies
 
 #les tests
 
-test_node: Node
-	$(cmd_exe)
-
 test_directed: all_classes
-	$(cmd_exe)
-
-test_acm_directed: all_classes
 	$(cmd_exe)
 
 test_acm: all_classes
@@ -132,6 +126,10 @@ gps: all_classes
 
 gps_multichemin: all_classes
 	$(cmd_exe)
+
+all_tests: test_directed test_acm test_coloring test_dijkstra test_dijkstra_maximize test_bellman test_Xdijkstra test_Xbellman test_weights_transformations
+
+all_examples: reseau_routier feux_tricolores gps gps_multichemin
 
 #Cleanings
 
