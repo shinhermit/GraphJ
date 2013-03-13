@@ -12,6 +12,21 @@ void GraphvizAttributesHolder::setGraphName(const std::string & graphName)
   _graphName = graphName;
 }
 
+void GraphvizAttributesHolder::clear()
+{
+  _graphName.clear();
+
+  _graph_global_attributes.clear();
+
+  _nodes_global_attributes.clear();
+
+  _edges_global_attributes.clear();
+
+  _nodes_attributes.clear();
+
+  _edges_attributes.clear();
+}
+
 const std::string & GraphvizAttributesHolder::graphName()const
 {
   return _graphName;

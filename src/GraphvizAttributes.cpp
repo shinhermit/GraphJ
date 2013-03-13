@@ -62,6 +62,25 @@ void GraphvizAttributes::setStyle(const GraphTypes::Graphviz::StyleAttribute & s
   _style = style;
 }
 
+void GraphvizAttributes::clear()
+{
+  _label.clear();
+
+  _fontcolor = GraphTypes::Color(GraphTypes::NamedColor::DefaultColor);
+
+  _color = GraphTypes::Color(GraphTypes::NamedColor::DefaultColor);
+
+  _shape = GraphTypes::Graphviz::ShapeAttribute::DEFAULT_SHAPE;
+
+  _style = GraphTypes::Graphviz::StyleAttribute::DEFAULT_STYLE;
+  
+}
+
+void GraphvizAttributes::reset()
+{
+  clear();
+}
+
 std::string GraphvizAttributes::toString()const
 {
   std::ostringstream oss;

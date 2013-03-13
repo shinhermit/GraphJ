@@ -6,6 +6,7 @@ int main()
 {
   Graph<> graph(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
   XPathFinding<> lookup;
+  GraphvizAttributesHolder config;
 
   typedef Exporter<> Export;
 
@@ -46,8 +47,11 @@ int main()
       lookup.Xdijkstra(graph, 1);
 
       //Exports
-      Export::ToGraphviz(graph, lookup.paths_to(5), "test_Xdijkstra.graph");
-      Export::ToGraphviz(lookup.resultGraph(), "paths_Xdijkstra.graph");
+      config.setGraphName("test_Xdijkstra");
+      Export::GraphvizPathsHighlight(config, lookup.paths_to(5));
+      Export::ToGraphviz(graph, config, "test_Xdijkstra.graph");
+
+      Export::ToGraphviz(lookup.resultGraph(), GraphvizAttributesHolder("paths_Xdijkstra"), "paths_Xdijkstra.graph");
 
 #ifdef _SYSTEM
 

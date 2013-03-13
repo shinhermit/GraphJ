@@ -49,6 +49,10 @@ public:
 
   void setStyle(const GraphTypes::Graphviz::StyleAttribute & style);
 
+  void clear();
+
+  void reset();
+
   std::string toString()const;
 
   operator std::string()const;

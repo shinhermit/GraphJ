@@ -27,6 +27,8 @@ public:
 
   void setGraphName(const std::string & graphName);
 
+  void clear();
+
   const std::string &  graphName()const;
 
   GraphvizAttributes &  globalAttributes();

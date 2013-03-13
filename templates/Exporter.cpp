@@ -1,7 +1,7 @@
 
 template<typename Type>
 std::string Exporter<Type>::_graphviz_headers(const Graph<Type> & graph,
-					      GraphvizAttributesHolder & config)
+					      const GraphvizAttributesHolder & config)
 {
   std::ostringstream oss;
 
@@ -21,7 +21,7 @@ std::string Exporter<Type>::_graphviz_headers(const Graph<Type> & graph,
 
 template<typename Type>
 std::string Exporter<Type>::_graphviz_nodes(const Graph<Type> & graph,
-					    GraphvizAttributesHolder & config)
+					    const GraphvizAttributesHolder & config)
 {
   typename Graph<Type>::NodeIterator node;
   std::ostringstream oss;
@@ -45,7 +45,7 @@ std::string Exporter<Type>::_graphviz_nodes(const Graph<Type> & graph,
 
 template<typename Type>
 std::string Exporter<Type>::_graphviz_edges(const Graph<Type> & graph,
-					    GraphvizAttributesHolder & config)
+					    const GraphvizAttributesHolder & config)
 {
   typename Graph<Type>::EdgeIterator edge;
   std::ostringstream oss;
@@ -57,7 +57,7 @@ std::string Exporter<Type>::_graphviz_edges(const Graph<Type> & graph,
     {
       oss << edge->source() << linkSymbol << edge->target();
 
-      GraphvizAttributes & attr = config.attributesOf(*edge);
+      GraphvizAttributes & attr = const_cast<GraphvizAttributes&>( config.attributesOf(*edge) );
 
       if(graph.is_weighted() && attr.label() == "")
 	attr.setLabel( GraphFunctor::StringConverter::StringFrom<GraphTypes::Cost>(graph.getCost(edge->source(), edge->target())) );
@@ -94,37 +94,6 @@ void Exporter<Type>::_highlight_edge(GraphvizAttributesHolder & config,
 
   attr.setColor( GraphTypes::Color(color) );
   attr.setFontColor( GraphTypes::Color(color) );
-}
-
-template<typename Type>
-void Exporter<Type>::_graphviz_paths_highlight(GraphvizAttributesHolder & config,
-					       const std::list<GraphTypes::Path> & paths_highlight)
-{
-  GraphTypes::NamedColor::ColorNameIterator col;
-  std::list<GraphTypes::Path>::const_iterator path;
-  std::list<GraphTypes::node_id>::const_iterator node;
-  GraphTypes::node_id sourceNode;
-
-  col = GraphTypes::NamedColor::Names_begin();
-  for(path = paths_highlight.begin(); path != paths_highlight.end(); ++path)
-    {
-      node = path->begin();
-
-      while( node != path->end() )
-	{
-	  _highlight_node(config, *node, *col);
-
-	  sourceNode = *node;
-	  ++node;
-
-	  if( node != path->end() )
-	    {
-	      _highlight_edge( config, Edge(sourceNode, *node), *col );
-	    }
-	}
-
-      ++col; if( col == GraphTypes::NamedColor::Names_end() ) col = GraphTypes::NamedColor::Names_begin();
-    }
 }
 
 template<typename Type>
@@ -170,8 +139,45 @@ void Exporter<Type>::ToStream(const Graph<Type> & graph,
 }
 
 template<typename Type>
+void Exporter<Type>::GraphvizPathsHighlight(GraphvizAttributesHolder & config,
+					    const std::list<GraphTypes::Path> & paths_highlight)
+{
+  GraphTypes::NamedColor::ColorNameIterator col;
+  std::list<GraphTypes::Path>::const_iterator path;
+  std::list<GraphTypes::node_id>::const_iterator node;
+  GraphTypes::node_id sourceNode;
+
+  col = GraphTypes::NamedColor::Names_begin();
+  for(path = paths_highlight.begin(); path != paths_highlight.end(); ++path)
+    {
+      node = path->begin();
+
+      while( node != path->end() )
+	{
+	  _highlight_node(config, *node, *col);
+
+	  sourceNode = *node;
+	  ++node;
+
+	  if( node != path->end() )
+	    {
+	      _highlight_edge( config, Edge(sourceNode, *node), *col );
+	    }
+	}
+
+      ++col; if( col == GraphTypes::NamedColor::Names_end() ) col = GraphTypes::NamedColor::Names_begin();
+    }
+}
+
+template<typename Type>
+void Exporter<Type>::GraphvizMpmPrepare(const Graph<Type> & graph,
+					GraphvizAttributesHolder & config)
+{
+}
+
+template<typename Type>
 std::string Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
-				       GraphvizAttributesHolder & config)
+				       const GraphvizAttributesHolder & config)
 {
   std::ostringstream oss;
   oss << _graphviz_headers(graph, config);
@@ -194,37 +200,8 @@ std::string Exporter<Type>::ToGraphviz(const Graph<Type> & graph)
 }
 
 template<typename Type>
-std::string Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
-				       GraphvizAttributesHolder & config,
-				       const std::list<GraphTypes::Path> & paths_highlight)
-{
-  std::ostringstream oss;
-
-  oss << _graphviz_headers(graph, config);
-
-  _graphviz_paths_highlight(config, paths_highlight);
-
-  oss << _graphviz_nodes(graph, config);
-
-  oss << _graphviz_edges(graph, config);
-
-  oss << _graphviz_footers();
-
-  return oss.str();
-}
-
-template<typename Type>
-std::string Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
-				       const std::list<GraphTypes::Path> & paths_highlight)
-{
-  GraphvizAttributesHolder config;
-
-  return ToGraphviz(graph, config, paths_highlight);
-}
-
-template<typename Type>
 void Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
-				GraphvizAttributesHolder & config,
+				const GraphvizAttributesHolder & config,
 				const std::string & filename)
 {
   std::ofstream file;
@@ -243,33 +220,6 @@ void Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
   file.open(filename.c_str(), std::ios::out | std::ios::trunc);
 
   file << ToGraphviz(graph);
-
-  file.close();
-}
-
-template<typename Type>
-void Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
-				GraphvizAttributesHolder & config,
-				const std::list<GraphTypes::Path> & paths_highlight,
-				const std::string & filename)
-{
-  std::ofstream file;
-  file.open(filename.c_str(), std::ios::out | std::ios::trunc);
-
-  file << ToGraphviz(graph, config, paths_highlight);
-
-  file.close();
-}
-
-template<typename Type>
-void Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
-				const std::list<GraphTypes::Path> & paths_highlight,
-				const std::string & filename)
-{
-  std::ofstream file;
-  file.open(filename.c_str(), std::ios::out | std::ios::trunc);
-
-  file << ToGraphviz(graph, paths_highlight);
 
   file.close();
 }

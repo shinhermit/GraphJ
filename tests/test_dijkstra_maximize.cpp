@@ -11,6 +11,7 @@ int main()
   std::list<GraphTypes::Path> paths_dijkstra_between, paths_bellman_between;
   GraphTypes::node_id source, target;
   PathFinding<> lookup;
+  GraphvizAttributesHolder config;
 
   typedef WeightsTransformer<> Transformer;
   typedef Exporter<> Export;
@@ -46,21 +47,32 @@ int main()
 
 try
   {
-  allPaths_dijkstra = lookup.dijkstra(reversed, source);
-  paths_dijkstra_between = lookup.paths_to(allPaths_dijkstra, target);
+  lookup.dijkstra(reversed, source);
 
-  allPaths_bellman = lookup.bellman(graph, source, GraphTypes::Algorithms::DYNAMIC, GraphTypes::Algorithms::MAXIMIZE);
-  paths_bellman_between = lookup.paths_to(allPaths_bellman, target);
+  allPaths_dijkstra = lookup.resultGraph();
+  paths_dijkstra_between = lookup.paths_to(target);
+
+  lookup.bellman(graph, source, GraphTypes::Algorithms::DYNAMIC, GraphTypes::Algorithms::MAXIMIZE);
+
+  allPaths_bellman = lookup.resultGraph();
+  paths_bellman_between = lookup.paths_to(target);
 
   //remettre les vrais poids dans l'arbre des chemins
   allPaths_dijkstra = Transformer::Update_subgraph(graph, allPaths_dijkstra);
 
   //Exports
-  Export::ToGraphviz(graph, paths_dijkstra_between, "dijkstra_maximize.graph");
-  Export::ToGraphviz(allPaths_dijkstra, "paths_dijkstra_maximize.graph");
+  config.setGraphName("dijkstra_maximize");
+  Export::GraphvizPathsHighlight(config, paths_dijkstra_between);
+  Export::ToGraphviz(graph, config, "dijkstra_maximize.graph");
 
-  Export::ToGraphviz(graph, paths_bellman_between, "bellman_maximize.graph");
-  Export::ToGraphviz(allPaths_bellman, "paths_bellman_maximize.graph");
+  Export::ToGraphviz(allPaths_dijkstra, GraphvizAttributesHolder("paths_dijkstra_maximize"), "paths_dijkstra_maximize.graph");
+
+  config.clear();
+  config.setGraphName("bellman_maximize");
+  Export::GraphvizPathsHighlight(config, paths_bellman_between);
+  Export::ToGraphviz(graph, config, "bellman_maximize.graph");
+
+  Export::ToGraphviz(allPaths_bellman, GraphvizAttributesHolder("paths_bellman_maximize"), "paths_bellman_maximize.graph");
 
 #ifdef _SYSTEM
 

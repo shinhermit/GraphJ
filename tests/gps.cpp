@@ -9,7 +9,7 @@
 int main()
 {
   Graph<> graph(GraphTypes::UNDIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
-  GraphvizAttributesHolder config;
+  GraphvizAttributesHolder config, highlight;
   Graph<> allPaths_dijkstra( GraphTypes::DIRECTED, graph.edgeState(), GraphTypes::NOCONTENT);
   Graph<> allPaths_bellman( GraphTypes::DIRECTED, graph.edgeState(), GraphTypes::NOCONTENT);
   Graph<> allPaths_greedy_bellman( GraphTypes::DIRECTED, graph.edgeState(), GraphTypes::NOCONTENT);
@@ -100,6 +100,7 @@ int main()
       targetNode = 13;//Sendet
 
       //tests
+      config.setGraphName("undirected_before");
       Export::ToGraphviz(graph, config, "undirected_before.graph");
       system("dot -Tpng undirected_before.graph -o undirected_before.png");
 
@@ -118,21 +119,37 @@ int main()
       greedy_bellman_between = lookup.paths_to(targetNode);
 
       //tests
+      config.setGraphName("undirected_after");
       Export::ToGraphviz(Convert::ToUndirected(graph), config, "undirected_after.graph");
       system("dot -Tpng undirected_after.graph -o undirected_after.png");
 
       //exports
-      // std::cout << Export::ToMathString(graph, label_mapper) << std::endl << std::endl;
+      config.setGraphName("reseau_routier");
       Export::ToGraphviz(graph, config, "reseau_routier.graph");
 
+      config.setGraphName("chemins_dijkstra");
       Export::ToGraphviz(allPaths_dijkstra, config, "chemins_dijkstra.graph");
+
+      config.setGraphName("chemins_bellman");
       Export::ToGraphviz(allPaths_bellman, config, "chemins_bellman.graph");
 
+      config.setGraphName("chemins_bellman_rapide");
       Export::ToGraphviz(allPaths_greedy_bellman, config, "chemins_bellman_rapide.graph");
 
-      Export::ToGraphviz(graph, config, dijkstra_between, "highlight_dijkstra.graph");
-      Export::ToGraphviz(graph, config, bellman_between, "highlight_bellman.graph");
-      Export::ToGraphviz(graph, config, greedy_bellman_between, "highlight_greedy_bellman.graph");
+      highlight = config;
+      highlight.setGraphName("highlight_dijkstra");
+      Export::GraphvizPathsHighlight(highlight, dijkstra_between);
+      Export::ToGraphviz(graph, highlight, "highlight_dijkstra.graph");
+
+      highlight = config;
+      highlight.setGraphName("highlight_bellman");
+      Export::GraphvizPathsHighlight(highlight, bellman_between);
+      Export::ToGraphviz(graph, highlight, "highlight_bellman.graph");
+
+      highlight = config;
+      highlight.setGraphName("highlight_greedy_bellman");
+      Export::GraphvizPathsHighlight(highlight, greedy_bellman_between);
+      Export::ToGraphviz(graph, highlight, "highlight_greedy_bellman.graph");
 
       //compilations dot
 #ifdef _SYSTEM

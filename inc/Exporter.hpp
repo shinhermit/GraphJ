@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <memory>
+
 #include "Traverse.hpp"
 #include "GraphvizAttributesHolder.hpp" 
 #include "GraphFunctor.hpp"
@@ -14,13 +16,13 @@ template<typename Type=GraphTypes::Default>
 class Exporter{
 private:
   static std::string _graphviz_headers(const Graph<Type> & graph,
-				       GraphvizAttributesHolder & config);
+				       const GraphvizAttributesHolder & config);
 
   static std::string _graphviz_nodes(const Graph<Type> & graph,
-				     GraphvizAttributesHolder & config);
+				     const GraphvizAttributesHolder & config);
 
   static std::string _graphviz_edges(const Graph<Type> & graph,
-				     GraphvizAttributesHolder & config);
+				     const GraphvizAttributesHolder & config);
 
   static void _highlight_node(GraphvizAttributesHolder & config,
 			      const GraphTypes::node_id & node,
@@ -29,9 +31,6 @@ private:
   static void _highlight_edge(GraphvizAttributesHolder & config,
 			      const Edge & edge,
 			      const GraphTypes::NamedColor::E_NamedColor & color);
-
-  static void _graphviz_paths_highlight(GraphvizAttributesHolder & config,
-					const std::list<GraphTypes::Path> & paths_highlight);
 
   static std::string _graphviz_footers();
 
@@ -46,32 +45,22 @@ public:
   static void ToStream(const Graph<Type> & graph,
 		       std::ostream & out);
 
+  static void GraphvizPathsHighlight(GraphvizAttributesHolder & config,
+				     const std::list<GraphTypes::Path> & paths_highlight);
+
+  static void GraphvizMpmPrepare(const Graph<Type> & graph,
+				 GraphvizAttributesHolder & config);
+
   static std::string ToGraphviz(const Graph<Type> & graph,
-				GraphvizAttributesHolder & config);
+				const GraphvizAttributesHolder & config);
 
   static std::string ToGraphviz(const Graph<Type> & graph);
 
-  static std::string ToGraphviz(const Graph<Type> & graph,
-				GraphvizAttributesHolder & config,
-				const std::list<GraphTypes::Path> & paths_highlight);
-
-  static std::string ToGraphviz(const Graph<Type> & graph,
-				const std::list<GraphTypes::Path> & paths_highlight);
-
   static void ToGraphviz(const Graph<Type> & graph,
-			 GraphvizAttributesHolder & config,
+			 const GraphvizAttributesHolder & config,
 			 const std::string & filename);
 
   static void ToGraphviz(const Graph<Type> & graph,
-			 const std::string & filename);
-
-  static void ToGraphviz(const Graph<Type> & graph,
-			 GraphvizAttributesHolder & config,
-			 const std::list<GraphTypes::Path> & paths_highlight,
-			 const std::string & filename);
-
-  static void ToGraphviz(const Graph<Type> & graph,
-			 const std::list<GraphTypes::Path> & paths_highlight,
 			 const std::string & filename);
 };
 
