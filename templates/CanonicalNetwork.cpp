@@ -65,6 +65,12 @@ Graph<Type> & CanonicalNetwork<Type>::flowGraph()
 }
 
 template<typename Type>
+const Graph<Type> & CanonicalNetwork<Type>::flowGraph()const
+{
+  return _flowGraph;
+}
+
+template<typename Type>
 CanonicalNetwork<Type>::operator Graph<Type>&()
 {
   return _flowGraph;

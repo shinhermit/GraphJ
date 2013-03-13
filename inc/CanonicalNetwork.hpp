@@ -34,6 +34,7 @@ public:
   const GraphTypes::node_id & sink()const;
 
   Graph<Type> & flowGraph();
+  const Graph<Type> & flowGraph()const;
   operator Graph<Type>&();
 };
 

@@ -29,10 +29,13 @@ int main()
 
   MpmNetworkBuilder mpmBuilder(activities);
   MpmNetwork mpm(GraphTypes::UNWEIGHTED, GraphTypes::CONTAINER);
+  GraphvizAttributesHolder config;
 
   mpmBuilder.buildInto(mpm);
 
-  Export::ToGraphviz(mpm, "flowGraph.graph");
+  Export::GraphvizMpmPrepare(mpm, config);
+  Export::ToGraphviz(mpm, config, "flowGraph.graph");
+
   Exporter<PlanningActivity>::ToGraphviz(activities, "activityGraph.graph");
 
   system("dot -Tpng activityGraph.graph -o activityGraph.png");

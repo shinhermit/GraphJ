@@ -11,6 +11,7 @@
 #include "GraphFunctor.hpp"
 #include "Color.hpp"
 #include "NamedColor.hpp"
+#include "MpmNetwork.hpp"
 
 template<typename Type=GraphTypes::Default>
 class Exporter{
@@ -24,6 +25,8 @@ private:
   static std::string _graphviz_edges(const Graph<Type> & graph,
 				     const GraphvizAttributesHolder & config);
 
+  static std::string _graphviz_footers();
+
   static void _highlight_node(GraphvizAttributesHolder & config,
 			      const GraphTypes::node_id & node,
 			      const GraphTypes::NamedColor::E_NamedColor & color);
@@ -32,7 +35,10 @@ private:
 			      const Edge & edge,
 			      const GraphTypes::NamedColor::E_NamedColor & color);
 
-  static std::string _graphviz_footers();
+  static void _mpm_node_prepare(const MpmNetwork & network,
+				GraphvizAttributesHolder & config,
+				const GraphTypes::node_id & node,
+				const std::string & label="");
 
 public:
   static std::string ToString(const Graph<Type> & graph);
@@ -48,8 +54,10 @@ public:
   static void GraphvizPathsHighlight(GraphvizAttributesHolder & config,
 				     const std::list<GraphTypes::Path> & paths_highlight);
 
-  static void GraphvizMpmPrepare(const Graph<Type> & graph,
-				 GraphvizAttributesHolder & config);
+  static void GraphvizMpmPrepare(const MpmNetwork & network,
+				 GraphvizAttributesHolder & config,
+				 const std::string & beginLabel="Begin",
+				 const std::string & endLabel="End");
 
   static std::string ToGraphviz(const Graph<Type> & graph,
 				const GraphvizAttributesHolder & config);

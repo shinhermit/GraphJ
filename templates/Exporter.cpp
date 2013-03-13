@@ -170,9 +170,60 @@ void Exporter<Type>::GraphvizPathsHighlight(GraphvizAttributesHolder & config,
 }
 
 template<typename Type>
-void Exporter<Type>::GraphvizMpmPrepare(const Graph<Type> & graph,
-					GraphvizAttributesHolder & config)
+void Exporter<Type>::_mpm_node_prepare(const MpmNetwork & network,
+				       GraphvizAttributesHolder & config,
+				       const GraphTypes::node_id & node,
+				       const std::string & label)
 {
+  std::string cartouche("");
+
+  const MpmTask & task = network.flowGraph().get_node_content(node);
+
+  const GraphTypes::Planning::Duration & earlyBegin = task.earlyBegin();
+  const GraphTypes::Planning::Duration & latelyBegin = task.latelyBegin();
+  const GraphTypes::Planning::Duration & duration = task.duration();
+
+  if(label != "")
+    cartouche = cartouche+"|"+label+"|";
+
+  else
+    cartouche = cartouche+"|"+task.label()+"|";
+
+  if(node != network.source() && node != network.sink())
+    {
+      cartouche += GraphFunctor::StringConverter::StringFrom<GraphTypes::Planning::Duration>(duration) + "|";
+    }
+
+  cartouche += "\\n|";
+
+  cartouche += GraphFunctor::StringConverter::StringFrom<GraphTypes::Planning::Duration>(earlyBegin) + "|";
+  cartouche += GraphFunctor::StringConverter::StringFrom<GraphTypes::Planning::Duration>(latelyBegin) + "|";
+
+  config.attributesOf(node).setLabel(cartouche);
+}
+
+template<typename Type>
+void Exporter<Type>::GraphvizMpmPrepare(const MpmNetwork & network,
+					GraphvizAttributesHolder & config,
+					const std::string & beginNodeLabel,
+					const std::string & endNodeLabel)
+{
+  const Graph<MpmTask> & flowGraph = network.flowGraph();
+
+  config.nodesGlobalAttributes().setShape(GraphTypes::Graphviz::ShapeAttribute::BOX);
+
+  //source and sink
+  _mpm_node_prepare( network, config, network.source(), beginNodeLabel );
+  _mpm_node_prepare( network, config, network.sink(), endNodeLabel );
+
+  //other nodes
+  for(Graph<MpmTask>::NodeIterator node = flowGraph.nodes_begin();
+      node != flowGraph.nodes_end();
+      ++node)
+    {
+      if( *node != network.source() && *node != network.sink() )
+	_mpm_node_prepare(network, config, *node);
+    }
 }
 
 template<typename Type>
