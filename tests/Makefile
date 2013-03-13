@@ -83,3 +83,6 @@ gps:
 
 gps_multichemin:
 	$(cmd_sys)
+
+plannification:
+	$(cmd_sys)
