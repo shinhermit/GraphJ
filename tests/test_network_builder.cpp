@@ -44,6 +44,7 @@ int main()
 
   config.setGraphLabel("MPM chart");
   Export::GraphvizMpmPrepare(mpm, config);
+  Export::GraphvizPathHighlight( config, dates.criticalPath() );
   Export::ToGraphviz(mpm, config, "MPM_chart.graph");
 
   system("dot -Tpng activityGraph.graph -o activityGraph.png");

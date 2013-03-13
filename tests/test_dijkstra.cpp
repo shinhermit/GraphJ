@@ -7,6 +7,7 @@ int main()
   Graph<> graph(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
   PathFinding<> lookup;
   GraphvizAttributesHolder config;
+  const GraphTypes::Graphviz::StyleAttribute nodeStyle=GraphTypes::Graphviz::StyleAttribute::FILLED;
 
   typedef Exporter<> Export;
 
@@ -40,7 +41,7 @@ int main()
 
       //Exports
       config.setGraphName("test_dijkstra");
-      Export::GraphvizPathsHighlight(config, lookup.paths_to(6));
+      Export::GraphvizPathsHighlight(config, lookup.paths_to(6), nodeStyle);
       Export::ToGraphviz(graph, config, "test_dijkstra.graph");
 
       Export::ToGraphviz(lookup.resultGraph(), GraphvizAttributesHolder("paths_dijkstra"), "paths_dijkstra.graph");

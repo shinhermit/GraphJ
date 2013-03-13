@@ -78,25 +78,26 @@ std::string Exporter<Type>::_graphviz_edges(const Graph<Type> & graph,
 template<typename Type>
 void Exporter<Type>::_highlight_node(GraphvizAttributesHolder & config,
 				     const GraphTypes::node_id & node,
-				     const GraphTypes::NamedColor::E_NamedColor & color)
+				     const GraphTypes::Color & color,
+				     const GraphTypes::Graphviz::StyleAttribute & nodeStyle)
 {
 
   GraphvizAttributes & attr = config.attributesOf(node);
 
-  attr.setColor( GraphTypes::Color(color) );
-  attr.setStyle(GraphTypes::Graphviz::StyleAttribute::FILLED);
+  attr.setColor(color);
+  attr.setStyle(nodeStyle);
 }
 
 template<typename Type>
 void Exporter<Type>::_highlight_edge(GraphvizAttributesHolder & config,
 				     const Edge & edge,
-				     const GraphTypes::NamedColor::E_NamedColor & color)
+				     const GraphTypes::Color & color)
 {
 
   GraphvizAttributes &  attr = config.attributesOf(edge);
 
-  attr.setColor( GraphTypes::Color(color) );
-  attr.setFontColor( GraphTypes::Color(color) );
+  attr.setColor(color);
+  attr.setFontColor(color);
 }
 
 template<typename Type>
@@ -142,31 +143,42 @@ void Exporter<Type>::ToStream(const Graph<Type> & graph,
 }
 
 template<typename Type>
-void Exporter<Type>::GraphvizPathsHighlight(GraphvizAttributesHolder & config,
-					    const std::list<GraphTypes::Path> & paths_highlight)
+void Exporter<Type>::GraphvizPathHighlight(GraphvizAttributesHolder & config,
+					   const GraphTypes::Path & path,
+					   const GraphTypes::Color & col,
+					    const GraphTypes::Graphviz::StyleAttribute & nodeStyle)
 {
-  GraphTypes::NamedColor::ColorNameIterator col;
-  std::list<GraphTypes::Path>::const_iterator path;
   std::list<GraphTypes::node_id>::const_iterator node;
   GraphTypes::node_id sourceNode;
 
-  col = GraphTypes::NamedColor::Names_begin();
-  for(path = paths_highlight.begin(); path != paths_highlight.end(); ++path)
+  node = path.begin();
+
+  while( node != path.end() )
     {
-      node = path->begin();
+      _highlight_node(config, *node, col, nodeStyle);
 
-      while( node != path->end() )
+      sourceNode = *node;
+      ++node;
+
+      if( node != path.end() )
 	{
-	  _highlight_node(config, *node, *col);
-
-	  sourceNode = *node;
-	  ++node;
-
-	  if( node != path->end() )
-	    {
-	      _highlight_edge( config, Edge(sourceNode, *node), *col );
-	    }
+	  _highlight_edge( config, Edge(sourceNode, *node), col );
 	}
+    }
+}
+
+template<typename Type>
+void Exporter<Type>::GraphvizPathsHighlight(GraphvizAttributesHolder & config,
+					    const std::list<GraphTypes::Path> & paths,
+					    const GraphTypes::Graphviz::StyleAttribute & nodeStyle)
+{
+  GraphTypes::NamedColor::ColorNameIterator col;
+  std::list<GraphTypes::Path>::const_iterator onePath;
+
+  col = ++GraphTypes::NamedColor::Names_begin();
+  for(onePath = paths.begin(); onePath != paths.end(); ++onePath)
+    {
+      GraphvizPathHighlight(config, *onePath, *col, nodeStyle);
 
       ++col; if( col == GraphTypes::NamedColor::Names_end() ) col = GraphTypes::NamedColor::Names_begin();
     }

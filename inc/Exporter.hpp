@@ -29,11 +29,12 @@ private:
 
   static void _highlight_node(GraphvizAttributesHolder & config,
 			      const GraphTypes::node_id & node,
-			      const GraphTypes::NamedColor::E_NamedColor & color);
+			      const GraphTypes::Color & color,
+			      const GraphTypes::Graphviz::StyleAttribute & nodeStyle=GraphTypes::Graphviz::StyleAttribute::DEFAULT_STYLE);
 
   static void _highlight_edge(GraphvizAttributesHolder & config,
 			      const Edge & edge,
-			      const GraphTypes::NamedColor::E_NamedColor & color);
+			      const GraphTypes::Color & color);
 
   static void _mpm_node_prepare(const MpmNetwork & network,
 				GraphvizAttributesHolder & config,
@@ -51,8 +52,14 @@ public:
   static void ToStream(const Graph<Type> & graph,
 		       std::ostream & out);
 
+  static void GraphvizPathHighlight(GraphvizAttributesHolder & config,
+				     const GraphTypes::Path & path,
+				    const GraphTypes::Color & col=GraphTypes::NamedColor::Red,
+				    const GraphTypes::Graphviz::StyleAttribute & nodeStyle=GraphTypes::Graphviz::StyleAttribute::DEFAULT_STYLE);
+
   static void GraphvizPathsHighlight(GraphvizAttributesHolder & config,
-				     const std::list<GraphTypes::Path> & paths_highlight);
+				     const std::list<GraphTypes::Path> & paths,
+				     const GraphTypes::Graphviz::StyleAttribute & nodeStyle=GraphTypes::Graphviz::StyleAttribute::DEFAULT_STYLE);
 
   static void GraphvizMpmPrepare(const MpmNetwork & network,
 				 GraphvizAttributesHolder & config,

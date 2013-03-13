@@ -35,6 +35,8 @@ void MpmDatesComputer::_early_start_computation()
 	  task.setLateStart(earlyStart);
 	}
     }
+
+  _critical_path = *_lookup.paths_to( _network.sink() ).begin();
 }
 
 void MpmDatesComputer::_late_start_computation()
@@ -100,4 +102,9 @@ void MpmDatesComputer::compute()
   _early_start_computation();
   _late_start_computation();
   _slacks_computation();
+}
+
+const GraphTypes::Path & MpmDatesComputer::criticalPath()const
+{
+  return _critical_path;
 }

@@ -12,6 +12,7 @@ int main()
   GraphTypes::node_id source, target;
   PathFinding<> lookup;
   GraphvizAttributesHolder config;
+  const GraphTypes::Graphviz::StyleAttribute nodeStyle=GraphTypes::Graphviz::StyleAttribute::FILLED;
 
   typedef WeightsTransformer<> Transformer;
   typedef Exporter<> Export;
@@ -62,14 +63,14 @@ try
 
   //Exports
   config.setGraphName("dijkstra_maximize");
-  Export::GraphvizPathsHighlight(config, paths_dijkstra_between);
+  Export::GraphvizPathsHighlight(config, paths_dijkstra_between, nodeStyle);
   Export::ToGraphviz(graph, config, "dijkstra_maximize.graph");
 
   Export::ToGraphviz(allPaths_dijkstra, GraphvizAttributesHolder("paths_dijkstra_maximize"), "paths_dijkstra_maximize.graph");
 
   config.clear();
   config.setGraphName("bellman_maximize");
-  Export::GraphvizPathsHighlight(config, paths_bellman_between);
+  Export::GraphvizPathsHighlight(config, paths_bellman_between, nodeStyle);
   Export::ToGraphviz(graph, config, "bellman_maximize.graph");
 
   Export::ToGraphviz(allPaths_bellman, GraphvizAttributesHolder("paths_bellman_maximize"), "paths_bellman_maximize.graph");

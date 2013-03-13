@@ -15,6 +15,7 @@ int main()
   Graph<> allPaths_greedy_bellman( GraphTypes::DIRECTED, graph.edgeState(), GraphTypes::NOCONTENT);
   std::list<GraphTypes::Path> dijkstra_between, bellman_between, greedy_bellman_between;
   GraphTypes::node_id sourceNode, targetNode;
+  const GraphTypes::Graphviz::StyleAttribute nodeStyle=GraphTypes::Graphviz::StyleAttribute::FILLED;
   PathFinding<> lookup;
 
   typedef GraphConverter<> Convert;
@@ -138,17 +139,17 @@ int main()
 
       highlight = config;
       highlight.setGraphName("highlight_dijkstra");
-      Export::GraphvizPathsHighlight(highlight, dijkstra_between);
+      Export::GraphvizPathsHighlight(highlight, dijkstra_between, nodeStyle);
       Export::ToGraphviz(graph, highlight, "highlight_dijkstra.graph");
 
       highlight = config;
       highlight.setGraphName("highlight_bellman");
-      Export::GraphvizPathsHighlight(highlight, bellman_between);
+      Export::GraphvizPathsHighlight(highlight, bellman_between, nodeStyle);
       Export::ToGraphviz(graph, highlight, "highlight_bellman.graph");
 
       highlight = config;
       highlight.setGraphName("highlight_greedy_bellman");
-      Export::GraphvizPathsHighlight(highlight, greedy_bellman_between);
+      Export::GraphvizPathsHighlight(highlight, greedy_bellman_between, nodeStyle);
       Export::ToGraphviz(graph, highlight, "highlight_greedy_bellman.graph");
 
       //compilations dot

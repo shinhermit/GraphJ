@@ -7,6 +7,7 @@ int main()
   Graph<> graph(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
   XPathFinding<> lookup;
   GraphvizAttributesHolder config;
+  const GraphTypes::Graphviz::StyleAttribute nodeStyle=GraphTypes::Graphviz::StyleAttribute::FILLED;
 
   typedef Exporter<> Export;
 
@@ -36,7 +37,7 @@ int main()
 
       //Exports
       config.setGraphName("test_Xbellman");
-      Export::GraphvizPathsHighlight(config, lookup.paths_to(5));
+      Export::GraphvizPathsHighlight(config, lookup.paths_to(5), nodeStyle);
       Export::ToGraphviz(graph, config, "test_Xbellman.graph");
 
       Export::ToGraphviz(lookup.resultGraph(), GraphvizAttributesHolder("paths_Xbellman"), "paths_Xbellman.graph");

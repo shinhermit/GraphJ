@@ -15,10 +15,14 @@ public:
 
   void compute();
 
+  const GraphTypes::Path & criticalPath()const;
+
 private:
   MpmNetwork & _network;
 
   PathFinding<MpmTask> _lookup;
+
+  GraphTypes::Path _critical_path;
 
   void _early_start_computation();
 
