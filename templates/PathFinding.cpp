@@ -504,7 +504,7 @@ void PathFinding<Type>::dual_bellman(Graph<Type> & graph,
 {
   graph.reverse_edges();
 
-  bellman(graph, targetNode, algoClass, optimizationType);
+  bellman(graph, getCost, targetNode, algoClass, optimizationType);
 
   graph.reverse_edges();
   _resultGraph.reverse_edges();

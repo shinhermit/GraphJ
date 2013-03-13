@@ -11,6 +11,8 @@ class GraphvizAttributesHolder
 private:
   std::string _graphName;
 
+  std::string _graphLegend;
+
   GraphvizAttributes _graph_global_attributes;
 
   GraphvizAttributes _nodes_global_attributes;
@@ -23,13 +25,22 @@ private:
 
 public:
 
-  GraphvizAttributesHolder(const std::string & graphName="G");
+  GraphvizAttributesHolder(const std::string & graphLabel="",
+			   const std::string & graphName="G");
 
   void setGraphName(const std::string & graphName);
+
+  void setGraphLabel(const std::string & graphLabel);
+
+  void setGraphLegend(const std::string & graphLegend);
 
   void clear();
 
   const std::string &  graphName()const;
+
+  const std::string &  graphLabel()const;
+
+  const std::string &  graphLegend()const;
 
   GraphvizAttributes &  globalAttributes();
   const GraphvizAttributes &  globalAttributes()const;

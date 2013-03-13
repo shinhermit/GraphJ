@@ -4,6 +4,7 @@
 
 #include "Exporter.hpp"
 #include "MpmNetworkBuilder.hpp"
+#include "MpmDatesComputer.hpp"
 
 int main()
 {
@@ -27,6 +28,8 @@ int main()
   activities.add_edge(3,5);
   activities.add_edge(4,5);
 
+  Exporter<PlanningActivity>::ToGraphviz(activities, "activityGraph.graph");
+
   MpmNetworkBuilder mpmBuilder(activities);
   MpmNetwork mpm(GraphTypes::UNWEIGHTED, GraphTypes::CONTAINER);
   GraphvizAttributesHolder config;
@@ -36,9 +39,15 @@ int main()
   Export::GraphvizMpmPrepare(mpm, config);
   Export::ToGraphviz(mpm, config, "flowGraph.graph");
 
-  Exporter<PlanningActivity>::ToGraphviz(activities, "activityGraph.graph");
+  MpmDatesComputer dates(mpm);
+  dates.compute();
+
+  config.setGraphLabel("MPM chart");
+  Export::GraphvizMpmPrepare(mpm, config);
+  Export::ToGraphviz(mpm, config, "MPM_chart.graph");
 
   system("dot -Tpng activityGraph.graph -o activityGraph.png");
   system("dot -Tpng flowGraph.graph -o flowGraph.png");
+  system("dot -Tpng MPM_chart.graph -o MPM_chart.png");
 
 }

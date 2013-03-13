@@ -97,7 +97,10 @@ MpmEdgeWeighter:
 MpmNetworkBuilder:
 	$(cmd_src)
 
-all_classes: Node WeightedNode Edge WeightedEdge BasicGraphException InvalidNodeID InvalidEdge InvalidOperation TopologyIterator DoubleNodeSetIterator BaseGraph DirectableGraph PonderableGraph NamedColor ColorIntensity Color ColorizingVisitor ShapeAttribute StyleAttribute GraphvizAttributes GraphvizAttributesHolder Visitor TricolorBuilderVisitor PlanningActivity MpmTask MpmNetworkBuilder
+MpmDatesComputer:
+	$(cmd_src)
+
+all_classes: Node WeightedNode Edge WeightedEdge BasicGraphException InvalidNodeID InvalidEdge InvalidOperation TopologyIterator DoubleNodeSetIterator BaseGraph DirectableGraph PonderableGraph NamedColor ColorIntensity Color ColorizingVisitor ShapeAttribute StyleAttribute GraphvizAttributes GraphvizAttributesHolder Visitor TricolorBuilderVisitor PlanningActivity MpmTask MpmNetworkBuilder MpmEdgeWeighter MpmDatesComputer
 
 
 #les validations

@@ -7,10 +7,15 @@
 class MpmTask
 {
 private:
-  GraphTypes::Planning::Duration _duration;
-  GraphTypes::Planning::Duration _earliest_beginning;
-  GraphTypes::Planning::Duration _latest_beginning;
   std::string _label;
+
+  GraphTypes::Planning::Duration _duration;
+  GraphTypes::Planning::Duration _early_start;
+  GraphTypes::Planning::Duration _late_start;
+
+  GraphTypes::Planning::Duration _total_slack;
+  GraphTypes::Planning::Duration _free_slack;
+  GraphTypes::Planning::Duration _sure_slack;
 
 public:
   MpmTask();
@@ -22,24 +27,29 @@ public:
   MpmTask(const std::string  & label,
 	  const GraphTypes::Planning::Duration  & duration);
 
-  MpmTask(const std::string  & label,
-	  const GraphTypes::Planning::Duration & duration,
-	  const GraphTypes::Planning::Duration & early_beginning,
-	  const GraphTypes::Planning::Duration & late_beginning);
-
   MpmTask(const MpmTask  & source);
 
   MpmTask & operator=(const MpmTask & source);
 
-  const GraphTypes::Planning::Duration & duration()const;
-  const GraphTypes::Planning::Duration & earlyBegin()const;
-  const GraphTypes::Planning::Duration & latelyBegin()const;
   const std::string & label()const;
 
-  void setDuration(const GraphTypes::Planning::Duration & duration);
-  void setEarlyBegin(const GraphTypes::Planning::Duration & early_beginning);
-  void setLatelyBegin(const GraphTypes::Planning::Duration & late_beginning);
+  const GraphTypes::Planning::Duration & duration()const;
+  const GraphTypes::Planning::Duration & earlyStart()const;
+  const GraphTypes::Planning::Duration & lateStart()const;
+
+  const GraphTypes::Planning::Duration & totalSlack()const;
+  const GraphTypes::Planning::Duration & freeSlack()const;
+  const GraphTypes::Planning::Duration & sureSlack()const;
+
   void setLabel(const std::string & label);
+
+  void setDuration(const GraphTypes::Planning::Duration & duration);
+  void setEarlyStart(const GraphTypes::Planning::Duration & early_start);
+  void setLateStart(const GraphTypes::Planning::Duration & late_start);
+
+  void setTotalSlack(const GraphTypes::Planning::Duration & duration);
+  void setFreeSlack(const GraphTypes::Planning::Duration & early_start);
+  void setSureSlack(const GraphTypes::Planning::Duration & late_start);
 };
 
 #endif

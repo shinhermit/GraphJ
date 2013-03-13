@@ -57,6 +57,8 @@ namespace GraphTypes
   {
     typedef unsigned int Activity_id;
     typedef float Duration;
+
+    enum EdgeDirection{DIRECT, REVERSED};
   };
 
 };

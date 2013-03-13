@@ -15,7 +15,7 @@ private:
 
   std::map<GraphTypes::node_id, GraphTypes::node_id> _best_predecessor;
   
-  Graph<Type> _resultGraph;
+  Graph<> _resultGraph;
 
   std::list<GraphTypes::Path> _foundPaths;
 

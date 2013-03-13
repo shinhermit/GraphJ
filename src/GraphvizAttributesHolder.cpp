@@ -1,15 +1,28 @@
 #include "GraphvizAttributesHolder.hpp"
 
-GraphvizAttributesHolder::GraphvizAttributesHolder(const std::string & graphName)
+GraphvizAttributesHolder::GraphvizAttributesHolder(const std::string & graphLabel,
+						   const std::string & graphName)
   :_graphName(graphName),
    _graph_global_attributes( GraphvizAttributes() ),
    _nodes_global_attributes( GraphvizAttributes() ),
    _edges_global_attributes( GraphvizAttributes() )
-{}
+{
+  _graph_global_attributes.setLabel(graphLabel);
+}
 
 void GraphvizAttributesHolder::setGraphName(const std::string & graphName)
 {
   _graphName = graphName;
+}
+
+void GraphvizAttributesHolder::setGraphLabel(const std::string & graphLabel)
+{
+  _graph_global_attributes.setLabel(graphLabel);
+}
+
+void GraphvizAttributesHolder::setGraphLegend(const std::string & graphLegend)
+{
+  _graphLegend = graphLegend;
 }
 
 void GraphvizAttributesHolder::clear()
@@ -30,6 +43,16 @@ void GraphvizAttributesHolder::clear()
 const std::string & GraphvizAttributesHolder::graphName()const
 {
   return _graphName;
+}
+
+const std::string & GraphvizAttributesHolder::graphLabel()const
+{
+  return _graph_global_attributes.label();
+}
+
+const std::string & GraphvizAttributesHolder::graphLegend()const
+{
+  return _graphLegend;
 }
 
 GraphvizAttributes &  GraphvizAttributesHolder::globalAttributes()

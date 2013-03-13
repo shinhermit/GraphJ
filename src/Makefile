@@ -95,3 +95,6 @@ MpmEdgeWeighter:
 
 MpmNetworkBuilder:
 	$(cmd)
+
+MpmDatesComputer:
+	$(cmd)

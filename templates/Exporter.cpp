@@ -16,6 +16,9 @@ std::string Exporter<Type>::_graphviz_headers(const Graph<Type> & graph,
 
   oss << "edge " << config.edgesGlobalAttributes().toString() << std::endl;
 
+  if(config.graphLegend() != "")
+    oss << "{rank=sink;\nLegend [shape=none, fontsize=10, margin=\"0.5,0.2\", label=\"" << config.graphLegend() << "\"]}" << std::endl;
+
   return oss.str();
 }
 
@@ -179,25 +182,38 @@ void Exporter<Type>::_mpm_node_prepare(const MpmNetwork & network,
 
   const MpmTask & task = network.flowGraph().get_node_content(node);
 
-  const GraphTypes::Planning::Duration & earlyBegin = task.earlyBegin();
-  const GraphTypes::Planning::Duration & latelyBegin = task.latelyBegin();
+  const GraphTypes::Planning::Duration & earlyStart = task.earlyStart();
+  const GraphTypes::Planning::Duration & lateStart = task.lateStart();
   const GraphTypes::Planning::Duration & duration = task.duration();
 
-  if(label != "")
-    cartouche = cartouche+"|"+label+"|";
+  const GraphTypes::Planning::Duration & totalSlack = task.totalSlack();
+  const GraphTypes::Planning::Duration & freeSlack = task.freeSlack();
+  const GraphTypes::Planning::Duration & sureSlack = task.sureSlack();
+
+  if( node == network.source() || node == network.sink() )
+    {
+      cartouche = label;
+    }
 
   else
-    cartouche = cartouche+"|"+task.label()+"|";
-
-  if(node != network.source() && node != network.sink())
     {
+      cartouche = cartouche+"|"+task.label()+"|";
       cartouche += GraphFunctor::StringConverter::StringFrom<GraphTypes::Planning::Duration>(duration) + "|";
     }
 
   cartouche += "\\n|";
 
-  cartouche += GraphFunctor::StringConverter::StringFrom<GraphTypes::Planning::Duration>(earlyBegin) + "|";
-  cartouche += GraphFunctor::StringConverter::StringFrom<GraphTypes::Planning::Duration>(latelyBegin) + "|";
+  cartouche += GraphFunctor::StringConverter::StringFrom<GraphTypes::Planning::Duration>(earlyStart) + "|";
+  cartouche += GraphFunctor::StringConverter::StringFrom<GraphTypes::Planning::Duration>(lateStart) + "|";
+
+  if( node != network.source() && node != network.sink() )
+    {
+      cartouche += "\\n|";
+
+      cartouche += GraphFunctor::StringConverter::StringFrom<GraphTypes::Planning::Duration>(totalSlack) + "|";
+      cartouche += GraphFunctor::StringConverter::StringFrom<GraphTypes::Planning::Duration>(freeSlack) + "|";
+      cartouche += GraphFunctor::StringConverter::StringFrom<GraphTypes::Planning::Duration>(sureSlack) + "|";
+    }
 
   config.attributesOf(node).setLabel(cartouche);
 }
@@ -211,6 +227,7 @@ void Exporter<Type>::GraphvizMpmPrepare(const MpmNetwork & network,
   const Graph<MpmTask> & flowGraph = network.flowGraph();
 
   config.nodesGlobalAttributes().setShape(GraphTypes::Graphviz::ShapeAttribute::BOX);
+  config.setGraphLegend("|Task label| duration|\\n|Early Start| Late Start|\\n|Total Slack| Free Slack| Sure Slack|");
 
   //source and sink
   _mpm_node_prepare( network, config, network.source(), beginNodeLabel );
