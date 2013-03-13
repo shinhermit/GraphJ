@@ -1,11 +1,18 @@
-#ifndef GRAPHTYPES
-#define GRAPHTYPES
+#ifndef _GraphTypes
+#define _GraphTypes
 
 #include <list>
+#include <string>
 
-class GraphTypes{
-public:
+#include "ShapeAttribute.hpp"
+#include "StyleAttribute.hpp"
+#include "Color.hpp"
+#include "ColorIntensity.hpp"
+#include "ColorIncrementor.hpp"
+#include "NamedColor.hpp"
 
+namespace GraphTypes
+{
   typedef unsigned long node_id;
 
   typedef float Cost;
@@ -16,23 +23,23 @@ public:
 
   enum EdgeState{WEIGHTED, UNWEIGHTED};
 
-  enum What{NODES, CONTENTS};
+  // enum What{NODES, CONTENTS};
 
   enum NodeType{CONTAINER, NOCONTENT};
 
   enum Default{DEFAULT};
 
-  struct Exceptions
+  namespace Exceptions
   {
     enum Verbosity{BRIEVE, VERBOSE};
   };
 
-  struct Iterator
+  namespace Iterator
   {
     enum Type{SIMPLE, DOUBLE};
   };
 
-  struct Algorithms
+  namespace Algorithms
   {
     typedef unsigned int Color;
 
@@ -40,12 +47,16 @@ public:
 
     enum AlgorithmicClass{GREEDY, DYNAMIC};
 
-    enum ComputingValidity{UNDEFINED, VALID, INVALID};
-
     enum OptimizationType{MAXIMIZE, MINIMIZE};
 
-    static const float POSITIVE_INFINITY;
-    static const float NEGATIVE_INFINITY;
+    const float POSITIVE_INFINITY = 20000.F;
+    const float NEGATIVE_INFINITY = -20000.F;
+  };
+
+  namespace Planning
+  {
+    typedef unsigned int Activity_id;
+    typedef float Duration;
   };
 
 };

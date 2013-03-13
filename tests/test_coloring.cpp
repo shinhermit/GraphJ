@@ -7,7 +7,7 @@
 int main()
 {
   Graph<> graph(GraphTypes::UNDIRECTED, GraphTypes::UNWEIGHTED, GraphTypes::NOCONTENT);
-  std::map<GraphTypes::node_id, NamedColor::ColorName> color_mapper;
+  std::map<GraphTypes::node_id, GraphTypes::NamedColor::E_NamedColor> color_mapper;
 
   typedef Coloring<> Coloring;
   typedef Exporter<> Export;
@@ -29,25 +29,29 @@ int main()
   graph.add_edge(5,7);
   graph.add_edge(6,7);
 
-try
-  {
-  std::cout << Export::ToGraphviz(graph) << std::endl;
+  try
+    {
+      Coloring::Welsh(graph, color_mapper);
 
-  color_mapper = Coloring::Welsh(graph);
+      GraphvizAttributesHolder config("Coloring");
+      for(std::map<GraphTypes::node_id, GraphTypes::NamedColor::E_NamedColor>::iterator it = color_mapper.begin();
+	  it != color_mapper.end();
+	  ++it)
+	{
+	  config.attributesOf(it->first).setColor(it->second);
+	  config.attributesOf(it->first).setStyle(GraphTypes::Graphviz::StyleAttribute::FILLED);
+	}
 
-  std::cout << "Résultat de la coloration:" << std::endl;
-  std::cout << Export::ToGraphviz(graph, color_mapper) << std::endl;
-
-  Export::ToGraphviz(graph, color_mapper, "test_coloring.graph");
-  std::cout << "Le graphe a été exporté dans le fichier test_coloring.graph" << std::endl;
+      Export::ToGraphviz(graph, config, "test_coloring.graph");
+      std::cout << "Le graphe a été exporté dans le fichier test_coloring.graph" << std::endl;
 
 #ifdef _SYSTEM
 
-  system("dot -Tpng test_coloring.graph -o test_coloring.png");
+      system("dot -Tpng test_coloring.graph -o test_coloring.png");
 
 #endif
 
-  }
+    }
 
   catch(const GraphException::InvalidOperation & io)
     {

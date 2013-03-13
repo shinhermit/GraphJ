@@ -17,6 +17,12 @@ public:
   typedef GraphIterator::DoubleNodeSetIterator NodeIterator;
 
 private:
+  std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & _topology();
+  const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & _topology()const;
+
+  std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & _reversed_topology();
+  const std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & _reversed_topology()const;
+
   unsigned int _clean_topology(std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & topology,
 			       std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > & relative_reversed,
 			       const GraphTypes::node_id & id);
@@ -29,11 +35,13 @@ private:
 protected:
   std::set<GraphTypes::node_id> _nodes; /*!< id-sorted vector of all Nodes IDs*/
 
-  std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > _topology; /*!< Relations (edges): successors lists*/
+  std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > _d_topology; /*!< Direct relations (edges): successors lists*/
 
-  std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > _reversed_topology; /*!< Reversed relations: predecessors lists*/
+  std::map<GraphTypes::node_id, std::set<GraphTypes::node_id> > _r_topology; /*!< Reversed relations: predecessors lists*/
 
   unsigned int _nb_of_edges; /*!< Makes it easier to get graph metrics*/
+
+  bool _reversed_edges;
 
 public:
   BaseGraph();
@@ -66,6 +74,8 @@ public:
 
   void remove_edge(const GraphTypes::node_id & origin,
 		   const GraphTypes::node_id & target);
+
+  void reverse_edges();
 
   //observateurs
   unsigned long nodes_size()const;

@@ -5,8 +5,6 @@
 int main()
 {
   Graph<> graph(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
-  Graph<> allPaths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
-  std::list<GraphTypes::Path> paths_between;
   PathFinding<> lookup;
 
   typedef Exporter<> Export;
@@ -37,12 +35,11 @@ int main()
     {
 
       //Recherche des chemins
-      allPaths = lookup.dijkstra(graph, 1);
-      paths_between = lookup.paths_to(allPaths, 6);
+      lookup.dijkstra(graph, 1);
 
       //Exports
-      Export::ToGraphviz(graph, paths_between, "test_dijkstra.graph");
-      Export::ToGraphviz(allPaths, "paths_dijkstra.graph");
+      Export::ToGraphviz(graph, lookup.paths_to(6), "test_dijkstra.graph");
+      Export::ToGraphviz(lookup.resultGraph(), "paths_dijkstra.graph");
 
 #ifdef _SYSTEM
 

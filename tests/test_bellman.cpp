@@ -30,8 +30,11 @@ int main()
 
   try
     {
-      paths_greedy = lookup.bellman(graph, 1, GraphTypes::Algorithms::GREEDY);
-      paths_dynamic = lookup.bellman(graph, 1, GraphTypes::Algorithms::DYNAMIC);
+      lookup.bellman(graph, 1, GraphTypes::Algorithms::GREEDY);
+      paths_greedy = lookup.resultGraph();
+
+      lookup.bellman(graph, 1, GraphTypes::Algorithms::DYNAMIC);
+      paths_dynamic = lookup.resultGraph();
 
       //Exports
       Export::ToGraphviz(graph, "test_bellman.graph");

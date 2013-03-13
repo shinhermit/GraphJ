@@ -8,30 +8,31 @@
 int main()
 {
   Graph<> graph(GraphTypes::UNDIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
-  std::map<GraphTypes::node_id, std::string> label_mapper;
   Graph<> min_tree(GraphTypes::UNDIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
+  GraphvizAttributesHolder config("resRoute");
 
   typedef Acm<> Acm;
   typedef Exporter<> Export;
 
-  //On ajoute les villes (noeuds)
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(1,"Artigueloutan") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(2,"Billère") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(3,"Bizanos") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(4,"Gan") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(5,"Gelos") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(6,"Idron") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(7,"Jurançon") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(8,"Lescar") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(9,"Lons") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(10,"Mazères-Lezons") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(11,"Ousse") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(12,"Pau") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(13,"Sendets") );
+  //Labels pour les villes
+  config.attributesOf(1).setLabel("Artigueloutan");
+  config.attributesOf(2).setLabel("Billère");
+  config.attributesOf(3).setLabel("Bizanos");
+  config.attributesOf(4).setLabel("Gan");
+  config.attributesOf(5).setLabel("Gelos");
+  config.attributesOf(6).setLabel("Idron");
+  config.attributesOf(7).setLabel("Jurançon");
+  config.attributesOf(8).setLabel("Lescar");
+  config.attributesOf(9).setLabel("Lons");
+  config.attributesOf(10).setLabel("Mazères-Lezons");
+  config.attributesOf(11).setLabel("Ousse");
+  config.attributesOf(12).setLabel("Pau");
+  config.attributesOf(13).setLabel("Sendets");
 
   //On ajoute maintenant les arcs
-  //La syntaxe est la suivante:
-  //graph.add_edge(noeud1, noeud2, cout en km)
+  //Tous les noeuds sont impliqués
+  //dans des relations, pas d'ajout séparé
+
   //Liaisons Artigueloutan
   graph.add_edge(1,10,12.2);
   graph.add_edge(1,11,3.1);
@@ -90,28 +91,22 @@ int main()
 
   try
     {
-      std::cout << Export::ToGraphviz(graph, label_mapper) << std::endl << std::endl;
-      // std::cout << Export::ToMathString(graph, label_mapper) << std::endl << std::endl;
 
-      Export::ToGraphviz(graph, label_mapper, "reseau_routier.graph");
+      Export::ToGraphviz(graph, config, "reseau_routier.graph");
       std::cout << "Le graphe a été exporté dans le fichier reseau_routier.graph" << std::endl << std::endl;
       std::cout << "dot -Tpng reseau_routier.graph -o reseau_routier.png" << std::endl << std::endl;
 
       min_tree = Acm::Prim(graph);
-      std::cout << "Prim:" << std::endl;
-      std::cout << Export::ToGraphviz(min_tree, label_mapper) << std::endl;
-      std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
+      std::cout << "Prim, Coût: " << min_tree.cost() << std::endl << std::endl;
 
-      Export::ToGraphviz(min_tree, label_mapper, "acm_prim.graph");
+      Export::ToGraphviz(min_tree, config, "acm_prim.graph");
       std::cout << "L'arbre a été exporté dans le fichier acm_prim.graph" << std::endl;
       std::cout << "dot -Tpng acm_prim.graph -o acm_prim.png" << std::endl << std::endl;
 
       min_tree = Acm::Kruskal(graph);
-      std::cout << "Kruskal:" << std::endl;
-      std::cout << Export::ToGraphviz(min_tree, label_mapper) << std::endl;
-      std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
+      std::cout << "Kruskal, Coût: " << min_tree.cost() << std::endl << std::endl;
 
-      Export::ToGraphviz(min_tree, label_mapper, "acm_kruskal.graph");
+      Export::ToGraphviz(min_tree, config, "acm_kruskal.graph");
       std::cout << "L'arbre a été exporté dans le fichier acm_kruskal.graph" << std::endl;
       std::cout << "dot -Tpng acm_kruskal.graph -o acm_kruskal.png" << std::endl << std::endl;
 

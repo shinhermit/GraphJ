@@ -1,52 +1,44 @@
-template <typename Type>
-XPathFinding<Type>::XPathFinding():_validity(GraphTypes::Algorithms::UNDEFINED){}
 
 template <typename Type>
-GraphTypes::Algorithms::ComputingValidity XPathFinding<Type>::_check_computing_validity(const Graph<Type> & graph,
-											const std::map<GraphTypes::node_id,GraphTypes::Cost> & distance_from_source)
+XPathFinding<Type>::XPathFinding()
+  :_resultGraph(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT)
+{}
+
+template <typename Type>
+void XPathFinding<Type>::_reset()
 {
-  typename Graph<Type>::EdgeIterator it;
-  GraphTypes::Algorithms::ComputingValidity validity;
 
-  validity = GraphTypes::Algorithms::VALID;
+  if(_distance_from_source.size() != 0)
+    _distance_from_source.clear();
 
-  for(it = graph.edges_begin(); it != graph.edges_end(); ++it)
-    {
+  if(_best_predecessors.size() != 0)
+    _best_predecessors.clear();
 
-      const GraphTypes::node_id & pred = it->source();
-      const GraphTypes::node_id & succ = it->target();
+  if(_resultGraph.nodes_size() != 0)
+    _resultGraph = Graph<>(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
 
-      const GraphTypes::Cost & min_distance = distance_from_source.find(succ)->second;
-      const GraphTypes::Cost & distance_from_pred = distance_from_source.find(pred)->second + graph.getCost(pred,succ);
-
-      if( min_distance > distance_from_pred )
-	{
-	  validity = GraphTypes::Algorithms::INVALID;
-	}
-
-    }
-
-  return validity;
+  if(_foundPaths.size() != 0)
+    _foundPaths.clear();
 }
 
 template <typename Type>
 void XPathFinding<Type>::_init(const Graph<Type> & graph,
-			       Graph<> & paths,
+			       const GraphFunctor::EdgeWeighter<Type> & getCost,
 			       const GraphTypes::node_id & sourceNode,
-			       std::list<GraphTypes::node_id> & candidates,
-			       std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source,
-			       std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors)
+			       std::list<GraphTypes::node_id> & candidates)
 {
   typename Graph<Type>::NodeIterator it;
   GraphTypes::Cost distance;
 
-  distance_from_source[sourceNode] = 0;
-  paths.add_node(sourceNode);
+  _reset();
+
+  _distance_from_source[sourceNode] = 0;
+  _resultGraph.add_node(sourceNode);
 
   for(it = graph.nodes_begin(); it != graph.nodes_end(); ++it)
     {
-      best_predecessors[*it] = std::list<GraphTypes::node_id>();
-      best_predecessors[*it].push_back(sourceNode);
+      _best_predecessors[*it] = std::list<GraphTypes::node_id>();
+      _best_predecessors[*it].push_back(sourceNode);
 
       if(*it != sourceNode)
 	{
@@ -54,7 +46,7 @@ void XPathFinding<Type>::_init(const Graph<Type> & graph,
 
 	  if( graph.has_edge(sourceNode, *it) )
 	    {
-	      distance = graph.getCost(sourceNode, *it);
+	      distance = getCost(graph, sourceNode, *it);
 	    }
 
 	  else
@@ -62,15 +54,14 @@ void XPathFinding<Type>::_init(const Graph<Type> & graph,
 	      distance = GraphTypes::Algorithms::POSITIVE_INFINITY;
 	    }
 
-	  distance_from_source[*it] = distance;
+	  _distance_from_source[*it] = distance;
 	}
 
     }
 }
 
 template <typename Type>
-std::list<GraphTypes::node_id> XPathFinding<Type>::_allClosest(const std::list<GraphTypes::node_id> & candidates,
-							       const std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source)
+std::list<GraphTypes::node_id> XPathFinding<Type>::_allClosest(const std::list<GraphTypes::node_id> & candidates)
 {
   GraphTypes::node_id closest;
   GraphTypes::Cost d_closest, new_distance;
@@ -80,14 +71,14 @@ std::list<GraphTypes::node_id> XPathFinding<Type>::_allClosest(const std::list<G
   node = candidates.begin();
 
   closest = *node;
-  d_closest = distance_from_source.find(closest)->second;
+  d_closest = _distance_from_source.find(closest)->second;
   allClosest.push_back(closest);
 
   ++node;
   while( node != candidates.end() )
     {
 
-      new_distance = distance_from_source.find(*node)->second;
+      new_distance = _distance_from_source.find(*node)->second;
 
       if( new_distance < d_closest )
 	{
@@ -112,21 +103,19 @@ std::list<GraphTypes::node_id> XPathFinding<Type>::_allClosest(const std::list<G
 
 template <typename Type>
 void XPathFinding<Type>::_add_edges(const Graph<Type> & graph,
-				    Graph<> & paths,
-				    const std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors,
+				    const GraphFunctor::EdgeWeighter<Type> & getCost,
 				    const std::list<GraphTypes::node_id> allClosest)
 {
-  std::list<GraphTypes::node_id> best_preds;
   std::list<GraphTypes::node_id>::const_iterator closest, pred;
 
   for(closest = allClosest.begin(); closest != allClosest.end(); ++closest)
     {
 
-      best_preds = best_predecessors.find(*closest)->second;
+      std::list<GraphTypes::node_id> & best_preds = _best_predecessors.find(*closest)->second;
 
       for(pred = best_preds.begin(); pred != best_preds.end(); ++pred)
 	{
-	  paths.add_edge( *pred, *closest, graph.getCost(*pred, *closest) );
+	  _resultGraph.add_edge( *pred, *closest, getCost(graph, *pred, *closest) );
 	}
 
     }
@@ -134,7 +123,7 @@ void XPathFinding<Type>::_add_edges(const Graph<Type> & graph,
 
 template <typename Type>
 void XPathFinding<Type>::_remove_nodes(std::list<GraphTypes::node_id> & candidates,
-				       const std::list<GraphTypes::node_id> allClosest)
+				       const std::list<GraphTypes::node_id> & allClosest)
 {
   std::list<GraphTypes::node_id>::const_iterator closest;
 
@@ -146,10 +135,8 @@ void XPathFinding<Type>::_remove_nodes(std::list<GraphTypes::node_id> & candidat
 
 template <typename Type>
 void XPathFinding<Type>::_update_tables(const Graph<Type> & graph,
-					const Graph<> & paths,
-					const std::list<GraphTypes::node_id> allClosest,
-					std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source,
-					std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors)
+					const GraphFunctor::EdgeWeighter<Type> & getCost,
+					const std::list<GraphTypes::node_id> allClosest)
 {
   typename Graph<Type>::NodeIterator succ;
   std::list<GraphTypes::node_id>::const_iterator closest;
@@ -161,22 +148,22 @@ void XPathFinding<Type>::_update_tables(const Graph<Type> & graph,
       for(succ = graph.successors_begin(*closest); succ != graph.successors_end(*closest); ++succ)
 	{
 
-	  if( !paths.has_node(*succ) )
+	  if( !_resultGraph.has_node(*succ) )
 	    {
-	      distance = distance_from_source[*succ];
-	      new_distance = distance_from_source[*closest] + graph.getCost(*closest, *succ);
+	      distance = _distance_from_source[*succ];
+	      new_distance = _distance_from_source[*closest] + getCost(graph, *closest, *succ);
 
 	      if(new_distance < distance)
 		{
-		  distance_from_source[*succ] = new_distance;
+		  _distance_from_source[*succ] = new_distance;
 
-		  best_predecessors[*succ].clear();
-		  best_predecessors[*succ].push_back(*closest);
+		  _best_predecessors[*succ].clear();
+		  _best_predecessors[*succ].push_back(*closest);
 		}
 
 	      else if(new_distance == distance)
 		{
-		  best_predecessors[*succ].push_back(*closest);
+		  _best_predecessors[*succ].push_back(*closest);
 		}
 
 	    }
@@ -186,14 +173,12 @@ void XPathFinding<Type>::_update_tables(const Graph<Type> & graph,
 }
 
 template <typename Type>
-Graph<> XPathFinding<Type>::Xdijkstra(const Graph<Type> & graph,
-				      const GraphTypes::node_id & sourceNode
-				      ) throw(GraphException::InvalidOperation)
+void XPathFinding<Type>::Xdijkstra(const Graph<Type> & graph,
+				   const GraphFunctor::EdgeWeighter<Type> & getCost,
+				   const GraphTypes::node_id & sourceNode
+				   ) throw(GraphException::InvalidOperation)
 {
-  std::map<GraphTypes::node_id, GraphTypes::Cost> distance_from_source;
-  std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > best_predecessors;
   std::list<GraphTypes::node_id> candidates, allClosest;
-  Graph<> paths(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
   GraphTypes::node_id closest;
   bool allInfinite;
 
@@ -204,58 +189,91 @@ Graph<> XPathFinding<Type>::Xdijkstra(const Graph<Type> & graph,
     }
 
   //initialisation des tables
-  _init(graph, paths, sourceNode, candidates, distance_from_source, best_predecessors);
+  _init(graph, getCost, sourceNode, candidates);
 
   //début de l'algorithme
   allInfinite = false;
 
-  while( paths.nodes_size() < graph.nodes_size() && !allInfinite )
+  while( _resultGraph.nodes_size() < graph.nodes_size() && !allInfinite )
     {
-      allClosest = _allClosest(candidates, distance_from_source);
+      allClosest = _allClosest(candidates);
 
       closest = *allClosest.begin();
 
-      if(distance_from_source[closest] == GraphTypes::Algorithms::POSITIVE_INFINITY)
+      if(_distance_from_source[closest] == GraphTypes::Algorithms::POSITIVE_INFINITY)
 	{
 	  allInfinite = true;
 	}
 
       else
 	{
-	  _update_tables(graph, paths, allClosest, distance_from_source, best_predecessors);
+	  _update_tables(graph, getCost, allClosest);
 
-	  _add_edges(graph, paths, best_predecessors, allClosest);
+	  _add_edges(graph, getCost, allClosest);
 
 	  _remove_nodes(candidates, allClosest);
 	}
 
     }
 
-  return paths;
+}
+
+template <typename Type>
+void XPathFinding<Type>::Xdijkstra(const Graph<Type> & graph,
+				   const GraphTypes::node_id & sourceNode
+				   ) throw(GraphException::InvalidOperation)
+{
+  GraphFunctor::DefaultEdgeWeighter<Type> getCost;
+
+  Xdijkstra(graph, getCost, sourceNode);
+}
+
+template <typename Type>
+void XPathFinding<Type>::dual_Xdijkstra(Graph<Type> & graph,
+					const GraphFunctor::EdgeWeighter<Type> & getCost,
+					const GraphTypes::node_id & targetNode
+					) throw(GraphException::InvalidOperation)
+{
+  graph.reverse_edges();
+
+  Xdijkstra(graph, getCost, targetNode);
+
+  graph.reverse_edges();
+  _resultGraph.reverse_edges();
+}
+
+template <typename Type>
+void XPathFinding<Type>::dual_Xdijkstra(Graph<Type> & graph,
+				   const GraphTypes::node_id & targetNode
+				   ) throw(GraphException::InvalidOperation)
+{
+  GraphFunctor::DefaultEdgeWeighter<Type> getCost;
+
+  dual_Xdijkstra(graph, getCost, targetNode);
 }
 
 template <typename Type>
 void XPathFinding<Type>::_init(const Graph<Type> & graph,
-			       Graph<> & paths,
 			       const GraphTypes::node_id & sourceNode,
 			       std::list<GraphTypes::node_id> & candidates,
-			       std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source,
 			       const GraphTypes::Algorithms::OptimizationType & optimizationType)
 {
   typename Graph<Type>::NodeIterator it;
   GraphTypes::Cost infinite;
 
+  _reset();
+
   infinite = (optimizationType == GraphTypes::Algorithms::MINIMIZE) ? GraphTypes::Algorithms::POSITIVE_INFINITY : GraphTypes::Algorithms::NEGATIVE_INFINITY;
 
-  distance_from_source[sourceNode] = 0;
-  paths.add_node(sourceNode);
+  _distance_from_source[sourceNode] = 0;
+  _resultGraph.add_node(sourceNode);
 
   for(it = graph.nodes_begin(); it != graph.nodes_end(); ++it)
     {
 
       if(*it != sourceNode)
 	{
-	  distance_from_source[*it] = infinite;
+	  _distance_from_source[*it] = infinite;
 
 	  candidates.push_back(*it);
 	}
@@ -265,7 +283,6 @@ void XPathFinding<Type>::_init(const Graph<Type> & graph,
 
 template <typename Type>
 std::deque<GraphTypes::node_id> XPathFinding<Type>::_coupe(const Graph<Type> & graph,
-							   const Graph<> & paths,
 							   const std::list<GraphTypes::node_id> & candidates)
 {
   typename Graph<Type>::NodeIterator pred;
@@ -288,7 +305,7 @@ std::deque<GraphTypes::node_id> XPathFinding<Type>::_coupe(const Graph<Type> & g
 	  while(pred != graph.predecessors_end(*s) && relaxable)
 	    {
 
-	      if( !paths.has_node(*pred) )
+	      if( !_resultGraph.has_node(*pred) )
 		{
 		  relaxable = false;
 		}
@@ -311,10 +328,8 @@ std::deque<GraphTypes::node_id> XPathFinding<Type>::_coupe(const Graph<Type> & g
 
 template <typename Type>
 void XPathFinding<Type>::_update_tables(const Graph<Type> & graph,
-					const Graph<> & paths,
+					const GraphFunctor::EdgeWeighter<Type> & getCost,
 					const std::deque<GraphTypes::node_id> & waiting_for_insertion,
-					std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source,
-					std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors,
 					const GraphTypes::Algorithms::OptimizationType & optimizationType)
 {
   typename Graph<Type>::NodeIterator pred;
@@ -325,16 +340,16 @@ void XPathFinding<Type>::_update_tables(const Graph<Type> & graph,
   for(s = waiting_for_insertion.begin(); s != waiting_for_insertion.end(); ++s)
     {
 
-      std::list<GraphTypes::node_id> & s_best_preds = best_predecessors[*s];
-      GraphTypes::Cost & s_distance = distance_from_source[*s];
+      std::list<GraphTypes::node_id> & s_best_preds = _best_predecessors[*s];
+      GraphTypes::Cost & s_distance = _distance_from_source[*s];
 
       for(pred = graph.predecessors_begin(*s); pred != graph.predecessors_end(*s); ++pred)
 	{
 
-	  if( paths.has_node(*pred) )
+	  if( _resultGraph.has_node(*pred) )
 	    {
 
-	      new_distance = distance_from_source[*pred] + graph.getCost(*pred, *s);
+	      new_distance = _distance_from_source[*pred] + getCost(graph, *pred, *s);
 
 	      optimal = (optimizationType == GraphTypes::Algorithms::MINIMIZE) ? (new_distance < s_distance) : (new_distance > s_distance);
 
@@ -359,9 +374,8 @@ void XPathFinding<Type>::_update_tables(const Graph<Type> & graph,
 
 template <typename Type>
 void XPathFinding<Type>::_insert_waiting_nodes(const Graph<Type> & graph,
-					       Graph<> & paths,
-					       std::deque<GraphTypes::node_id> & waiting_for_insertion,
-					       const std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors)
+					       const GraphFunctor::EdgeWeighter<Type> & getCost,
+					       std::deque<GraphTypes::node_id> & waiting_for_insertion)
 {
   std::list<GraphTypes::node_id>::const_iterator pred;
   GraphTypes::node_id s;
@@ -371,11 +385,11 @@ void XPathFinding<Type>::_insert_waiting_nodes(const Graph<Type> & graph,
 
       s  = waiting_for_insertion.front();
 
-      const std::list<GraphTypes::node_id> & predecessors = best_predecessors.find(s)->second;
+      const std::list<GraphTypes::node_id> & predecessors = _best_predecessors.find(s)->second;
 
       for(pred = predecessors.begin(); pred != predecessors.end(); ++pred)
 	{
-	  paths.add_edge( *pred, s, graph.getCost(*pred, s) );
+	  _resultGraph.add_edge( *pred, s, getCost(graph, *pred, s) );
 	}
 
       waiting_for_insertion.pop_front();
@@ -396,57 +410,54 @@ void XPathFinding<Type>::_remove_nodes(std::list<GraphTypes::node_id> & candidat
 }
 
 template <typename Type>
-Graph<> XPathFinding<Type>::_greedy_bellman(const Graph<Type> & graph,
-					    const GraphTypes::node_id & sourceNode,
-					    const GraphTypes::Algorithms::OptimizationType & optimizationType)
+void XPathFinding<Type>::_greedy_bellman(const Graph<Type> & graph,
+					 const GraphFunctor::EdgeWeighter<Type> & getCost,
+					 const GraphTypes::node_id & sourceNode,
+					 const GraphTypes::Algorithms::OptimizationType & optimizationType)
 {
-  Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
-  std::map<GraphTypes::node_id, GraphTypes::Cost> distance_from_source;
-  std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > best_predecessors;
   std::list<GraphTypes::node_id> candidates;
   std::deque<GraphTypes::node_id> waiting_for_insertion;
 
-  _init(graph, paths, sourceNode, candidates, distance_from_source, optimizationType);
+  _init(graph, sourceNode, candidates, optimizationType);
 
-  waiting_for_insertion = _coupe(graph, paths, candidates);
+  waiting_for_insertion = _coupe(graph, candidates);
 
   while( waiting_for_insertion.size() > 0 )
     {
 
-      _update_tables(graph, paths, waiting_for_insertion, distance_from_source, best_predecessors, optimizationType);
+      _update_tables(graph, getCost, waiting_for_insertion, optimizationType);
 
       _remove_nodes(candidates, waiting_for_insertion);
 
-      _insert_waiting_nodes(graph, paths, waiting_for_insertion, best_predecessors);
+      _insert_waiting_nodes(graph, getCost, waiting_for_insertion);
 
-      waiting_for_insertion = _coupe(graph, paths, candidates);
+      waiting_for_insertion = _coupe(graph, candidates);
 
     }
 
-  return paths;
 }
 
 template <typename Type>
 void XPathFinding<Type>::_init(const Graph<Type> & graph,
-			       Graph<> & paths,
 			       const GraphTypes::node_id & sourceNode,
-			       std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source,
 			       const GraphTypes::Algorithms::OptimizationType & optimizationType)
 {
   typename Graph<Type>::NodeIterator node;
   GraphTypes::Cost infinite;
 
+  _reset();
+
   infinite = (optimizationType == GraphTypes::Algorithms::MINIMIZE) ? GraphTypes::Algorithms::POSITIVE_INFINITY : GraphTypes::Algorithms::NEGATIVE_INFINITY;
 
-  distance_from_source[sourceNode] = 0;
-  paths.add_node(sourceNode);
+  _distance_from_source[sourceNode] = 0;
+  _resultGraph.add_node(sourceNode);
 
   for(node = graph.nodes_begin(); node != graph.nodes_end(); ++node)
     {
 
       if(*node != sourceNode)
 	{
-	  distance_from_source[*node] = infinite;
+	  _distance_from_source[*node] = infinite;
 	}
 
     }
@@ -454,8 +465,7 @@ void XPathFinding<Type>::_init(const Graph<Type> & graph,
 
 template <typename Type>
 void XPathFinding<Type>::_update_tables(const Graph<Type> & graph,
-					std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source,
-					std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors,
+					const GraphFunctor::EdgeWeighter<Type> & getCost,
 					const GraphTypes::Algorithms::OptimizationType & optimizationType)
 {
   typename Graph<Type>::EdgeIterator it;
@@ -468,10 +478,10 @@ void XPathFinding<Type>::_update_tables(const Graph<Type> & graph,
       pred = it->source();
       succ = it->target();
 
-      GraphTypes::Cost & distance = distance_from_source[succ];
-      std::list<GraphTypes::node_id> & pred_list = best_predecessors[succ];
+      GraphTypes::Cost & distance = _distance_from_source[succ];
+      std::list<GraphTypes::node_id> & pred_list = _best_predecessors[succ];
 
-      new_distance = distance_from_source[pred] + graph.getCost(pred,succ);
+      new_distance = _distance_from_source[pred] + getCost(graph, pred,succ);
 
 
       optimal = (optimizationType == GraphTypes::Algorithms::MINIMIZE) ? (new_distance < distance) : (new_distance > distance);
@@ -493,16 +503,14 @@ void XPathFinding<Type>::_update_tables(const Graph<Type> & graph,
 }
 
 template <typename Type>
-void XPathFinding<Type>::_build_paths_graph(const Graph<Type> & graph,
-					    Graph<> & paths,
-					    const GraphTypes::node_id & sourceNode,
-					    const std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source,
-					    const std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > & best_predecessors)
+void XPathFinding<Type>::_build_result_graph(const Graph<Type> & graph,
+					     const GraphFunctor::EdgeWeighter<Type> & getCost,
+					     const GraphTypes::node_id & sourceNode)
 {
   std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> >::const_iterator it;
   std::list<GraphTypes::node_id>::const_iterator pred;
 
-  for(it = best_predecessors.begin(); it != best_predecessors.end(); ++it)
+  for(it = _best_predecessors.begin(); it != _best_predecessors.end(); ++it)
     {
       const GraphTypes::node_id & succ = it->first;
       const std::list<GraphTypes::node_id> & pred_list = it->second;
@@ -512,7 +520,7 @@ void XPathFinding<Type>::_build_paths_graph(const Graph<Type> & graph,
 
 	  if(succ != sourceNode)
 	    {
-	      paths.add_edge( *pred, succ, graph.getCost(*pred, succ) );
+	      _resultGraph.add_edge( *pred, succ, getCost(graph, *pred, succ) );
 	    }
 
 	}
@@ -521,89 +529,122 @@ void XPathFinding<Type>::_build_paths_graph(const Graph<Type> & graph,
 }
 
 template <typename Type>
-Graph<> XPathFinding<Type>::_dynamic_bellman(const Graph<Type> & graph,
-					     const GraphTypes::node_id & sourceNode,
-					     const GraphTypes::Algorithms::OptimizationType & optimizationType)
+void XPathFinding<Type>::_dynamic_bellman(const Graph<Type> & graph,
+					  const GraphFunctor::EdgeWeighter<Type> & getCost,
+					  const GraphTypes::node_id & sourceNode,
+					  const GraphTypes::Algorithms::OptimizationType & optimizationType)
 {
-  Graph<> paths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
-  std::map<GraphTypes::node_id, GraphTypes::Cost> distance_from_source;
-  std::map<GraphTypes::node_id, std::list<GraphTypes::node_id> > best_predecessors;
-  std::pair<Graph<Type>, bool> result;
   int i, size;
 
-  _init(graph, paths, sourceNode, distance_from_source, optimizationType);
+  _init(graph, sourceNode, optimizationType);
 
   size = graph.nodes_size();
 
   for(i=0; i < size; ++i)
     {
-      _update_tables(graph, distance_from_source, best_predecessors, optimizationType);
+      _update_tables(graph, getCost, optimizationType);
     }
 
-  _build_paths_graph(graph, paths, sourceNode, distance_from_source, best_predecessors);
+  _build_result_graph(graph, getCost, sourceNode);
 
-  _validity = _check_computing_validity(graph, distance_from_source);
-
-  return paths;
 }
 
 template <typename Type>
-Graph<> XPathFinding<Type>::Xbellman(const Graph<Type> & graph,
-				     const GraphTypes::node_id & sourceNode,
-				     const GraphTypes::Algorithms::AlgorithmicClass & algoClass,
-				     const GraphTypes::Algorithms::OptimizationType & optimizationType
-				     ) throw(GraphException::InvalidOperation)
+void XPathFinding<Type>::Xbellman(const Graph<Type> & graph,
+				  const GraphFunctor::EdgeWeighter<Type> & getCost,
+				  const GraphTypes::node_id & sourceNode,
+				  const GraphTypes::Algorithms::AlgorithmicClass & algoClass,
+				  const GraphTypes::Algorithms::OptimizationType & optimizationType
+				  ) throw(GraphException::InvalidOperation)
 {
 
-  if( !graph.is_directed() || !graph.is_weighted() )
+  if( !graph.is_directed() )
     {
-      throw GraphException::InvalidOperation("This implemention of Bellman's algorithm has been designed for directed weighted graphs", __LINE__, __FILE__, "XPathFinding<Type>::Xbellman(const Graph<Type>&,const GraphTypes::node_id&,const GraphTypes::Algorithms::AlgorithmicClass&,const GraphTypes::Algorithms::OptimizationType&)");
+      throw GraphException::InvalidOperation("This implemention of Bellman's algorithm has been designed for directed graphs", __LINE__, __FILE__, "XPathFinding<Type>::Xbellman(const Graph<Type>&,const GraphTypes::node_id&,const GraphTypes::Algorithms::AlgorithmicClass&,const GraphTypes::Algorithms::OptimizationType&)");
     }
 
   if(algoClass == GraphTypes::Algorithms::DYNAMIC)
     {
-      return _dynamic_bellman(graph, sourceNode, optimizationType);
+      return _dynamic_bellman(graph, getCost, sourceNode, optimizationType);
     }
 
   else
     {
-      return _greedy_bellman(graph, sourceNode, optimizationType);
+      return _greedy_bellman(graph, getCost, sourceNode, optimizationType);
     }
 
 }
 
 template <typename Type>
-std::list<GraphTypes::Path> XPathFinding<Type>::paths_to(const Graph<> & allPaths,
-							 const GraphTypes::node_id & target
-							 ) throw(GraphException::InvalidOperation)
+void XPathFinding<Type>::Xbellman(const Graph<Type> & graph,
+				  const GraphTypes::node_id & sourceNode,
+				  const GraphTypes::Algorithms::AlgorithmicClass & algoClass,
+				  const GraphTypes::Algorithms::OptimizationType & optimizationType
+				  ) throw(GraphException::InvalidOperation)
+{
+  GraphFunctor::DefaultEdgeWeighter<Type> getCost;
+
+  Xbellman(graph, getCost, sourceNode, algoClass, optimizationType);
+}
+
+template <typename Type>
+void XPathFinding<Type>::dual_Xbellman(Graph<Type> & graph,
+				       const GraphFunctor::EdgeWeighter<Type> & getCost,
+				       const GraphTypes::node_id & targetNode,
+				       const GraphTypes::Algorithms::AlgorithmicClass & algoClass,
+				       const GraphTypes::Algorithms::OptimizationType & optimizationType
+				       ) throw(GraphException::InvalidOperation)
+{
+  graph.reverse_edges();
+
+  Xbellman(graph, getCost, targetNode, algoClass, optimizationType);
+
+  graph.reverse_edges();
+  _resultGraph.reverse_edges();
+}
+
+template <typename Type>
+void XPathFinding<Type>::dual_Xbellman(Graph<Type> & graph,
+				  const GraphTypes::node_id & sourceNode,
+				  const GraphTypes::Algorithms::AlgorithmicClass & algoClass,
+				  const GraphTypes::Algorithms::OptimizationType & optimizationType
+				  ) throw(GraphException::InvalidOperation)
+{
+  GraphFunctor::DefaultEdgeWeighter<Type> getCost;
+
+  dual_Xbellman(graph, getCost, sourceNode, algoClass, optimizationType);
+}
+
+template <typename Type>
+std::list<GraphTypes::Path> XPathFinding<Type>::_paths_to(const GraphTypes::node_id & target)
 {
   typename Graph<Type>::NodeIterator pred;
-  std::list<GraphTypes::Path> paths, until_pred;
+  std::list<GraphTypes::Path> foundPaths, until_pred;
   std::list<GraphTypes::Path>::iterator onePath;
 
-  if( !allPaths.is_directed() )
+  if( !_resultGraph.is_directed() )
     {
       throw GraphException::InvalidOperation("This method is designed for directed graphs.", __LINE__, __FILE__, "PathFinding<Type>::Xpaths_to(const Graph<>&,const GraphTypes::node_id&");
     }
 
-  if( allPaths.has_node(target) )
+  if( _resultGraph.has_node(target) )
     {
 
-      pred = allPaths.predecessors_begin(target);
+      pred = _resultGraph.predecessors_begin(target);
 
-      while(pred != allPaths.predecessors_end(target) )
+      while(pred != _resultGraph.predecessors_end(target) )
 	{
-	  until_pred = paths_to(allPaths, *pred);
+	  until_pred = paths_to(*pred);
 
-	  paths.insert(paths.begin(), until_pred.begin(), until_pred.end() );
+	  foundPaths.insert(foundPaths.begin(), until_pred.begin(), until_pred.end() );
 
 	  ++pred;
 	}
 
-      if( paths.size() > 0 )
+      if( foundPaths.size() > 0 )
 	{
 
-	  for(onePath = paths.begin(); onePath != paths.end(); ++onePath)
+	  for(onePath = foundPaths.begin(); onePath != foundPaths.end(); ++onePath)
 	    {
 	      onePath->push_back(target);
 	    }
@@ -612,29 +653,70 @@ std::list<GraphTypes::Path> XPathFinding<Type>::paths_to(const Graph<> & allPath
       else
 	{
 
-	  paths.push_back( std::list<GraphTypes::node_id>() );
+	  foundPaths.push_back( std::list<GraphTypes::node_id>() );
 
-	  onePath = paths.begin();
+	  onePath = foundPaths.begin();
 	  onePath->push_back(target);
 	}
 
     }
 
-  return paths;
+  return foundPaths;
 }
 
 template <typename Type>
-std::list<GraphTypes::Path> XPathFinding<Type>::Xbetween(const Graph<Type> & graph,
-							 const GraphTypes::node_id & source,
-							 const GraphTypes::node_id & target,
-							 const GraphTypes::Algorithms::SearchAlgorithm & algo
-							 ) throw(GraphException::InvalidOperation)
+const std::list<GraphTypes::Path> & XPathFinding<Type>::paths_to(const GraphTypes::node_id & target) throw(GraphException::InvalidOperation)
 {
+  _foundPaths = _paths_to(target);
 
-  Graph<> allPaths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
+  return _foundPaths;
+}
 
-  allPaths = (algo == GraphTypes::Algorithms::DIJKSTRA) ? Xdijkstra(graph, source) : Xbellman(graph, source);
+template <typename Type>
+const std::list<GraphTypes::Path> & XPathFinding<Type>::Xbetween(const Graph<Type> & graph,
+								 const GraphFunctor::EdgeWeighter<Type> & getCost,
+								 const GraphTypes::node_id & source,
+								 const GraphTypes::node_id & target,
+								 const GraphTypes::Algorithms::SearchAlgorithm & algo
+								 ) throw(GraphException::InvalidOperation)
+{
+  (algo == GraphTypes::Algorithms::DIJKSTRA) ? dijkstra(graph, getCost, source) : bellman(graph, getCost, source);
+  
+  return paths_to(target);
+}
 
-  return paths_to(allPaths, target);
+template <typename Type>
+const std::list<GraphTypes::Path> & XPathFinding<Type>::Xbetween(const Graph<Type> & graph,
+								 const GraphTypes::node_id & source,
+								 const GraphTypes::node_id & target,
+								 const GraphTypes::Algorithms::SearchAlgorithm & algo
+								 ) throw(GraphException::InvalidOperation)
+{
+  GraphFunctor::DefaultEdgeWeighter<Type> getCost;
 
+  return Xbetween(graph, source, target, algo);
+}
+
+template <typename Type>
+const std::map<GraphTypes::node_id, GraphTypes::Cost> & XPathFinding<Type>::distances()const
+{
+  return _distance_from_source;
+}
+
+template <typename Type>
+const std::map<GraphTypes::node_id, GraphTypes::node_id> & XPathFinding<Type>::predecessors()const
+{
+  return _best_predecessors;
+}
+
+template <typename Type>
+const Graph<Type> & XPathFinding<Type>::resultGraph()const
+{
+  return _resultGraph;
+}
+
+template <typename Type>
+const std::list<GraphTypes::Path> & XPathFinding<Type>::foundPaths()const
+{
+  return _foundPaths;
 }

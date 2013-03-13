@@ -32,25 +32,19 @@ int main()
 
   try
     {
-      std::cout << Export::ToMathString(graph) << std::endl << std::endl;
-      std::cout << Export::ToGraphviz(graph) << std::endl << std::endl;
-      std::cout << "Coût: " << graph.cost() << std::endl << std::endl;
+      std::cout << "Coût graph initial: " << graph.cost() << std::endl << std::endl;
 
       Export::ToGraphviz(graph, "graph_res_route.graph");
       std::cout << "Le graph a été exporté dans le fichier graph_res_route.graph" << std::endl << std::endl;
 
       min_tree = Acm::Prim(graph);
-      std::cout << "Prim:" << std::endl;
-      std::cout << Export::ToGraphviz(min_tree) << std::endl;
-      std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
+      std::cout << "Prim, Coût:" << min_tree.cost() << std::endl << std::endl;
 
       Export::ToGraphviz(min_tree, "acm_prim.graph");
       std::cout << "L'arbre couvrant a été exporté dans le fichier acm_prim.graph" << std::endl << std::endl;
 
       min_tree = Acm::Kruskal(graph);
-      std::cout << "Kruskal:" << std::endl;
-      std::cout << Export::ToGraphviz(min_tree) << std::endl;
-      std::cout << "Coût: " << min_tree.cost() << std::endl << std::endl;
+      std::cout << "Kruskal, Coût: " << min_tree.cost() << std::endl << std::endl;
 
       Export::ToGraphviz(min_tree, "acm_kruskal.graph");
       std::cout << "L'arbre couvrant a été exporté dans le fichier acm_kruskal.graph" << std::endl << std::endl;

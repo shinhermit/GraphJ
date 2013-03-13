@@ -21,7 +21,7 @@ int main()
       assert("graph.setCost(209, 3, -1)" == "echec");
     }
 
-  catch(const GraphException::InvalidEdgeException & e){}
+  catch(const GraphException::InvalidEdge & e){}
   
   // Les prédicats
   assert( graph.is_weighted() );
@@ -35,7 +35,7 @@ int main()
     assert("graph.getCost(2,3)" == "echec");
   }
 
-  catch(const GraphException::InvalidEdgeException & e){}
+  catch(const GraphException::InvalidEdge & e){}
 
 
   try
@@ -44,7 +44,7 @@ int main()
     assert("graph.getCost( Edge(2,3) )" == "echec");
   }
 
-  catch(const GraphException::InvalidEdgeException & e){}
+  catch(const GraphException::InvalidEdge & e){}
 
   assert( graph.cost() == 0 );
 
@@ -97,14 +97,14 @@ int main()
     graph.getCost(1,5);
   }
 
-  catch(const GraphException::InvalidEdgeException & e){}
+  catch(const GraphException::InvalidEdge & e){}
 
   try
     {
     graph.getCost(5,2);
   }
 
-  catch(const GraphException::InvalidEdgeException & e){}
+  catch(const GraphException::InvalidEdge & e){}
 
   assert( graph.cost() == 6 );
 
@@ -120,14 +120,14 @@ int main()
     graph.getCost(2,3);
   }
 
-  catch(const GraphException::InvalidEdgeException & e){}
+  catch(const GraphException::InvalidEdge & e){}
 
   try
     {
     graph.getCost(5,2);
   }
 
-  catch(const GraphException::InvalidEdgeException & e){}
+  catch(const GraphException::InvalidEdge & e){}
 
   assert( graph.cost() == 4 );
 
@@ -143,7 +143,7 @@ int main()
     graph.getCost(2,3);
   }
 
-  catch(const GraphException::InvalidEdgeException & e){}
+  catch(const GraphException::InvalidEdge & e){}
 
   assert( graph.cost() == 2 );
 

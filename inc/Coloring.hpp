@@ -16,12 +16,15 @@ private:
 				     std::list<GraphTypes::node_id> & candidates);
 
   static void _colorize_remove_compatibles(std::list<GraphTypes::node_id> & candidates,
-				    std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper,
-				    const NamedColor::ColorName & color,
+				    std::map<GraphTypes::node_id, GraphTypes::NamedColor::E_NamedColor> & color_mapper,
+				    const GraphTypes::NamedColor::E_NamedColor & color,
 				    std::vector<GraphTypes::node_id> & sorted_nodes);
 
 public:
-  static std::map<GraphTypes::node_id, NamedColor::ColorName> Welsh(const Graph<Type> & graph);
+  static void Welsh(const Graph<Type> & graph,
+		    std::map<GraphTypes::node_id, GraphTypes::NamedColor::E_NamedColor> & color_mapper);
+  
+  static std::map<GraphTypes::node_id, GraphTypes::NamedColor::E_NamedColor> Welsh(const Graph<Type> & graph);
 };
 
 #include "Coloring.cpp"

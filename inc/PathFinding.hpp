@@ -5,110 +5,151 @@
 #include <deque>
 #include "Graph.hpp"
 #include "Traverse.hpp"
+#include "GraphFunctor.hpp"
 
 template <typename Type=GraphTypes::Default>
 class PathFinding
 {
 private:
-  GraphTypes::Algorithms::ComputingValidity _validity;
+  std::map<GraphTypes::node_id, GraphTypes::Cost> _distance_from_source;
 
-  GraphTypes::Algorithms::ComputingValidity _check_computing_validity(const Graph<Type> & graph,
-								      const std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source);
+  std::map<GraphTypes::node_id, GraphTypes::node_id> _best_predecessor;
+  
+  Graph<Type> _resultGraph;
+
+  std::list<GraphTypes::Path> _foundPaths;
+
+  void _reset();
 
   //DIJKSTRA
   void _init(const Graph<Type> & graph,
-	     Graph<> & paths,
+	     const GraphFunctor::EdgeWeighter<Type> & getCost,
 	     const GraphTypes::node_id & sourceNode,
-	     std::list<GraphTypes::node_id> & candidates,
-	     std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source,
-	     std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor);
+	     std::list<GraphTypes::node_id> & candidates);
 
-  const GraphTypes::node_id & _closest(const std::list<GraphTypes::node_id> & candidates,
-				       const std::map<GraphTypes::node_id,GraphTypes::Cost> & distance_from_source);
+  const GraphTypes::node_id & _closest(const std::list<GraphTypes::node_id> & candidates);
 
   void _update_tables(const Graph<Type> & graph,
-		      const Graph<> & paths,
-		      const GraphTypes::node_id & closest,
-		      std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source,
-		      std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor);
+		      const GraphFunctor::EdgeWeighter<Type> & getCost,
+		      const GraphTypes::node_id & closest);
 
   //BELLMAN GREEDY
   void _init(const Graph<Type> & graph,
-	     Graph<> & paths,
 	     const GraphTypes::node_id & sourceNode,
 	     std::list<GraphTypes::node_id> & candidates,
-	     std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source,
 	     const GraphTypes::Algorithms::OptimizationType & optimizationType=GraphTypes::Algorithms::MINIMIZE);
 
   std::deque<GraphTypes::node_id> _coupe(const Graph<Type> & graph,
-					 const Graph<> & paths,
 					 const std::list<GraphTypes::node_id> & candidates);
 
   void _update_tables(const Graph<Type> & graph,
-		      const Graph<> & paths,
+		      const GraphFunctor::EdgeWeighter<Type> & getCost,
 		      const std::deque<GraphTypes::node_id> & waiting_for_insertion,
-		      std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source,
-		      std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor,
 		      const GraphTypes::Algorithms::OptimizationType & optimizationType=GraphTypes::Algorithms::MINIMIZE);
 
   void _insert_waiting_nodes(const Graph<Type> & graph,
-			     Graph<> & paths,
-			     std::deque<GraphTypes::node_id> & waiting_for_insertion,
-			     const std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor);
+			     const GraphFunctor::EdgeWeighter<Type> & getCost,
+			     std::deque<GraphTypes::node_id> & waiting_for_insertion);
 
   void _remove_nodes(std::list<GraphTypes::node_id> & candidates,
 		     const std::deque<GraphTypes::node_id> & waiting_for_insertion);
 
-  Graph<> _greedy_bellman(const Graph<Type> & graph,
-			  const GraphTypes::node_id & sourceNode,
-			  const GraphTypes::Algorithms::OptimizationType & optimizationType=GraphTypes::Algorithms::MINIMIZE);
+  void _greedy_bellman(const Graph<Type> & graph,
+		       const GraphFunctor::EdgeWeighter<Type> & getCost,
+		       const GraphTypes::node_id & sourceNode,
+		       const GraphTypes::Algorithms::OptimizationType & optimizationType=GraphTypes::Algorithms::MINIMIZE);
 
   //BELLMAN DYNAMIC
   void _init(const Graph<Type> & graph,
-	     Graph<> & paths,
 	     const GraphTypes::node_id & sourceNode,
-	     std::map<GraphTypes::node_id,GraphTypes::Cost> & distance_from_source,
 	     const GraphTypes::Algorithms::OptimizationType & optimizationType=GraphTypes::Algorithms::MINIMIZE);
 
   void _update_tables(const Graph<Type> & graph,
-		      std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source,
-		      std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor,
+		      const GraphFunctor::EdgeWeighter<Type> & getCost,
 		      const GraphTypes::Algorithms::OptimizationType & optimizationType=GraphTypes::Algorithms::MINIMIZE);
 
-  void _build_paths_graph(const Graph<Type> & graph,
-			  Graph<> & paths,
-			  const GraphTypes::node_id & sourceNode,
-			  const std::map<GraphTypes::node_id, GraphTypes::Cost> & distance_from_source,
-			  const std::map<GraphTypes::node_id, GraphTypes::node_id> & best_predecessor);
+  void _build_result_graph(const Graph<Type> & graph,
+			   const GraphFunctor::EdgeWeighter<Type> & getCost,
+			   const GraphTypes::node_id & sourceNode);
 
-  Graph<> _dynamic_bellman(const Graph<Type> & graph,
-			   const GraphTypes::node_id & sourceNode,
-			   const GraphTypes::Algorithms::OptimizationType & optimizationType=GraphTypes::Algorithms::MINIMIZE);
+  void _dynamic_bellman(const Graph<Type> & graph,
+			const GraphFunctor::EdgeWeighter<Type> & getCost,
+			const GraphTypes::node_id & sourceNode,
+			const GraphTypes::Algorithms::OptimizationType & optimizationType=GraphTypes::Algorithms::MINIMIZE);
+
+  //particular paths
+  std::list<GraphTypes::Path> _paths_to(const GraphTypes::node_id & target);
 
 public:
   PathFinding();
 
-  Graph<> dijkstra(const Graph<Type> & graph,
-		   const GraphTypes::node_id & sourceNode
-		   ) throw(GraphException::InvalidOperation);
+  void dijkstra(const Graph<Type> & graph,
+		const GraphFunctor::EdgeWeighter<Type> & getCost,
+		const GraphTypes::node_id & sourceNode
+		) throw(GraphException::InvalidOperation);
 
-  Graph<> bellman(const Graph<Type> & graph,
-		  const GraphTypes::node_id & sourceNode,
-		  const GraphTypes::Algorithms::AlgorithmicClass & algoClass=GraphTypes::Algorithms::DYNAMIC,
-		  const GraphTypes::Algorithms::OptimizationType & optimizationType=GraphTypes::Algorithms::MINIMIZE
-		  ) throw(GraphException::InvalidOperation);
+  void dijkstra(const Graph<Type> & graph,
+		const GraphTypes::node_id & sourceNode
+		) throw(GraphException::InvalidOperation);
 
-  std::list<GraphTypes::Path> paths_to(const Graph<> & allPaths,
-				       const GraphTypes::node_id & target
-				       ) throw(GraphException::InvalidOperation);
+  void dual_dijkstra(Graph<Type> & graph,
+		     const GraphFunctor::EdgeWeighter<Type> & getCost,
+		     const GraphTypes::node_id & targetNode
+		     ) throw(GraphException::InvalidOperation);
 
-  std::list<GraphTypes::Path> between(const Graph<Type> & graph,
-				      const GraphTypes::node_id & source,
-				      const GraphTypes::node_id & target,
-				      const GraphTypes::Algorithms::SearchAlgorithm & algo=GraphTypes::Algorithms::DIJKSTRA
-				      )throw(GraphException::InvalidOperation);
+  void dual_dijkstra(Graph<Type> & graph,
+		     const GraphTypes::node_id & targetNode
+		     ) throw(GraphException::InvalidOperation);
 
-  const GraphTypes::Algorithms::ComputingValidity & validity()const;
+  void bellman(const Graph<Type> & graph,
+	       const GraphFunctor::EdgeWeighter<Type> & getCost,
+	       const GraphTypes::node_id & sourceNode,
+	       const GraphTypes::Algorithms::AlgorithmicClass & algoClass=GraphTypes::Algorithms::DYNAMIC,
+	       const GraphTypes::Algorithms::OptimizationType & optimizationType=GraphTypes::Algorithms::MINIMIZE
+	       ) throw(GraphException::InvalidOperation);
+
+  void bellman(const Graph<Type> & graph,
+	       const GraphTypes::node_id & sourceNode,
+	       const GraphTypes::Algorithms::AlgorithmicClass & algoClass=GraphTypes::Algorithms::DYNAMIC,
+	       const GraphTypes::Algorithms::OptimizationType & optimizationType=GraphTypes::Algorithms::MINIMIZE
+	       ) throw(GraphException::InvalidOperation);
+
+  void dual_bellman(Graph<Type> & graph,
+		    const GraphFunctor::EdgeWeighter<Type> & getCost,
+		    const GraphTypes::node_id & targetNode,
+		    const GraphTypes::Algorithms::AlgorithmicClass & algoClass=GraphTypes::Algorithms::DYNAMIC,
+		    const GraphTypes::Algorithms::OptimizationType & optimizationType=GraphTypes::Algorithms::MINIMIZE
+		    ) throw(GraphException::InvalidOperation);
+
+  void dual_bellman(Graph<Type> & graph,
+		    const GraphTypes::node_id & targetNode,
+		    const GraphTypes::Algorithms::AlgorithmicClass & algoClass=GraphTypes::Algorithms::DYNAMIC,
+		    const GraphTypes::Algorithms::OptimizationType & optimizationType=GraphTypes::Algorithms::MINIMIZE
+		    ) throw(GraphException::InvalidOperation);
+
+  const std::list<GraphTypes::Path> & paths_to(const GraphTypes::node_id & target);
+
+  const std::list<GraphTypes::Path> & between(const Graph<Type> & graph,
+					      const GraphFunctor::EdgeWeighter<Type> & getCost,
+					      const GraphTypes::node_id & source,
+					      const GraphTypes::node_id & target,
+					      const GraphTypes::Algorithms::SearchAlgorithm & algo=GraphTypes::Algorithms::DIJKSTRA
+					      )throw(GraphException::InvalidOperation);
+
+  const std::list<GraphTypes::Path> & between(const Graph<Type> & graph,
+					      const GraphTypes::node_id & source,
+					      const GraphTypes::node_id & target,
+					      const GraphTypes::Algorithms::SearchAlgorithm & algo=GraphTypes::Algorithms::DIJKSTRA
+					      )throw(GraphException::InvalidOperation);
+
+  const std::map<GraphTypes::node_id, GraphTypes::Cost> & distances()const;
+
+  const std::map<GraphTypes::node_id, GraphTypes::node_id> & predecessors()const;
+
+  const Graph<Type> & resultGraph()const;
+
+  const std::list<GraphTypes::Path> & foundPaths()const;
+
 };
 
 #include "PathFinding.cpp"

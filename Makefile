@@ -13,9 +13,6 @@ cmd_exe = cd $(tst); make $@
 
 #Les classes
 
-GraphTypes:
-	$(cmd_src)
-
 Node:
 	$(cmd_src)
 
@@ -58,6 +55,15 @@ PonderableGraph:
 NamedColor:
 	$(cmd_src)
 
+ColorIntensity:
+	$(cmd_src)
+
+Color:
+	$(cmd_src)
+
+ColorIncrementor:
+	$(cmd_src)
+
 Visitor:
 	$(cmd_src)
 
@@ -67,12 +73,36 @@ ColorizingVisitor:
 TricolorBuilderVisitor:
 	$(cmd_src)
 
-all_classes: GraphTypes Node WeightedNode Edge WeightedEdge BasicGraphException InvalidNodeID InvalidEdge InvalidOperation TopologyIterator DoubleNodeSetIterator BaseGraph DirectableGraph PonderableGraph NamedColor ColorizingVisitor Visitor TricolorBuilderVisitor
+ShapeAttribute:
+	$(cmd_src)
+
+StyleAttribute:
+	$(cmd_src)
+
+GraphvizAttributes:
+	$(cmd_src)
+
+GraphvizAttributesHolder:
+	$(cmd_src)
+
+PlanningActivity:
+	$(cmd_src)
+
+MpmTask:
+	$(cmd_src)
+
+MpmEdgeWeighter:
+	$(cmd_src)
+
+MpmNetworkBuilder:
+	$(cmd_src)
+
+all_classes: Node WeightedNode Edge WeightedEdge BasicGraphException InvalidNodeID InvalidEdge InvalidOperation TopologyIterator DoubleNodeSetIterator BaseGraph DirectableGraph PonderableGraph NamedColor ColorIntensity Color ColorizingVisitor ShapeAttribute StyleAttribute GraphvizAttributes GraphvizAttributesHolder Visitor TricolorBuilderVisitor PlanningActivity MpmTask MpmNetworkBuilder
 
 
 #les validations
 
-validation_dependencies:  BaseGraph DirectableGraph PonderableGraph Edge GraphTypes BasicGraphException InvalidNodeID  InvalidEdge InvalidOperation TopologyIterator DoubleNodeSetIterator
+validation_dependencies: BaseGraph DirectableGraph PonderableGraph Edge BasicGraphException InvalidNodeID  InvalidEdge InvalidOperation TopologyIterator DoubleNodeSetIterator
 
 BaseGraph_validation: validation_dependencies
 	$(cmd_exe)
@@ -84,6 +114,9 @@ PonderableGraph_validation: validation_dependencies
 	$(cmd_exe)
 
 Graph_validation: validation_dependencies
+	$(cmd_exe)
+
+CanonicalNetwork_validation: validation_dependencies
 	$(cmd_exe)
 
 #les tests
@@ -115,6 +148,12 @@ test_Xbellman: all_classes
 test_weights_transformations: all_classes
 	$(cmd_exe)
 
+test_preceedence_table: all_classes
+	$(cmd_exe)
+
+test_network_builder: all_classes
+	$(cmd_exe)
+
 reseau_routier: all_classes
 	$(cmd_exe)
 
@@ -127,7 +166,7 @@ gps: all_classes
 gps_multichemin: all_classes
 	$(cmd_exe)
 
-all_tests: test_directed test_acm test_coloring test_dijkstra test_dijkstra_maximize test_bellman test_Xdijkstra test_Xbellman test_weights_transformations
+all_tests: test_directed test_acm test_coloring test_dijkstra test_dijkstra_maximize test_bellman test_Xdijkstra test_Xbellman test_weights_transformations test_preceedence_table
 
 all_examples: reseau_routier feux_tricolores gps gps_multichemin
 

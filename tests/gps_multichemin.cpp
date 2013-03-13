@@ -8,7 +8,7 @@
 
 int main(){
   Graph<> graph(GraphTypes::UNDIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
-  std::map<GraphTypes::node_id, std::string> label_mapper;
+  GraphvizAttributesHolder config;
   Graph<> allPaths_dijkstra( GraphTypes::DIRECTED, graph.edgeState(), GraphTypes::NOCONTENT);
   Graph<> allPaths_bellman( GraphTypes::DIRECTED, graph.edgeState(), GraphTypes::NOCONTENT);
   std::list<GraphTypes::Path> dijkstra_between, bellman_between;
@@ -19,19 +19,19 @@ int main(){
   typedef Exporter<> Export;
 
   //On ajoute les villes (noeuds)
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(1,"Artigueloutan") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(2,"Billère") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(3,"Bizanos") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(4,"Gan") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(5,"Gelos") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(6,"Idron") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(7,"Jurançon") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(8,"Lescar") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(9,"Lons") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(10,"Mazères-Lezons") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(11,"Ousse") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(12,"Pau") );
-  label_mapper.insert( std::pair<GraphTypes::node_id, std::string>(13,"Sendets") );
+  config.attributesOf(1).setLabel("Artigueloutan");
+  config.attributesOf(2).setLabel("Billère");
+  config.attributesOf(3).setLabel("Bizanos");
+  config.attributesOf(4).setLabel("Gan");
+  config.attributesOf(5).setLabel("Gelos");
+  config.attributesOf(6).setLabel("Idron");
+  config.attributesOf(7).setLabel("Jurançon");
+  config.attributesOf(8).setLabel("Lescar");
+  config.attributesOf(9).setLabel("Lons");
+  config.attributesOf(10).setLabel("Mazères-Lezons");
+  config.attributesOf(11).setLabel("Ousse");
+  config.attributesOf(12).setLabel("Pau");
+  config.attributesOf(13).setLabel("Sendets");
 
   //On ajoute maintenant les arcs
   //La syntaxe est la suivante:
@@ -102,30 +102,32 @@ int main(){
       targetNode = 1;//Sendet
 
       //tests
-      Export::ToGraphviz(graph, label_mapper, "undirected_before.graph");
+      Export::ToGraphviz(graph, config, "undirected_before.graph");
       system("dot -Tpng undirected_before.graph -o undirected_before.png");
 
       graph = Convert::ToDirected(graph);
 
-      allPaths_dijkstra = lookup.Xdijkstra(graph, sourceNode);
-      allPaths_bellman = lookup.Xbellman(graph, sourceNode);
+      lookup.Xdijkstra(graph, sourceNode);
+      allPaths_dijkstra = lookup.resultGraph();
+      dijkstra_between = lookup.paths_to(targetNode);
 
-      dijkstra_between = lookup.paths_to(allPaths_dijkstra, targetNode);
-      bellman_between = lookup.paths_to(allPaths_bellman, targetNode);
+      lookup.Xbellman(graph, sourceNode);
+      allPaths_bellman = lookup.resultGraph();
+      bellman_between = lookup.paths_to(targetNode);
 
       //tests
-      Export::ToGraphviz(Convert::ToUndirected(graph), label_mapper, "undirected_after.graph");
+      Export::ToGraphviz(Convert::ToUndirected(graph), config, "undirected_after.graph");
       system("dot -Tpng undirected_after.graph -o undirected_after.png");
 
       //exports
-      // std::cout << Export::ToMathString(graph, label_mapper) << std::endl << std::endl;
-      Export::ToGraphviz(graph, label_mapper, "reseau_routier.graph");
+      // std::cout << Export::ToMathString(graph, config) << std::endl << std::endl;
+      Export::ToGraphviz(graph, config, "reseau_routier.graph");
 
-      Export::ToGraphviz(allPaths_dijkstra, label_mapper, "chemins_dijkstra.graph");
-      Export::ToGraphviz(allPaths_bellman, label_mapper, "chemins_bellman.graph");
+      Export::ToGraphviz(allPaths_dijkstra, config, "chemins_dijkstra.graph");
+      Export::ToGraphviz(allPaths_bellman, config, "chemins_bellman.graph");
 
-      Export::ToGraphviz(graph, label_mapper, dijkstra_between, "highlight_dijkstra.graph");
-      Export::ToGraphviz(graph, label_mapper, bellman_between, "highlight_bellman.graph");
+      Export::ToGraphviz(graph, config, dijkstra_between, "highlight_dijkstra.graph");
+      Export::ToGraphviz(graph, config, bellman_between, "highlight_bellman.graph");
 
       //compilations dot
       system("dot -Tpng reseau_routier.graph -o reseau_routier.png");

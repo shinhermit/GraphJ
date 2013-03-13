@@ -1,6 +1,7 @@
 #ifndef _Graph
 #define _Graph
 
+#include <memory>
 #include "PonderableGraph.hpp"
 
 template <typename Type=GraphTypes::Default>
@@ -48,7 +49,10 @@ public:
 			const Type & content
 			) throw(GraphException::InvalidOperation, GraphException::InvalidNodeID);
 
-  Type get_node_content(const GraphTypes::node_id & node)const
+  Type & get_node_content(const GraphTypes::node_id & node)
+    throw(GraphException::InvalidOperation, GraphException::InvalidNodeID);
+
+  const Type & get_node_content(const GraphTypes::node_id & node)const
     throw(GraphException::InvalidOperation, GraphException::InvalidNodeID);
 };
 

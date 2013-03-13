@@ -1,45 +1,41 @@
+
 template<typename Type>
-std::string Exporter<Type>::_graphviz_headers(const Graph<Type> & graph)
+std::string Exporter<Type>::_graphviz_headers(const Graph<Type> & graph,
+					      GraphvizAttributesHolder & config)
 {
   std::ostringstream oss;
 
   if( graph.is_directed() )
-    oss << "strict digraph G{" << std::endl;
+    oss << "strict digraph " << config.graphName() << "{" << std::endl;
   else
-    oss << "strict graph G{" << std::endl;
+    oss << "strict graph " << config.graphName() << "{" << std::endl;
+
+  oss << "graph " << config.globalAttributes().toString() << std::endl;
+
+  oss << "node " << config.nodesGlobalAttributes().toString() << std::endl;
+
+  oss << "edge " << config.edgesGlobalAttributes().toString() << std::endl;
 
   return oss.str();
 }
 
 template<typename Type>
-std::string Exporter<Type>::_graphviz_relations(const Graph<Type> & graph)
-{
-  std::string buffer;
-  GraphFunctor::GraphvizVisitor<Type> visitor(graph, buffer);
-    
-  Traverse<Type>::Nodes(const_cast<Graph<Type>&>(graph), visitor);
-
-  return buffer;
-}
-
-template<typename Type>
-std::string Exporter<Type>::_graphviz_node_label_mapping(const Graph<Type> & graph,
-							 const std::map<GraphTypes::node_id, std::string> & label_mapper)
+std::string Exporter<Type>::_graphviz_nodes(const Graph<Type> & graph,
+					    GraphvizAttributesHolder & config)
 {
   typename Graph<Type>::NodeIterator node;
-  std::map<GraphTypes::node_id, std::string>::const_iterator label_it;
   std::ostringstream oss;
 
   node = graph.nodes_begin();
   while( node != graph.nodes_end() )
     {
+      oss << *node;
 
-      label_it = label_mapper.find(*node);
+      const GraphvizAttributes & attr = config.attributesOf(*node);
 
-      if( label_it != label_mapper.end() )
-	{
-	  oss << *node <<" [label=\"" << label_it->second << "\"]" << std::endl;
-	}
+      oss << attr.toString();
+
+      oss << std::endl;
 
       ++node;
     }
@@ -48,94 +44,87 @@ std::string Exporter<Type>::_graphviz_node_label_mapping(const Graph<Type> & gra
 }
 
 template<typename Type>
-std::string Exporter<Type>::_graphviz_node_color_mapping(const Graph<Type> & graph,
-							 const std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper)
+std::string Exporter<Type>::_graphviz_edges(const Graph<Type> & graph,
+					    GraphvizAttributesHolder & config)
 {
-  typename Graph<Type>::NodeIterator node;
-  std::map<GraphTypes::node_id, NamedColor::ColorName>::const_iterator color_it;
+  typename Graph<Type>::EdgeIterator edge;
   std::ostringstream oss;
 
-  node = graph.nodes_begin();
-  while( node != graph.nodes_end() )
+  const std::string linkSymbol = graph.is_directed() ? "->" : "--";
+
+  edge = graph.edges_begin();
+  while( edge != graph.edges_end() )
     {
+      oss << edge->source() << linkSymbol << edge->target();
 
-      color_it = color_mapper.find(*node);
-      if( color_it != color_mapper.end() )
-	{
-	  oss << *node <<" [color=" << NamedColor::ToString(color_it->second) << "]" << std::endl;
-	}
+      GraphvizAttributes & attr = config.attributesOf(*edge);
 
-      ++node;
+      if(graph.is_weighted() && attr.label() == "")
+	attr.setLabel( GraphFunctor::StringConverter::StringFrom<GraphTypes::Cost>(graph.getCost(edge->source(), edge->target())) );
+
+      oss << attr.toString();
+
+      oss << std::endl;
+
+      ++edge;
     }
 
   return oss.str();
 }
 
 template<typename Type>
-std::string Exporter<Type>::_graphviz_paths_highlighting(const Graph<Type> & graph,
-							 const std::list<GraphTypes::Path> & paths_highlight)
+void Exporter<Type>::_highlight_node(GraphvizAttributesHolder & config,
+				     const GraphTypes::node_id & node,
+				     const GraphTypes::NamedColor::E_NamedColor & color)
 {
-  NamedColor::NameToStringIterator col;
+
+  GraphvizAttributes & attr = config.attributesOf(node);
+
+  attr.setColor( GraphTypes::Color(color) );
+  attr.setStyle(GraphTypes::Graphviz::StyleAttribute::FILLED);
+}
+
+template<typename Type>
+void Exporter<Type>::_highlight_edge(GraphvizAttributesHolder & config,
+				     const Edge & edge,
+				     const GraphTypes::NamedColor::E_NamedColor & color)
+{
+
+  GraphvizAttributes &  attr = config.attributesOf(edge);
+
+  attr.setColor( GraphTypes::Color(color) );
+  attr.setFontColor( GraphTypes::Color(color) );
+}
+
+template<typename Type>
+void Exporter<Type>::_graphviz_paths_highlight(GraphvizAttributesHolder & config,
+					       const std::list<GraphTypes::Path> & paths_highlight)
+{
+  GraphTypes::NamedColor::ColorNameIterator col;
   std::list<GraphTypes::Path>::const_iterator path;
   std::list<GraphTypes::node_id>::const_iterator node;
   GraphTypes::node_id sourceNode;
-  std::ostringstream oss;
 
-  col = NamedColor::NamesToString_begin();
+  col = GraphTypes::NamedColor::Names_begin();
   for(path = paths_highlight.begin(); path != paths_highlight.end(); ++path)
     {
-
-      oss << "{" << std::endl << "node [color=" << col->second << ", style=\"filled\"]" << std::endl;
-      oss << "edge [color=" << col->second << "]" << std::endl;
-
       node = path->begin();
 
-      while( node!= path->end() )
+      while( node != path->end() )
 	{
+	  _highlight_node(config, *node, *col);
+
 	  sourceNode = *node;
 	  ++node;
 
 	  if( node != path->end() )
 	    {
-	      oss << sourceNode << "->" << *node;
-
-	      if( graph.is_weighted() )
-		{
-		  oss << "[label=\"" << graph.getCost(sourceNode, *node) << "\", fontcolor=" << col->second << "]";
-		}
-
-	      oss << std::endl;
+	      _highlight_edge( config, Edge(sourceNode, *node), *col );
 	    }
 	}
 
-      oss << "}" << std::endl;
-
-      ++col; if( col == NamedColor::NamesToString_end() ) col = NamedColor::NamesToString_begin();
+      ++col; if( col == GraphTypes::NamedColor::Names_end() ) col = GraphTypes::NamedColor::Names_begin();
     }
-
-  return oss.str();
-}
-
-template<typename Type>
-std::string Exporter<Type>::_graphviz_node_meta_mapping(const Graph<Type> & graph,
-							const std::map<GraphTypes::node_id, std::string> & label_mapper,
-							const std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper)
-{
-  std::ostringstream oss;
-  std::string stringColor;
-  typename Graph<Type>::NodeIterator nodeIt;
-
-  nodeIt = graph.nodes_begin();
-  while( nodeIt != graph.nodes_end() )
-    {
-      stringColor = NamedColor::ToString( color_mapper.find(*nodeIt)->second );
-
-      oss << *nodeIt <<" [label=\"" << label_mapper.find(*nodeIt)->second << "\", color=" << stringColor << "]" << std::endl;
-
-      ++nodeIt;
-    }
-
-  return oss.str();
 }
 
 template<typename Type>
@@ -174,23 +163,6 @@ std::string Exporter<Type>::ToMathString(const Graph<Type> & graph)
 }
 
 template<typename Type>
-std::string Exporter<Type>::ToMathString(const Graph<Type> & graph,
-					 const std::map<GraphTypes::node_id, std::string> & label_mapper)
-{
-  std::map<GraphTypes::node_id, std::string>::const_iterator it;
-  std::ostringstream oss;
-
-  for(it = label_mapper.begin(); it != label_mapper.end(); ++it)
-    {
-      oss << "s" << it->first << " |--> " << it->second << std::endl;
-    }
-
-  oss << toMathString(graph);
-
-  return oss.str();
-}
-
-template<typename Type>
 void Exporter<Type>::ToStream(const Graph<Type> & graph,
 			      std::ostream & out)
 {
@@ -198,11 +170,44 @@ void Exporter<Type>::ToStream(const Graph<Type> & graph,
 }
 
 template<typename Type>
-std::string Exporter<Type>::ToGraphviz(const Graph<Type> & graph)
+std::string Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
+				       GraphvizAttributesHolder & config)
 {
   std::ostringstream oss;
-  oss << _graphviz_headers(graph);
-  oss << _graphviz_relations(graph);
+  oss << _graphviz_headers(graph, config);
+
+  oss << _graphviz_nodes(graph, config);
+
+  oss << _graphviz_edges(graph, config);
+
+  oss << _graphviz_footers();
+
+  return oss.str();
+}
+
+template<typename Type>
+std::string Exporter<Type>::ToGraphviz(const Graph<Type> & graph)
+{
+  GraphvizAttributesHolder config;
+
+  return ToGraphviz(graph, config);
+}
+
+template<typename Type>
+std::string Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
+				       GraphvizAttributesHolder & config,
+				       const std::list<GraphTypes::Path> & paths_highlight)
+{
+  std::ostringstream oss;
+
+  oss << _graphviz_headers(graph, config);
+
+  _graphviz_paths_highlight(config, paths_highlight);
+
+  oss << _graphviz_nodes(graph, config);
+
+  oss << _graphviz_edges(graph, config);
+
   oss << _graphviz_footers();
 
   return oss.str();
@@ -210,102 +215,29 @@ std::string Exporter<Type>::ToGraphviz(const Graph<Type> & graph)
 
 template<typename Type>
 std::string Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
-				       const std::map<GraphTypes::node_id, std::string> & label_mapper)
-{
-  std::ostringstream oss117;
-
-  oss117 << _graphviz_headers(graph);
-
-  oss117 << _graphviz_relations(graph);
-
-  oss117 << _graphviz_node_label_mapping(graph, label_mapper);
-
-  oss117 << _graphviz_footers();
-
-  return oss117.str();
-  
-}
-
-template<typename Type>
-std::string Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
-				       const std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper)
-{
-  std::ostringstream oss117;
-
-  oss117 << _graphviz_headers(graph);
-
-  oss117 << "node [style=filled]" << std::endl << std::endl;
-
-  oss117 << _graphviz_relations(graph);
-
-  oss117 << _graphviz_node_color_mapping(graph, color_mapper);
-
-  oss117 << _graphviz_footers();
-
-  return oss117.str();
-  
-}
-
-template<typename Type>
-std::string Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
 				       const std::list<GraphTypes::Path> & paths_highlight)
 {
-  std::ostringstream oss117;
+  GraphvizAttributesHolder config;
 
-  oss117 << _graphviz_headers(graph);
-
-  oss117 << _graphviz_paths_highlighting(graph, paths_highlight);
-
-  oss117 << _graphviz_relations(graph);
-
-  oss117 << _graphviz_footers();
-
-  return oss117.str();
+  return ToGraphviz(graph, config, paths_highlight);
 }
 
 template<typename Type>
-std::string Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
-				       const std::map<GraphTypes::node_id, std::string> & label_mapper,
-				       const std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper)
+void Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
+				GraphvizAttributesHolder & config,
+				const std::string & filename)
 {
-  std::ostringstream oss117;
+  std::ofstream file;
+  file.open(filename.c_str(), std::ios::out | std::ios::trunc);
 
-  oss117 << _graphviz_headers(graph);
+  file << ToGraphviz(graph, config);
 
-  oss117 << "node [style=filled]" << std::endl << std::endl;
-
-  oss117 << _graphviz_relations(graph);
-
-  oss117 << _graphviz_node_meta_mapping(graph, label_mapper, color_mapper);
-
-  oss117 << _graphviz_footers();
-
-  return oss117.str();
-  
+  file.close();
 }
 
 template<typename Type>
-std::string Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
-				       const std::map<GraphTypes::node_id, std::string> & label_mapper,
-				       const std::list<GraphTypes::Path> & paths_highlight)
-{
-  std::ostringstream oss117;
-
-  oss117 << _graphviz_headers(graph);
-
-  oss117 << _graphviz_paths_highlighting(graph, paths_highlight);
-
-  oss117 << _graphviz_node_label_mapping(graph, label_mapper);
-
-  oss117 << _graphviz_relations(graph);
-
-  oss117 << _graphviz_footers();
-
-  return oss117.str();
-}
-
-template<typename Type>
-void Exporter<Type>::ToGraphviz(const Graph<Type> & graph, const std::string & filename)
+void Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
+				const std::string & filename)
 {
   std::ofstream file;
   file.open(filename.c_str(), std::ios::out | std::ios::trunc);
@@ -317,26 +249,14 @@ void Exporter<Type>::ToGraphviz(const Graph<Type> & graph, const std::string & f
 
 template<typename Type>
 void Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
-				const std::map<GraphTypes::node_id, std::string> & label_mapper,
+				GraphvizAttributesHolder & config,
+				const std::list<GraphTypes::Path> & paths_highlight,
 				const std::string & filename)
 {
   std::ofstream file;
   file.open(filename.c_str(), std::ios::out | std::ios::trunc);
 
-  file << ToGraphviz(graph, label_mapper);
-
-  file.close();
-}
-
-template<typename Type>
-void Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
-				const std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper,
-				const std::string & filename)
-{
-  std::ofstream file;
-  file.open(filename.c_str(), std::ios::out | std::ios::trunc);
-
-  file << ToGraphviz(graph, color_mapper);
+  file << ToGraphviz(graph, config, paths_highlight);
 
   file.close();
 }
@@ -350,34 +270,6 @@ void Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
   file.open(filename.c_str(), std::ios::out | std::ios::trunc);
 
   file << ToGraphviz(graph, paths_highlight);
-
-  file.close();
-}
-
-template<typename Type>
-void Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
-				const std::map<GraphTypes::node_id, std::string> & label_mapper,
-				const std::map<GraphTypes::node_id, NamedColor::ColorName> & color_mapper,
-				const std::string & filename)
-{
-  std::ofstream file;
-  file.open(filename.c_str(), std::ios::out | std::ios::trunc);
-
-  file << ToGraphviz(graph, label_mapper, color_mapper);
-
-  file.close();
-}
-
-template<typename Type>
-void Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
-				const std::map<GraphTypes::node_id, std::string> & label_mapper,
-				const std::list<GraphTypes::Path> & paths_highlight,
-				const std::string & filename)
-{
-  std::ofstream file;
-  file.open(filename.c_str(), std::ios::out | std::ios::trunc);
-
-  file << ToGraphviz(graph, label_mapper, paths_highlight);
 
   file.close();
 }

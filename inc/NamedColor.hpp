@@ -4,50 +4,57 @@
 #include <string>
 #include <map>
 #include <set>
-#include <ostream>
+#include <iostream>
 #include "CreateMap.hpp"
 #include "CreateSet.hpp"
 
-class NamedColor{
-public:
-  enum ColorName {Red, Green, Blue, Yellow, Brown, Purple, Black, White, Orange, Gray, Pink, Bordeaux};
+namespace GraphTypes
+{
 
-  typedef std::map<NamedColor::ColorName, std::string>::const_iterator NameToStringIterator;
+  class NamedColor{
+  public:
+    enum E_NamedColor {DefaultColor, Red, Green, Blue, Yellow, Brown, Purple, Black, White, Orange, Gray, Pink, Bordeaux};
 
-  typedef std::map<NamedColor::ColorName, unsigned int>::const_iterator NameToHexaIterator;
+    typedef std::set<E_NamedColor>::const_iterator ColorNameIterator;
 
-private:
-  ColorName _col;
+  private:
+    E_NamedColor _col;
 
-  static const std::map<ColorName, std::string> _toString;
-  static const std::map<ColorName, unsigned int> _hexaValue;
+    static const std::set<E_NamedColor> _iterate;
+    static const std::map<E_NamedColor, std::string> _toString;
+    static const std::map<E_NamedColor, std::string> _toHexa;
 
-public:
-  NamedColor(ColorName col=Black);
-  NamedColor(const NamedColor & source);
-  NamedColor & operator=(const NamedColor & source);
+  public:
+    NamedColor(const E_NamedColor & col=Black);
+    NamedColor(const int & intVal);
+    NamedColor(const NamedColor & source);
 
-  void operator>>(std::ostream & out)const;
+    NamedColor & operator=(const E_NamedColor & col);
+    NamedColor & operator=(const int & intVal);
+    NamedColor & operator=(const NamedColor & source);
 
-  friend std::ostream & operator<<(std::ostream & out,
-				   const NamedColor & col);
+    void operator>>(std::ostream & out)const;
 
-  bool operator==(const NamedColor & ref)const;
-  bool operator!=(const NamedColor & ref)const;
+    friend std::ostream & operator<<(std::ostream & out,
+				     const NamedColor & col);
 
-  std::string toString()const;
+    bool operator==(const NamedColor & ref)const;
+    bool operator!=(const NamedColor & ref)const;
 
-  int hexaValue()const;
+    std::string toHexa()const;
 
-  static std::string ToString(const ColorName & color);
+    std::string toString()const;
 
-  static NameToStringIterator NamesToString_begin();
+    operator E_NamedColor()const;
 
-  static NameToStringIterator NamesToString_end();
+    static ColorNameIterator Names_begin();
 
-  static NameToHexaIterator NamesToHexa_begin();
+    static ColorNameIterator Names_end();
 
-  static NameToHexaIterator NamesToHexa_end();
+    static std::string ToHexa(const E_NamedColor & color);
+    static std::string ToString(const E_NamedColor & color);
+  };
+
 };
 
 #endif

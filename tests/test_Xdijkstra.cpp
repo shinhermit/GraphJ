@@ -5,8 +5,6 @@
 int main()
 {
   Graph<> graph(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
-  Graph<> allPaths(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
-  std::list<GraphTypes::Path> paths_between;
   XPathFinding<> lookup;
 
   typedef Exporter<> Export;
@@ -45,12 +43,11 @@ int main()
   try
     {
       //Recherche des chemins
-      allPaths = lookup.Xdijkstra(graph, 1);
-      paths_between = lookup.paths_to(allPaths, 5);
+      lookup.Xdijkstra(graph, 1);
 
       //Exports
-      Export::ToGraphviz(graph, paths_between, "test_Xdijkstra.graph");
-      Export::ToGraphviz(allPaths, "paths_Xdijkstra.graph");
+      Export::ToGraphviz(graph, lookup.paths_to(5), "test_Xdijkstra.graph");
+      Export::ToGraphviz(lookup.resultGraph(), "paths_Xdijkstra.graph");
 
 #ifdef _SYSTEM
 

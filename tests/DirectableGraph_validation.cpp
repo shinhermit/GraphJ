@@ -35,7 +35,7 @@ int main()
       graph.in_degree(100);
       assert( "graph.in_degree(100)" == "echec" );
     }
-  catch(const GraphException::InvalidNodeIDException & e){}
+  catch(const GraphException::InvalidNodeID & e){}
 
   try
     {
@@ -43,7 +43,7 @@ int main()
       assert("graph.out_degree(1)" == "echec");
     }
 
-  catch(const GraphException::InvalidNodeIDException & e){}
+  catch(const GraphException::InvalidNodeID & e){}
 
   try
     {
@@ -51,7 +51,7 @@ int main()
       assert("graph.degree(2)" == "echec");
     }
 
-  catch(const GraphException::InvalidNodeIDException & e){}
+  catch(const GraphException::InvalidNodeID & e){}
 
   //les itérateurs
   assert( graph.nodes_begin() == graph.nodes_end() );
@@ -63,7 +63,7 @@ int main()
       assert("graph.successors_begin(100)" == "echec");
     }
 
-  catch(const GraphException::InvalidOperationException & e){}
+  catch(const GraphException::InvalidOperation & e){}
 
   try
     {
@@ -71,7 +71,7 @@ int main()
       assert("graph.successors_end(1)" == "echec");
     }
 
-  catch(const GraphException::InvalidOperationException & e){}
+  catch(const GraphException::InvalidOperation & e){}
 
   try
     {
@@ -79,7 +79,7 @@ int main()
       assert("graph.predecessors_begin(100)" == "echec");
     }
 
-  catch(const GraphException::InvalidOperationException & e){}
+  catch(const GraphException::InvalidOperation & e){}
 
   try
     {
@@ -87,7 +87,7 @@ int main()
       assert("graph.predecessors_end(1)" == "echec");
     }
 
-  catch(const GraphException::InvalidOperationException & e){}
+  catch(const GraphException::InvalidOperation & e){}
 
   try
     {
@@ -95,7 +95,7 @@ int main()
       assert("graph.adjacents_begin(100)" == "echec");
     }
 
-  catch(const GraphException::InvalidNodeIDException & e){}
+  catch(const GraphException::InvalidNodeID & e){}
 
   try
     {
@@ -103,7 +103,7 @@ int main()
       assert("graph.adjacents_end(1)" == "echec");
     }
 
-  catch(const GraphException::InvalidNodeIDException & e){}
+  catch(const GraphException::InvalidNodeID & e){}
 
   //Composition avec les constructeurs
   graph.remove_node(1);
@@ -148,7 +148,7 @@ int main()
       assert("graph.successors_begin(1)" == "echec");
     }
 
-  catch(const GraphException::InvalidOperationException & e){}
+  catch(const GraphException::InvalidOperation & e){}
 
 
   try
@@ -157,7 +157,7 @@ int main()
       assert("graph.predecessors_begin(1)" == "echec");
     }
 
-  catch(const GraphException::InvalidOperationException & e){}
+  catch(const GraphException::InvalidOperation & e){}
 
   assert( graph.adjacents_begin(1) == graph.adjacents_end(1) );
 
@@ -189,7 +189,7 @@ int main()
       assert("graph.in_degree(1)" == "echec");
     }
 
-  catch(const GraphException::InvalidNodeIDException & e){}
+  catch(const GraphException::InvalidNodeID & e){}
 
   try
     {
@@ -197,7 +197,7 @@ int main()
       assert("graph.out_degree(1)" == "echec");
     }
 
-  catch(const GraphException::InvalidNodeIDException & e){}
+  catch(const GraphException::InvalidNodeID & e){}
 
   try
     {
@@ -205,7 +205,7 @@ int main()
       assert("graph.degree(2)" == "echec");
     }
 
-  catch(const GraphException::InvalidNodeIDException & e){}
+  catch(const GraphException::InvalidNodeID & e){}
 
   //les itérateurs
   assert( graph.nodes_begin() == graph.nodes_end() );
@@ -217,7 +217,7 @@ int main()
       assert("graph.successors_begin(100)" == "echec");
     }
 
-  catch(const GraphException::InvalidOperationException & e){}
+  catch(const GraphException::InvalidOperation & e){}
 
   try
     {
@@ -225,7 +225,7 @@ int main()
       assert("graph.successors_end(1)" == "echec");
     }
 
-  catch(const GraphException::InvalidOperationException & e){}
+  catch(const GraphException::InvalidOperation & e){}
 
   try
     {
@@ -233,7 +233,7 @@ int main()
       assert("graph.predecessors_begin(100)" == "echec");
     }
 
-  catch(const GraphException::InvalidOperationException & e){}
+  catch(const GraphException::InvalidOperation & e){}
 
   try
     {
@@ -241,7 +241,7 @@ int main()
       assert("graph.predecessors_end(1)" == "echec");
     }
 
-  catch(const GraphException::InvalidOperationException & e){}
+  catch(const GraphException::InvalidOperation & e){}
 
   try
     {
@@ -249,7 +249,7 @@ int main()
       assert("graph.adjacents_begin(100)" == "echec");
     }
 
-  catch(const GraphException::InvalidNodeIDException & e){}
+  catch(const GraphException::InvalidNodeID & e){}
 
   try
     {
@@ -257,7 +257,7 @@ int main()
       assert("graph.adjacents_end(1)" == "echec");
     }
 
-  catch(const GraphException::InvalidNodeIDException & e){}
+  catch(const GraphException::InvalidNodeID & e){}
 
 
   /******** add_edge ******/

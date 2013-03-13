@@ -26,6 +26,9 @@ PonderableGraph_validation:
 Graph_validation:
 	$(cmd)
 
+CanonicalNetwork_validation:
+	$(cmd)
+
 
 
 #### Tests
@@ -62,6 +65,12 @@ test_Xbellman:
 
 test_weights_transformations:
 	$(cmd_sys)
+
+test_preceedence_table:
+	$(cmd)
+
+test_network_builder:
+	$(cmd)
 
 reseau_routier:
 	$(cmd_sys)

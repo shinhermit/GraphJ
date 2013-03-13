@@ -12,9 +12,6 @@ cmd = $(cc) -c $(flags) $(paths) $@.cpp -o $(obj)/$@.o
 ##CIBLES
 
 
-GraphTypes:
-	$(cmd)
-
 Node:
 	$(cmd)
 
@@ -57,6 +54,15 @@ PonderableGraph:
 NamedColor:
 	$(cmd)
 
+ColorIntensity:
+	$(cmd)
+
+Color:
+	$(cmd)
+
+ColorIncrementor:
+	$(cmd)
+
 Visitor:
 	$(cmd)
 
@@ -64,4 +70,28 @@ ColorizingVisitor:
 	$(cmd)
 
 TricolorBuilderVisitor:
+	$(cmd)
+
+ShapeAttribute:
+	$(cmd)
+
+StyleAttribute:
+	$(cmd)
+
+GraphvizAttributes:
+	$(cmd)
+
+GraphvizAttributesHolder:
+	$(cmd)
+
+PlanningActivity:
+	$(cmd)
+
+MpmTask:
+	$(cmd)
+
+MpmEdgeWeighter:
+	$(cmd)
+
+MpmNetworkBuilder:
 	$(cmd)

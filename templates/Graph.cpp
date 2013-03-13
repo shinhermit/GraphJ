@@ -28,7 +28,7 @@ Graph<Type> & Graph<Type>::operator=(const Graph<Type> & source)
 template <typename Type>
 bool Graph<Type>::is_container()const
 {
-  return _nodeType == GraphTypes::CONTAINER;
+  return (_nodeType == GraphTypes::CONTAINER);
 }
 
 template <typename Type>
@@ -138,10 +138,10 @@ void Graph<Type>::set_node_content(const GraphTypes::node_id & node,
 }
 
 template <typename Type>
-Type Graph<Type>::get_node_content(const GraphTypes::node_id & node)const
+Type & Graph<Type>::get_node_content(const GraphTypes::node_id & node)
   throw(GraphException::InvalidNodeID, GraphException::InvalidOperation)
 {
-  typename std::map<GraphTypes::node_id, Type>::const_iterator it;
+  typename std::map<GraphTypes::node_id, Type>::iterator it;
 
   if( has_node(node) )
     {
@@ -157,14 +157,23 @@ Type Graph<Type>::get_node_content(const GraphTypes::node_id & node)const
 
       else
 	{
-	  throw GraphException::InvalidOperation("Attempt to access content in a non-container graph", __LINE__, __FILE__, "Graph<Type>::get_node_content(const GraphTypes::node_id&)");
+	  throw GraphException::InvalidOperation("Attempt to access content in a non-container graph", __LINE__, __FILE__, "Graph<Type>::get_node_content(const GraphTypes::node_id&)const");
 	}
 
     }
 
   else
     {
-      throw GraphException::InvalidNodeID(node, "Invalid Node ID.", __LINE__, __FILE__, "Graph<Type>::get_node_content(const GraphTypes::node_id&)");
+      throw GraphException::InvalidNodeID(node, "Invalid Node ID.", __LINE__, __FILE__, "Graph<Type>::get_node_content(const GraphTypes::node_id&)const");
     }
 
+}
+
+template <typename Type>
+const Type & Graph<Type>::get_node_content(const GraphTypes::node_id & node)const
+  throw(GraphException::InvalidNodeID, GraphException::InvalidOperation)
+{
+  Graph<Type> * _this = const_cast<Graph<Type>*>(this);
+
+  return _this->get_node_content(node);
 }
