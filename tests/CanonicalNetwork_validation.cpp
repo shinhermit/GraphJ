@@ -8,7 +8,6 @@ int main()
   assert( network.source() == 2);
   assert( network.sink() == 3);
 
-
   network.setSource(0);
   network.setSink(1);
 
@@ -25,7 +24,7 @@ int main()
 
   Graph<> graph = flowGraph;
 
-  std::cout << "Strust worthy" << std::endl;
+  std::cout << "Half trust worthy (validator not complete!)" << std::endl;
 
   return 0;
 }

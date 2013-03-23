@@ -7,14 +7,16 @@ MpmNetworkBuilder::MpmNetworkBuilder(Graph<PlanningActivity> & planning)
 void MpmNetworkBuilder::buildInto(MpmNetwork & network)
 {
   GraphTypes::node_id id;
-
-  //source and sink always at 0 and 1
-  network.setSource(0);
-  network.setSink(1);
+  std::string sourceNodeLabel, sinkNodeLabel;
 
   Graph<MpmTask> & flowGraph = network;
-  flowGraph.add_node( network.source(), MpmTask("Début") );
-  flowGraph.add_node( network.sink(), MpmTask("Fin") );
+
+  //source and sink always at 0 and 1
+  sourceNodeLabel = flowGraph.get_node_content( network.source() ).label();
+  sinkNodeLabel = flowGraph.get_node_content( network.sink() ).label();
+
+  //empty the network, just in case
+  network = MpmNetwork(sourceNodeLabel, sinkNodeLabel);
 
   //treat nodes
   for(Graph<PlanningActivity>::NodeIterator planned = _planning.nodes_begin();

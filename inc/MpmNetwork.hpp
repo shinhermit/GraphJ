@@ -4,6 +4,16 @@
 #include "CanonicalNetwork.hpp"
 #include "MpmTask.hpp"
 
-typedef CanonicalNetwork<MpmTask> MpmNetwork;
+class MpmNetwork : public CanonicalNetwork<MpmTask>
+{
+public:
+  MpmNetwork(const GraphTypes::node_id & sourceNode,
+	     const GraphTypes::node_id & sinkNode,
+	     const std::string & sourceNodeLabel="Begin",
+	     const std::string & sinkNodeLabel="End");
+
+  MpmNetwork(const std::string & sourceNodeLabel="Begin",
+	     const std::string & sinkNodeLabel="End");
+};
 
 #endif

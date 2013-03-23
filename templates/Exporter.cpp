@@ -187,8 +187,7 @@ void Exporter<Type>::GraphvizPathsHighlight(GraphvizAttributesHolder & config,
 template<typename Type>
 void Exporter<Type>::_mpm_node_prepare(const MpmNetwork & network,
 				       GraphvizAttributesHolder & config,
-				       const GraphTypes::node_id & node,
-				       const std::string & label)
+				       const GraphTypes::node_id & node)
 {
   std::string cartouche("");
 
@@ -202,14 +201,10 @@ void Exporter<Type>::_mpm_node_prepare(const MpmNetwork & network,
   const GraphTypes::Planning::Duration & freeSlack = task.freeSlack();
   const GraphTypes::Planning::Duration & sureSlack = task.sureSlack();
 
-  if( node == network.source() || node == network.sink() )
-    {
-      cartouche = label;
-    }
+  cartouche = cartouche+"|"+task.label()+"|";
 
-  else
+  if( node != network.source() && node != network.sink() )
     {
-      cartouche = cartouche+"|"+task.label()+"|";
       cartouche += GraphFunctor::StringConverter::StringFrom<GraphTypes::Planning::Duration>(duration) + "|";
     }
 
@@ -232,26 +227,18 @@ void Exporter<Type>::_mpm_node_prepare(const MpmNetwork & network,
 
 template<typename Type>
 void Exporter<Type>::GraphvizMpmPrepare(const MpmNetwork & network,
-					GraphvizAttributesHolder & config,
-					const std::string & beginNodeLabel,
-					const std::string & endNodeLabel)
+					GraphvizAttributesHolder & config)
 {
   const Graph<MpmTask> & flowGraph = network.flowGraph();
 
   config.nodesGlobalAttributes().setShape(GraphTypes::Graphviz::ShapeAttribute::BOX);
   config.setGraphLegend("|Task label| duration|\\n|Early Start| Late Start|\\n|Total Slack| Free Slack| Sure Slack|");
 
-  //source and sink
-  _mpm_node_prepare( network, config, network.source(), beginNodeLabel );
-  _mpm_node_prepare( network, config, network.sink(), endNodeLabel );
-
-  //other nodes
   for(Graph<MpmTask>::NodeIterator node = flowGraph.nodes_begin();
       node != flowGraph.nodes_end();
       ++node)
     {
-      if( *node != network.source() && *node != network.sink() )
-	_mpm_node_prepare(network, config, *node);
+      _mpm_node_prepare(network, config, *node);
     }
 }
 

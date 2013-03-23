@@ -93,6 +93,9 @@ MpmTask:
 MpmEdgeWeighter:
 	$(cmd)
 
+MpmNetwork:
+	$(cmd)
+
 MpmNetworkBuilder:
 	$(cmd)
 

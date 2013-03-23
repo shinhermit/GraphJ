@@ -8,7 +8,7 @@
 
 int main()
 {
-  MpmNetwork network(GraphTypes::UNWEIGHTED, GraphTypes::CONTAINER);
+  MpmNetwork network("Début", "Fin");
   GraphvizAttributesHolder config;
 
   typedef Exporter<MpmTask> Export;

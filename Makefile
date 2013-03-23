@@ -91,6 +91,9 @@ PlanningActivity:
 MpmTask:
 	$(cmd_src)
 
+MpmNetwork:
+	$(cmd_src)
+
 MpmEdgeWeighter:
 	$(cmd_src)
 
@@ -100,12 +103,12 @@ MpmNetworkBuilder:
 MpmDatesComputer:
 	$(cmd_src)
 
-all_classes: Node WeightedNode Edge WeightedEdge BasicGraphException InvalidNodeID InvalidEdge InvalidOperation TopologyIterator DoubleNodeSetIterator BaseGraph DirectableGraph PonderableGraph NamedColor ColorIntensity Color ColorizingVisitor ShapeAttribute StyleAttribute GraphvizAttributes GraphvizAttributesHolder Visitor TricolorBuilderVisitor PlanningActivity MpmTask MpmNetworkBuilder MpmEdgeWeighter MpmDatesComputer
+all_classes: Node WeightedNode Edge WeightedEdge BasicGraphException InvalidNodeID InvalidEdge InvalidOperation TopologyIterator DoubleNodeSetIterator BaseGraph DirectableGraph PonderableGraph NamedColor ColorIntensity Color ColorizingVisitor ShapeAttribute StyleAttribute GraphvizAttributes GraphvizAttributesHolder Visitor TricolorBuilderVisitor PlanningActivity MpmTask MpmNetwork MpmNetworkBuilder MpmEdgeWeighter MpmDatesComputer
 
 
 #les validations
 
-validation_dependencies: BaseGraph DirectableGraph PonderableGraph Edge BasicGraphException InvalidNodeID  InvalidEdge InvalidOperation TopologyIterator DoubleNodeSetIterator
+validation_dependencies: BaseGraph DirectableGraph PonderableGraph MpmNetwork Edge BasicGraphException InvalidNodeID  InvalidEdge InvalidOperation TopologyIterator DoubleNodeSetIterator
 
 BaseGraph_validation: validation_dependencies
 	$(cmd_exe)

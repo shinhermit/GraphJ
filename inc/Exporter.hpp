@@ -38,8 +38,7 @@ private:
 
   static void _mpm_node_prepare(const MpmNetwork & network,
 				GraphvizAttributesHolder & config,
-				const GraphTypes::node_id & node,
-				const std::string & label="");
+				const GraphTypes::node_id & node);
 
 public:
   static std::string ToString(const Graph<Type> & graph);
@@ -62,9 +61,7 @@ public:
 				     const GraphTypes::Graphviz::StyleAttribute & nodeStyle=GraphTypes::Graphviz::StyleAttribute::DEFAULT_STYLE);
 
   static void GraphvizMpmPrepare(const MpmNetwork & network,
-				 GraphvizAttributesHolder & config,
-				 const std::string & beginLabel="Begin",
-				 const std::string & endLabel="End");
+				 GraphvizAttributesHolder & config);
 
   static std::string ToGraphviz(const Graph<Type> & graph,
 				const GraphvizAttributesHolder & config);
