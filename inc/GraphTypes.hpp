@@ -19,6 +19,8 @@ namespace GraphTypes
 
   typedef std::list<node_id> Path;
 
+  typedef float Flow;
+
   enum EdgeType{DIRECTED, UNDIRECTED};
 
   enum EdgeState{WEIGHTED, UNWEIGHTED};

@@ -172,6 +172,9 @@ gps_multichemin: all_classes
 plannification: all_classes
 	$(cmd_exe)
 
+plannification_interfaced: all_classes
+	$(cmd_exe)
+
 all_tests: test_directed test_acm test_coloring test_dijkstra test_dijkstra_maximize test_bellman test_Xdijkstra test_Xbellman test_weights_transformations test_preceedence_table test_network_builder
 
 all_examples: reseau_routier feux_tricolores gps gps_multichemin
