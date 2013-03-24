@@ -1,0 +1,17 @@
+A
+B
+C
+D
+E
+F
+fin.
+A B 1 2 2
+A C 2 3 2
+B C 1 4 3
+C D 2 2 2
+C E 0 4 3
+D B 0 2 1
+D F 0 2 2
+E D 0 1 1
+E F 2 3 2
+fin.

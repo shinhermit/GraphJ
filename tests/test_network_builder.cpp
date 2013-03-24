@@ -31,7 +31,7 @@ int main()
   Exporter<PlanningActivity>::ToGraphviz(activities, "activityGraph.graph");
 
   MpmNetworkBuilder mpmBuilder(activities);
-  MpmNetwork mpm(GraphTypes::UNWEIGHTED, GraphTypes::CONTAINER);
+  MpmNetwork mpm;
   GraphvizAttributesHolder config;
 
   mpmBuilder.buildInto(mpm);

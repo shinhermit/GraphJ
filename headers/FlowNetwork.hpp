@@ -3,8 +3,9 @@
 
 #include "GraphTypes.hpp"
 #include "CanonicalNetwork.hpp"
+#include "Edge.hpp"
 
-template<typename Type>
+template<typename Type=GraphTypes::Default>
 class FlowNetwork : public CanonicalNetwork<Type>
 {
 private:
@@ -93,36 +94,36 @@ public:
 
   //add_flow with node Capacities
   void add_flow(const GraphTypes::node_id & sourceNode,
-		const GraphTypes::Fow & sourceNodeCapacity,
+		const GraphTypes::Flow & sourceNodeCapacity,
 		const GraphTypes::node_id & targetNode,
-		const GraphTypes::Fow & targetNodeCapacity,
+		const GraphTypes::Flow & targetNodeCapacity,
 		const GraphTypes::Flow & minCapacity,
 		const GraphTypes::Flow & flowValue,
 		const GraphTypes::Flow & maxCapacity) throw(GraphException::InvalidOperation);
 
   void add_flow(const GraphTypes::node_id & sourceNode,
-		const GraphTypes::Fow & sourceNodeCapacity,
+		const GraphTypes::Flow & sourceNodeCapacity,
 		const GraphTypes::node_id & targetNode,
-		const GraphTypes::Fow & targetNodeCapacity,
+		const GraphTypes::Flow & targetNodeCapacity,
 		const GraphTypes::Flow & flowValue,
 		const GraphTypes::Flow & maxCapacity) throw(GraphException::InvalidOperation);
 
   void add_flow(const GraphTypes::node_id & sourceNode,
 		const Type & sourceNodeConent,
-		const GraphTypes::Fow & sourceNodeCapacity,
+		const GraphTypes::Flow & sourceNodeCapacity,
 		const GraphTypes::node_id & targetNode,
 		const Type & targetNodeConent,
-		const GraphTypes::Fow & targetNodeCapacity,
+		const GraphTypes::Flow & targetNodeCapacity,
 		const GraphTypes::Flow & minCapacity,
 		const GraphTypes::Flow & flowValue,
 		const GraphTypes::Flow & maxCapacity);
 
   void add_flow(const GraphTypes::node_id & sourceNode,
 		const Type & sourceNodeConent,
-		const GraphTypes::Fow & sourceNodeCapacity,
+		const GraphTypes::Flow & sourceNodeCapacity,
 		const GraphTypes::node_id & targetNode,
 		const Type & targetNodeConent,
-		const GraphTypes::Fow & targetNodeCapacity,
+		const GraphTypes::Flow & targetNodeCapacity,
 		const GraphTypes::Flow & flowValue,
 		const GraphTypes::Flow & maxCapacity);
 
