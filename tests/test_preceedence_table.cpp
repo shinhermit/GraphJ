@@ -46,14 +46,14 @@ int main()
 	  ++pred)
 	{
 	  PlanningActivity & preceeder = activities.get_node_content(*pred);
-	  std::cout << preceeder.label() << ", ";
+	  std::cout << preceeder.label() << ", "bin/;
 	}
 
       std::cout << " \t|" << std::endl;
       
     }
 
-  Export::ToGraphviz(activities, "precedences.graph");
+  Export::ToGraphviz(activities, "bin/precedences.graph");
 
-  system("dot -Tpng precedences.graph -o precedences.png");
+  system("dot -Tpng bin/precedences.graph -o bin/precedences.png");
 }

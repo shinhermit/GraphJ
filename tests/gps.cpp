@@ -102,8 +102,8 @@ int main()
 
       //tests
       config.setGraphName("undirected_before");
-      Export::ToGraphviz(graph, config, "undirected_before.graph");
-      system("dot -Tpng undirected_before.graph -o undirected_before.png");
+      Export::ToGraphviz(graph, config, "bin/undirected_before.graph");
+      system("dot -Tpng bin/undirected_before.graph -o bin/undirected_before.png");
 
       graph = Convert::ToDirected(graph);
 
@@ -121,72 +121,72 @@ int main()
 
       //tests
       config.setGraphName("undirected_after");
-      Export::ToGraphviz(Convert::ToUndirected(graph), config, "undirected_after.graph");
-      system("dot -Tpng undirected_after.graph -o undirected_after.png");
+      Export::ToGraphviz(Convert::ToUndirected(graph), config, "bin/undirected_after.graph");
+      system("dot -Tpng bin/undirected_after.graph -o bin/undirected_after.png");
 
       //exports
       config.setGraphName("reseau_routier");
-      Export::ToGraphviz(graph, config, "reseau_routier.graph");
+      Export::ToGraphviz(graph, config, "bin/reseau_routier.graph");
 
       config.setGraphName("chemins_dijkstra");
-      Export::ToGraphviz(allPaths_dijkstra, config, "chemins_dijkstra.graph");
+      Export::ToGraphviz(allPaths_dijkstra, config, "bin/chemins_dijkstra.graph");
 
       config.setGraphName("chemins_bellman");
-      Export::ToGraphviz(allPaths_bellman, config, "chemins_bellman.graph");
+      Export::ToGraphviz(allPaths_bellman, config, "bin/chemins_bellman.graph");
 
       config.setGraphName("chemins_bellman_rapide");
-      Export::ToGraphviz(allPaths_greedy_bellman, config, "chemins_bellman_rapide.graph");
+      Export::ToGraphviz(allPaths_greedy_bellman, config, "bin/chemins_bellman_rapide.graph");
 
       highlight = config;
       highlight.setGraphName("highlight_dijkstra");
       Export::GraphvizPathsHighlight(highlight, dijkstra_between, nodeStyle);
-      Export::ToGraphviz(graph, highlight, "highlight_dijkstra.graph");
+      Export::ToGraphviz(graph, highlight, "bin/highlight_dijkstra.graph");
 
       highlight = config;
       highlight.setGraphName("highlight_bellman");
       Export::GraphvizPathsHighlight(highlight, bellman_between, nodeStyle);
-      Export::ToGraphviz(graph, highlight, "highlight_bellman.graph");
+      Export::ToGraphviz(graph, highlight, "bin/highlight_bellman.graph");
 
       highlight = config;
       highlight.setGraphName("highlight_greedy_bellman");
       Export::GraphvizPathsHighlight(highlight, greedy_bellman_between, nodeStyle);
-      Export::ToGraphviz(graph, highlight, "highlight_greedy_bellman.graph");
+      Export::ToGraphviz(graph, highlight, "bin/highlight_greedy_bellman.graph");
 
       //compilations dot
 #ifdef _SYSTEM
 
-      system("dot -Tpng reseau_routier.graph -o reseau_routier.png");
+      system("dot -Tpng bin/reseau_routier.graph -o bin/reseau_routier.png");
 
-      system("dot -Tpng chemins_dijkstra.graph -o chemins_dijkstra.png");
-      system("dot -Tpng chemins_bellman.graph -o chemins_bellman.png");
-      system("dot -Tpng chemins_bellman_rapide.graph -o chemins_bellman_rapide.png");
+      system("dot -Tpng bin/chemins_dijkstra.graph -o bin/chemins_dijkstra.png");
+      system("dot -Tpng bin/chemins_bellman.graph -o bin/chemins_bellman.png");
+      system("dot -Tpng bin/chemins_bellman_rapide.graph -o bin/chemins_bellman_rapide.png");
 
-      system("dot -Tpng highlight_dijkstra.graph -o highlight_dijkstra.png");
-      system("dot -Tpng highlight_bellman.graph -o highlight_bellman.png");
-      system("dot -Tpng highlight_greedy_bellman.graph -o highlight_greedy_bellman.png");
+      system("dot -Tpng bin/highlight_dijkstra.graph -o bin/highlight_dijkstra.png");
+      system("dot -Tpng bin/highlight_bellman.graph -o bin/highlight_bellman.png");
+      system("dot -Tpng bin/highlight_greedy_bellman.graph -o bin/highlight_greedy_bellman.png");
 
 #endif
 
       //affichages
       std::cout << "Le graphe du réseau routier a été exporté dans le fichier reseau_routier.graph" << std::endl;
-      std::cout << "dot -Tpng reseau_routier.graph -o reseau_routier.png" << std::endl << std::endl;
+      std::cout << "dot -Tpng bin/reseau_routier.graph -o bin/reseau_routier.png" << std::endl << std::endl;
 
-      std::cout << "dot -Tpng chemins_dijkstra.graph -o chemins_dijkstra.png" << std::endl;
+      std::cout << "dot -Tpng bin/chemins_dijkstra.graph -o bin/chemins_dijkstra.png" << std::endl;
       std::cout << "Le graphe des chemins par Dijkstra a été exporté dans le fichier chemins_dijkstra.png" << std::endl << std::endl;
 
-      std::cout << "dot -Tpng chemins_bellman.graph -o chemins_bellman.png" << std::endl;
+      std::cout << "dot -Tpng bin/chemins_bellman.graph -o bin/chemins_bellman.png" << std::endl;
       std::cout << "Le graphe des chemins par Bellman a été exporté dans le fichier chemins_bellman.png" << std::endl << std::endl;
 
-      std::cout << "dot -Tpng chemins_bellman_rapide.graph -o chemins_bellman_rapide.png" << std::endl;
+      std::cout << "dot -Tpng bin/chemins_bellman_rapide.graph -o bin/chemins_bellman_rapide.png" << std::endl;
       std::cout << "Le graphe des chemins par Bellman a été exporté dans le fichier chemins_bellman_rapide.png" << std::endl << std::endl;
 
-      std::cout << "dot -Tpng highlight_dijkstra.graph -o highlight_dijkstra.png" << std::endl;
+      std::cout << "dot -Tpng bin/highlight_dijkstra.graph -o bin/highlight_dijkstra.png" << std::endl;
       std::cout << "Les chemins optimaux entre les deux villes sont visibles sur l'image highlight_dijkstra.png" << std::endl << std::endl;
 
-      std::cout << "dot -Tpng highlight_bellman.graph -o highlight_bellman.png" << std::endl;
+      std::cout << "dot -Tpng bin/highlight_bellman.graph -o bin/highlight_bellman.png" << std::endl;
       std::cout << "Les chemins optimaux entre les deux villes sont visibles sur l'image highlight_bellman.png" << std::endl << std::endl;
 
-      std::cout << "dot -Tpng highlight_greedy_bellman.graph -o highlight_greedy_bellman.png" << std::endl;
+      std::cout << "dot -Tpng bin/highlight_greedy_bellman.graph -o bin/highlight_greedy_bellman.png" << std::endl;
       std::cout << "Les chemins optimaux entre les deux villes sont visibles sur l'image highlight_greedy_bellman.png" << std::endl;
 
     }

@@ -57,8 +57,8 @@ int main()
 #ifdef _SYSTEM
 
       //compilation dot
-      system("dot -Tpng test_Xdijkstra.graph -o test_Xdijkstra.png");
-      system("dot -Tpng paths_Xdijkstra.graph -o paths_Xdijkstra.png");
+      system("dot -Tpng bin/test_Xdijkstra.graph -o bin/bin/test_Xdijkstra.png");
+      system("dot -Tpng bin/paths_Xdijkstra.graph -o bin/bin/paths_Xdijkstra.png");
 
 #endif
 
@@ -66,10 +66,10 @@ int main()
       std::cout << "Graph a été exporté dans le fichier test_Xdijkstra.graph" << std::endl;
       std::cout << "Arbre des chemins a été exporté dans le fichier paths_Xdijkstra.graph" << std::endl;
 
-      std::cout << std::endl << "dot -Tpng test_Xdijkstra.graph -o test_Xdijkstra.png" << std::endl;
+      std::cout << std::endl << "dot -Tpng bin/test_Xdijkstra.graph -o bin/bin/test_Xdijkstra.png" << std::endl;
       std::cout << "Graph a été compilé dans le fichier test_Xdijkstra.png" << std::endl;
 
-      std::cout << std::endl << "dot -Tpng paths_Xdijkstra.graph -o paths_dijkstra.png" << std::endl;
+      std::cout << std::endl << "dot -Tpng bin/paths_Xdijkstra.graph -o bin/bin/paths_dijkstra.png" << std::endl;
       std::cout << "Arbre des chemins a été compilé dans le fichier paths_Xdijkstra.png" << std::endl;
 
     }

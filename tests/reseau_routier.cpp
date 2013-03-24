@@ -92,29 +92,29 @@ int main()
   try
     {
 
-      Export::ToGraphviz(graph, config, "reseau_routier.graph");
+      Export::ToGraphviz(graph, config, "bin/reseau_routier.graph");
       std::cout << "Le graphe a été exporté dans le fichier reseau_routier.graph" << std::endl << std::endl;
-      std::cout << "dot -Tpng reseau_routier.graph -o reseau_routier.png" << std::endl << std::endl;
+      std::cout << "dot -Tpng bin/reseau_routier.graph -o bin/reseau_routier.png" << std::endl << std::endl;
 
       min_tree = Acm::Prim(graph);
       std::cout << "Prim, Coût: " << min_tree.cost() << std::endl << std::endl;
 
-      Export::ToGraphviz(min_tree, config, "acm_prim.graph");
+      Export::ToGraphviz(min_tree, config, "bin/acm_prim.graph");
       std::cout << "L'arbre a été exporté dans le fichier acm_prim.graph" << std::endl;
-      std::cout << "dot -Tpng acm_prim.graph -o acm_prim.png" << std::endl << std::endl;
+      std::cout << "dot -Tpng bin/acm_prim.graph -o bin/acm_prim.png" << std::endl << std::endl;
 
       min_tree = Acm::Kruskal(graph);
       std::cout << "Kruskal, Coût: " << min_tree.cost() << std::endl << std::endl;
 
-      Export::ToGraphviz(min_tree, config, "acm_kruskal.graph");
+      Export::ToGraphviz(min_tree, config, "bin/acm_kruskal.graph");
       std::cout << "L'arbre a été exporté dans le fichier acm_kruskal.graph" << std::endl;
-      std::cout << "dot -Tpng acm_kruskal.graph -o acm_kruskal.png" << std::endl << std::endl;
+      std::cout << "dot -Tpng bin/acm_kruskal.graph -o bin/acm_kruskal.png" << std::endl << std::endl;
 
 #ifdef _SYSTEM
 
-      system("dot -Tpng reseau_routier.graph -o reseau_routier.png");
-      system("dot -Tpng acm_prim.graph -o acm_prim.png");
-      system("dot -Tpng acm_kruskal.graph -o acm_kruskal.png");
+      system("dot -Tpng bin/reseau_routier.graph -o bin/reseau_routier.png");
+      system("dot -Tpng bin/acm_prim.graph -o bin/acm_prim.png");
+      system("dot -Tpng bin/acm_kruskal.graph -o bin/acm_kruskal.png");
 
 #endif
 

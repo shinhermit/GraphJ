@@ -28,7 +28,7 @@ int main()
   activities.add_edge(3,5);
   activities.add_edge(4,5);
 
-  Exporter<PlanningActivity>::ToGraphviz(activities, "activityGraph.graph");
+  Exporter<PlanningActivity>::ToGraphviz(activities, "bin/activityGraph.graph");
 
   MpmNetworkBuilder mpmBuilder(activities);
   MpmNetwork mpm;
@@ -37,7 +37,7 @@ int main()
   mpmBuilder.buildInto(mpm);
 
   Export::GraphvizMpmPrepare(mpm, config);
-  Export::ToGraphviz(mpm, config, "flowGraph.graph");
+  Export::ToGraphviz(mpm, config, "bin/flowGraph.graph");
 
   MpmDatesComputer dates(mpm);
   dates.compute();
@@ -45,10 +45,10 @@ int main()
   config.setGraphLabel("MPM chart");
   Export::GraphvizMpmPrepare(mpm, config);
   Export::GraphvizPathHighlight( config, dates.criticalPath() );
-  Export::ToGraphviz(mpm, config, "MPM_chart.graph");
+  Export::ToGraphviz(mpm, config, "bin/MPM_chart.graph");
 
-  system("dot -Tpng activityGraph.graph -o activityGraph.png");
-  system("dot -Tpng flowGraph.graph -o flowGraph.png");
-  system("dot -Tpng MPM_chart.graph -o MPM_chart.png");
+  system("dot -Tpng bin/activityGraph.graph -o bin/activityGraph.png");
+  system("dot -Tpng bin/flowGraph.graph -o bin/flowGraph.png");
+  system("dot -Tpng bin/MPM_chart.graph -o bin/MPM_chart.png");
 
 }

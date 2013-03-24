@@ -79,7 +79,7 @@ int main()
     activities.add_edge(11,12);
     activities.add_edge(11,14);
 
-    Exporter<PlanningActivity>::ToGraphviz(activities, "activityGraph.graph");
+    Exporter<PlanningActivity>::ToGraphviz(activities, "bin/activityGraph.graph");
 
     MpmNetworkBuilder mpmBuilder(activities);
 
@@ -92,9 +92,9 @@ int main()
   config.setGraphLabel("MPM chart TP1");
   Export::GraphvizMpmPrepare(network, config);
   Export::GraphvizPathHighlight( config, dates.criticalPath() );
-  Export::ToGraphviz(network, config, "MPM_chart.graph");
+  Export::ToGraphviz(network, config, "bin/MPM_chart.graph");
 
-  system("dot -Tpng MPM_chart.graph -o MPM_chart.png");
+  system("dot -Tpng bin/MPM_chart.graph -o bin/MPM_chart.png");
 
   return 0;
 }

@@ -42,12 +42,12 @@ int main()
 	  config.attributesOf(it->first).setStyle(GraphTypes::Graphviz::StyleAttribute::FILLED);
 	}
 
-      Export::ToGraphviz(graph, config, "test_coloring.graph");
+      Export::ToGraphviz(graph, config, "bin/test_coloring.graph");
       std::cout << "Le graphe a été exporté dans le fichier test_coloring.graph" << std::endl;
 
 #ifdef _SYSTEM
 
-      system("dot -Tpng test_coloring.graph -o test_coloring.png");
+      system("dot -Tpng bin/test_coloring.graph -o bin/test_coloring.png");
 
 #endif
 

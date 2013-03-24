@@ -37,16 +37,16 @@ int main()
       paths_dynamic = lookup.resultGraph();
 
       //Exports
-      Export::ToGraphviz(graph, "test_bellman.graph");
-      Export::ToGraphviz(paths_greedy, "greedy_bellman.graph");
-      Export::ToGraphviz(paths_dynamic, "dynamic_bellman.graph");
+      Export::ToGraphviz(graph, "bin/test_bellman.graph");
+      Export::ToGraphviz(paths_greedy, "bin/greedy_bellman.graph");
+      Export::ToGraphviz(paths_dynamic, "bin/dynamic_bellman.graph");
 
 #ifdef _SYSTEM
 
       //compilation dot
-      system("dot -Tpng test_bellman.graph -o test_bellman.png");
-      system("dot -Tpng greedy_bellman.graph -o greedy_bellman.png");
-      system("dot -Tpng dynamic_bellman.graph -o dynamic_bellman.png");
+      system("dot -Tpng bin/test_bellman.graph -o bin/test_bellman.png");
+      system("dot -Tpng bin/greedy_bellman.graph -o bin/greedy_bellman.png");
+      system("dot -Tpng bin/dynamic_bellman.graph -o bin/dynamic_bellman.png");
 
 #endif
 
@@ -55,9 +55,9 @@ int main()
       std::cout << "Bellman Glouton: Arbre des chemins a été exporté dans le fichier greedy_bellman.graph" << std::endl;
       std::cout << "Bellman Dynamique: Arbre des chemins a été exporté dans le fichier dynamic_bellman.graph" << std::endl;
 
-      std::cout << std::endl << "dot -Tpng test_bellman.graph -o test_bellman.png" << std::endl;
+      std::cout << std::endl << "dot -Tpng bin/test_bellman.graph -o bin/test_bellman.png" << std::endl;
       std::cout << "Graph a été compilé dans le fichier test_bellman.png" << std::endl;
-      std::cout << std::endl << "dot -Tpng paths_bellman.graph -o paths_bellman.png" << std::endl;
+      std::cout << std::endl << "dot -Tpng bin/paths_bellman.graph -o bin/paths_bellman.png" << std::endl;
       std::cout << "Bellman glouton: arbre des chemins a été compilé dans le fichier greedy_bellman.png" << std::endl;
       std::cout << "Bellman dynamique: arbre des chemins a été compilé dans le fichier dynamic_bellman.png" << std::endl;
 

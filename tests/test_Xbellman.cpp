@@ -38,15 +38,15 @@ int main()
       //Exports
       config.setGraphName("test_Xbellman");
       Export::GraphvizPathsHighlight(config, lookup.paths_to(5), nodeStyle);
-      Export::ToGraphviz(graph, config, "test_Xbellman.graph");
+      Export::ToGraphviz(graph, config, "bin/test_Xbellman.graph");
 
-      Export::ToGraphviz(lookup.resultGraph(), GraphvizAttributesHolder("paths_Xbellman"), "paths_Xbellman.graph");
+      Export::ToGraphviz(lookup.resultGraph(), GraphvizAttributesHolder("paths_Xbellman"), "bin/paths_Xbellman.graph");
 
 #ifdef _SYSTEM
 
       //compilation dot
-      system("dot -Tpng test_Xbellman.graph -o test_Xbellman.png");
-      system("dot -Tpng paths_Xbellman.graph -o paths_Xbellman.png");
+      system("dot -Tpng bin/test_Xbellman.graph -o bin/test_Xbellman.png");
+      system("dot -Tpng bin/paths_Xbellman.graph -o bin/paths_Xbellman.png");
 
 #endif
 
@@ -54,9 +54,9 @@ int main()
       std::cout << "Graph a été exporté dans le fichier test_Xbellman.graph" << std::endl;
       std::cout << "Arbre des chemins a été exporté dans le fichier paths_Xbellman.graph" << std::endl;
 
-      std::cout << std::endl << "dot -Tpng test_Xbellman.graph -o test_Xbellman.png" << std::endl;
+      std::cout << std::endl << "dot -Tpng bin/test_Xbellman.graph -o bin/test_Xbellman.png" << std::endl;
       std::cout << "Graph a été compilé dans le fichier test_Xbellman.png" << std::endl;
-      std::cout << std::endl << "dot -Tpng paths_Xbellman.graph -o paths_Xbellman.png" << std::endl;
+      std::cout << std::endl << "dot -Tpng bin/paths_Xbellman.graph -o bin/paths_Xbellman.png" << std::endl;
       std::cout << "Arbre des chemins a été compilé dans le fichier paths_Xbellman.png" << std::endl;
     }
 

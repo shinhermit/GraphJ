@@ -42,15 +42,15 @@ int main()
       //Exports
       config.setGraphName("test_dijkstra");
       Export::GraphvizPathsHighlight(config, lookup.paths_to(6), nodeStyle);
-      Export::ToGraphviz(graph, config, "test_dijkstra.graph");
+      Export::ToGraphviz(graph, config, "bin/test_dijkstra.graph");
 
-      Export::ToGraphviz(lookup.resultGraph(), GraphvizAttributesHolder("paths_dijkstra"), "paths_dijkstra.graph");
+      Export::ToGraphviz(lookup.resultGraph(), GraphvizAttributesHolder("paths_dijkstra"), "bin/paths_dijkstra.graph");
 
 #ifdef _SYSTEM
 
       //compilation dot
-      system("dot -Tpng test_dijkstra.graph -o test_dijkstra.png");
-      system("dot -Tpng paths_dijkstra.graph -o paths_dijkstra.png");
+      system("dot -Tpng bin/test_dijkstra.graph -o bin/test_dijkstra.png");
+      system("dot -Tpng bin/paths_dijkstra.graph -o bin/paths_dijkstra.png");
 
 #endif
 
@@ -58,8 +58,8 @@ int main()
       std::cout << "Le graphe a été exporté dans le fichier test_dijkstra.graph" << std::endl;
       std::cout << "L'arbre des chemins a été exporté dans le fichier paths_dijkstra.graph" << std::endl << std::endl;
 
-      std::cout << std::endl << "dot -Tpng test_dijkstra.graph -o test_dijkstra.png" << std::endl;
-      std::cout << std::endl << "dot -Tpng paths_dijkstra.graph -o paths_dijkstra.png" << std::endl << std::endl;
+      std::cout << std::endl << "dot -Tpng bin/test_dijkstra.graph -o bin/test_dijkstra.png" << std::endl;
+      std::cout << std::endl << "dot -Tpng bin/paths_dijkstra.graph -o bin/paths_dijkstra.png" << std::endl << std::endl;
 
       std::cout << "Le graphe a été exporté dans le fichier test_dijkstra.png" << std::endl;
       std::cout << "L'arbre des chemins a été exporté dans le fichier paths_dijkstra.png" << std::endl << std::endl;

@@ -34,26 +34,26 @@ int main()
     {
       std::cout << "Coût graph initial: " << graph.cost() << std::endl << std::endl;
 
-      Export::ToGraphviz(graph, "graph_res_route.graph");
+      Export::ToGraphviz(graph, "bin/graph_res_route.graph");
       std::cout << "Le graph a été exporté dans le fichier graph_res_route.graph" << std::endl << std::endl;
 
       min_tree = Acm::Prim(graph);
       std::cout << "Prim, Coût:" << min_tree.cost() << std::endl << std::endl;
 
-      Export::ToGraphviz(min_tree, "acm_prim.graph");
+      Export::ToGraphviz(min_tree, "bin/acm_prim.graph");
       std::cout << "L'arbre couvrant a été exporté dans le fichier acm_prim.graph" << std::endl << std::endl;
 
       min_tree = Acm::Kruskal(graph);
       std::cout << "Kruskal, Coût: " << min_tree.cost() << std::endl << std::endl;
 
-      Export::ToGraphviz(min_tree, "acm_kruskal.graph");
+      Export::ToGraphviz(min_tree, "bin/acm_kruskal.graph");
       std::cout << "L'arbre couvrant a été exporté dans le fichier acm_kruskal.graph" << std::endl << std::endl;
 
 #ifdef _SYSTEM
 
-      system("dot -Tpng graph_res_route.graph -o graph_res_route.png");
-      system("dot -Tpng acm_kruskal.graph -o acm_kruskal.png");
-      system("dot -Tpng acm_prim.graph -o acm_prim.png");
+      system("dot -Tpng bin/graph_res_route.graph -o bin/graph_res_route.png");
+      system("dot -Tpng bin/acm_kruskal.graph -o bin/acm_kruskal.png");
+      system("dot -Tpng bin/acm_prim.graph -o bin/acm_prim.png");
 
 #endif
 

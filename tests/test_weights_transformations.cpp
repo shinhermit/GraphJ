@@ -33,42 +33,42 @@ int main()
       involution =  Transformer::Reverse_weights_order(reversed_order);
 
       //exports
-      Export::ToGraphviz(graph, "initial.graph");
-      Export::ToGraphviz(negatived, "negative_weights.graph");
-      Export::ToGraphviz(translated, "offset_translation.graph");
-      Export::ToGraphviz(translated_positive, "positive_translation.graph");
-      Export::ToGraphviz(reversed_order, "order_reversion.graph");
-      Export::ToGraphviz(involution, "reversion_involution.graph");
+      Export::ToGraphviz(graph, "bin/initial.graph");
+      Export::ToGraphviz(negatived, "bin/negative_weights.graph");
+      Export::ToGraphviz(translated, "bin/offset_translation.graph");
+      Export::ToGraphviz(translated_positive, "bin/positive_translation.graph");
+      Export::ToGraphviz(reversed_order, "bin/order_reversion.graph");
+      Export::ToGraphviz(involution, "bin/reversion_involution.graph");
 
 #ifdef _SYSTEM
 
       //compilations
-      system("dot -Tpng initial.graph -o initial.png");
-      system("dot -Tpng negative_weights.graph -o negative_weights.png");
-      system("dot -Tpng offset_translation.graph -o offset_translation.png");
-      system("dot -Tpng positive_translation.graph -o positive_translation.png");
-      system("dot -Tpng order_reversion.graph -o order_reversion.png");
-      system("dot -Tpng reversion_involution.graph -o reversion_involution.png");
+      system("dot -Tpng bin/initial.graph -o bin/initial.png");
+      system("dot -Tpng bin/negative_weights.graph -o bin/negative_weights.png");
+      system("dot -Tpng bin/offset_translation.graph -o bin/offset_translation.png");
+      system("dot -Tpng bin/positive_translation.graph -o bin/positive_translation.png");
+      system("dot -Tpng bin/order_reversion.graph -o bin/order_reversion.png");
+      system("dot -Tpng bin/reversion_involution.graph -o bin/reversion_involution.png");
 
 #endif
 
       //affichages
-      std::cout << "dot -Tpng initial.graph -o initial.png" << std::endl;
+      std::cout << "dot -Tpng bin/initial.graph -o bin/initial.png" << std::endl;
       std::cout << "Le graphe de départ a été exporté dans le fichier initial.png" << std::endl << std::endl;
 
-      std::cout << "dot -Tpng negative_weights.graph -o negative_weights.png" << std::endl;
+      std::cout << "dot -Tpng bin/negative_weights.graph -o bin/negative_weights.png" << std::endl;
       std::cout << "Le graphe des poids transformé en négatifs a été exporté dans le fichier negative_weights.png" << std::endl << std::endl;
 
-      std::cout << "dot -Tpng offset_translation.graph -o offset_translation.png" << std::endl;
+      std::cout << "dot -Tpng bin/offset_translation.graph -o bin/offset_translation.png" << std::endl;
       std::cout << "Le graphe de la translation par offset a été exporté dans le fichier offset_translation.png" << std::endl << std::endl;
 
-      std::cout << "dot -Tpng positive_translation.graph -o positive_translation.png" << std::endl;
+      std::cout << "dot -Tpng bin/positive_translation.graph -o bin/positive_translation.png" << std::endl;
       std::cout << "Le graphe de translation dans l'espace des positifs a été exporté dans le fichier positive_translation.png" << std::endl << std::endl;
 
-      std::cout << "dot -Tpng order_reversion.graph -o order_reversion.png" << std::endl;
+      std::cout << "dot -Tpng bin/order_reversion.graph -o bin/order_reversion.png" << std::endl;
       std::cout << "Le graphe d'inversion de l'ordre des poids a été exporté dans le fichier order_reversion.png" << std::endl << std::endl;
 
-      std::cout << "dot -Tpng reversion_involution.graph -o reversion_involution.png" << std::endl;
+      std::cout << "dot -Tpng bin/reversion_involution.graph -o bin/reversion_involution.png" << std::endl;
       std::cout << "Le graphe d'inversion involutive des poids a été exporté dans le fichier reversion_involution.png" << std::endl << std::endl;
     }
 

@@ -43,9 +43,9 @@ int main()
 
   std::cout << "Graphe des franchissements" << std::endl;
 
-  Convert::ToGraphviz(franchissements, config1, "franchissements.graph");
+  Convert::ToGraphviz(franchissements, config1, "bin/franchissements.graph");
   std::cout << "Le graphe a été exporté dans le fichier franchissements.graph" << std::endl << std::endl;
-  std::cout << "dot -Tpng franchissements.graph -o franchissements.png" << std::endl << std::endl;
+  std::cout << "dot -Tpng bin/franchissements.graph -o bin/franchissements.png" << std::endl << std::endl;
 
 
   //graphe de la relations "les franchissements sont compatibles"
@@ -85,9 +85,9 @@ int main()
 
   std::cout << "Graphe des incompatibilités de franchissement" << std::endl;
 
-  Export::ToGraphviz(incompatibles, config2, "incompatibles.graph");
+  Export::ToGraphviz(incompatibles, config2, "bin/incompatibles.graph");
   std::cout << "Le graphe a été exporté dans le fichier incompatibles.graph" << std::endl << std::endl;
-  std::cout << "dot -Tpng incompatibles.graph -o incompatibles.png" << std::endl << std::endl;
+  std::cout << "dot -Tpng bin/incompatibles.graph -o bin/incompatibles.png" << std::endl << std::endl;
 
   std::cout << "Coloration des franchissements compatibles" << std::endl;
   Coloring::Welsh(incompatibles, color_mapper);
@@ -100,15 +100,15 @@ int main()
       config2.attributesOf(it->first).setStyle(GraphTypes::Graphviz::StyleAttribute::FILLED);
     }
 
-  Export::ToGraphviz(incompatibles, config2, "coloration.graph");
+  Export::ToGraphviz(incompatibles, config2, "bin/coloration.graph");
   std::cout << "Le graphe a été exporté dans le fichier coloration.graph" << std::endl << std::endl;
-  std::cout << "dot -Tpng coloration.graph -o coloration.png" << std::endl << std::endl;
+  std::cout << "dot -Tpng bin/coloration.graph -o bin/coloration.png" << std::endl << std::endl;
 
 #ifdef _SYSTEM
 
-  system("dot -Tpng franchissements.graph -o franchissements.png");
-  system("dot -Tpng incompatibles.graph -o incompatibles.png");
-  system("dot -Tpng coloration.graph -o coloration.png");
+  system("dot -Tpng bin/franchissements.graph -o bin/franchissements.png");
+  system("dot -Tpng bin/incompatibles.graph -o bin/incompatibles.png");
+  system("dot -Tpng bin/coloration.graph -o bin/coloration.png");
 
 #endif
 
