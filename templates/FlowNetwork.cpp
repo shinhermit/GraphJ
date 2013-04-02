@@ -406,16 +406,16 @@ GraphTypes::Flow FlowNetwork<Type>::contribution(const GraphTypes::node_id & nod
 }
 
 template<typename Type>
-const GraphTypes::Flow & FlowNetwork<Type>::minCapacity(const GraphTypes::node_id & sourceNode,
-							const GraphTypes::node_id & targetNode)
+GraphTypes::Flow FlowNetwork<Type>::minCapacity(const GraphTypes::node_id & sourceNode,
+							const GraphTypes::node_id & targetNode) const
   throw(GraphException::InvalidEdge)
 {
   if( this->flowGraph().has_edge(sourceNode, targetNode) )
     {
-      std::map<Edge, GraphTypes::Flow>::iterator it = _minCapacities.find( Edge(sourceNode, targetNode) );
+      std::map<Edge, GraphTypes::Flow>::const_iterator it = _minCapacities.find( Edge(sourceNode, targetNode) );
 
       if( it != _minCapacities.end() )
-	return *it;
+	return it->second;
 
       else
 	return 0;
@@ -428,13 +428,13 @@ const GraphTypes::Flow & FlowNetwork<Type>::minCapacity(const GraphTypes::node_i
 }
 
 template<typename Type>
-const GraphTypes::Flow & FlowNetwork<Type>::flow(const GraphTypes::node_id & sourceNode,
-						 const GraphTypes::node_id & targetNode)
+GraphTypes::Flow FlowNetwork<Type>::flow(const GraphTypes::node_id & sourceNode,
+						 const GraphTypes::node_id & targetNode) const
   throw(GraphException::InvalidEdge)
 {
   try
     {
-      return (GraphTypes::Flow &) this->flowGraph().getCost(sourceNode, targetNode);
+      return (GraphTypes::Flow) this->flowGraph().getCost(sourceNode, targetNode);
     }
 
   catch(const GraphException::InvalidEdge&)
@@ -444,16 +444,16 @@ const GraphTypes::Flow & FlowNetwork<Type>::flow(const GraphTypes::node_id & sou
 }
 
 template<typename Type>
-const GraphTypes::Flow & FlowNetwork<Type>::maxCapacity(const GraphTypes::node_id & sourceNode,
-							const GraphTypes::node_id & targetNode)
+GraphTypes::Flow FlowNetwork<Type>::maxCapacity(const GraphTypes::node_id & sourceNode,
+							const GraphTypes::node_id & targetNode) const
   throw(GraphException::InvalidEdge)
 {
   if( this->flowGraph().has_edge(sourceNode, targetNode) )
     {
-      std::map<Edge, GraphTypes::Flow>::iterator it = _maxCapacities.find( Edge(sourceNode, targetNode) );
+      std::map<Edge, GraphTypes::Flow>::const_iterator it = _maxCapacities.find( Edge(sourceNode, targetNode) );
 
       if( it != _maxCapacities.end() )
-	return *it;
+	return it->second;
 
       else
 	return 0;

@@ -8,26 +8,6 @@
 template<typename Type=GraphTypes::Default>
 class FlowNetwork : public CanonicalNetwork<Type>
 {
-private:
-  std::map<Edge, GraphTypes::Flow> _minCapacities; //only minCap > 0 are stored
-  std::map<Edge, GraphTypes::Flow> _maxCapacities;
-  std::map<GraphTypes::node_id, GraphTypes::Flow> _nodesCapacities;  //only nodeCap > 0 are stored
-
-  void _add_node_capacity(const GraphTypes::node_id & node,
-			  const GraphTypes::Flow & capacity);
-
-  void _clean_capacity_map(std::map<Edge, GraphTypes::Flow> & capacityMap, const GraphTypes::node_id & node);
-
-  void _add_edge_capacities(const GraphTypes::node_id & sourceNode,
-			    const GraphTypes::node_id & targetNode,
-			    const GraphTypes::Flow & minCapacity,
-			    const GraphTypes::Flow & maxCapacity);
-
-  void _remove_edge_capacities(const GraphTypes::node_id & sourceNode,
-			       const GraphTypes::node_id & targetNode);
-
-  GraphTypes::node_id _find_free_node_id();
-
 public:
   FlowNetwork(const GraphTypes::node_id & sourceNode,
 	      const GraphTypes::node_id & sinkNode,
@@ -155,16 +135,16 @@ public:
   GraphTypes::Flow contribution(const GraphTypes::node_id & node)
     throw(GraphException::InvalidNodeID);
 
-  const GraphTypes::Flow & minCapacity(const GraphTypes::node_id & sourceNode,
-				       const GraphTypes::node_id & targetNode)
+  GraphTypes::Flow minCapacity(const GraphTypes::node_id & sourceNode,
+				       const GraphTypes::node_id & targetNode) const
     throw(GraphException::InvalidEdge);
 
-  const GraphTypes::Flow & flow(const GraphTypes::node_id & sourceNode,
-				const GraphTypes::node_id & targetNode)
+  GraphTypes::Flow flow(const GraphTypes::node_id & sourceNode,
+				const GraphTypes::node_id & targetNode) const
     throw(GraphException::InvalidEdge);
 
-  const GraphTypes::Flow & maxCapacity(const GraphTypes::node_id & sourceNode,
-				       const GraphTypes::node_id & targetNode)
+  GraphTypes::Flow maxCapacity(const GraphTypes::node_id & sourceNode,
+				       const GraphTypes::node_id & targetNode) const
     throw(GraphException::InvalidEdge);
 
   //all min capacities to zero
@@ -178,6 +158,25 @@ public:
 
   void normalize();
 
+private:
+  std::map<Edge, GraphTypes::Flow> _minCapacities; //only minCap > 0 are stored
+  std::map<Edge, GraphTypes::Flow> _maxCapacities;
+  std::map<GraphTypes::node_id, GraphTypes::Flow> _nodesCapacities;  //only nodeCap > 0 are stored
+
+  void _add_node_capacity(const GraphTypes::node_id & node,
+			  const GraphTypes::Flow & capacity);
+
+  void _clean_capacity_map(std::map<Edge, GraphTypes::Flow> & capacityMap, const GraphTypes::node_id & node);
+
+  void _add_edge_capacities(const GraphTypes::node_id & sourceNode,
+			    const GraphTypes::node_id & targetNode,
+			    const GraphTypes::Flow & minCapacity,
+			    const GraphTypes::Flow & maxCapacity);
+
+  void _remove_edge_capacities(const GraphTypes::node_id & sourceNode,
+			       const GraphTypes::node_id & targetNode);
+
+  GraphTypes::node_id _find_free_node_id();
 };
 
 #include "FlowNetwork.cpp"

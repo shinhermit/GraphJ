@@ -2,7 +2,7 @@ cmake:
 	cd build; cmake .. -G"Unix Makefiles"
 
 %.o:
-	g++ -Wall -Wextra -Iinc -Itemplates -g -c src/$(@:.o=.cpp)
+	g++ -Wall -Wextra -Iheaders -Itemplates -g -c src/$(@:.o=.cpp)
 
 %:
 	cd build; make $@

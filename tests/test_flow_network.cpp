@@ -4,7 +4,7 @@
 #include "FlowNetwork.hpp"
 #include "Importer.hpp"
 #include "Exporter.hpp"
-#include <CommandLineParser.hpp>
+#include "CommandLineParser.hpp"
 
 int main(int argc, char ** argv)
 {

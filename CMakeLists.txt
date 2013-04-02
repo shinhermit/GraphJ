@@ -87,6 +87,12 @@ add_executable(
   )
 
 add_executable(
+  test_residual_graph_builder
+  tests/test_fn_residual_builder.cpp
+  ${sources}
+  )
+
+add_executable(
   reseau_routier
   tests/reseau_routier.cpp
   ${sources}
