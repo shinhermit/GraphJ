@@ -5,22 +5,12 @@ FnResidualBuilder<Type>::FnResidualBuilder(const FlowNetwork<Type> & network):
 {}
 
 template<typename Type>
-void FnResidualBuilder<Type>::_copy_nodes()
-{
-  for(typename Graph<Type>::NodeIterator node = _network.flowGraph().nodes_begin();
-      node != _network.flowGraph().nodes_end();
-      ++node)
-    {
-      _residualGraph.add_node(*node);
-    }
-}
-
-template<typename Type>
 void FnResidualBuilder<Type>::build()
 {
   GraphTypes::Flow directResidual, inverseResidual;
 
-  _copy_nodes();
+  if(_residualGraph.nodes_size() != 0)
+    _residualGraph = Graph<>(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
 
   for(typename Graph<Type>::EdgeIterator edge = _network.flowGraph().edges_begin();
       edge != _network.flowGraph().edges_end();
@@ -37,7 +27,7 @@ void FnResidualBuilder<Type>::build()
 	_residualGraph.add_edge(source, target, directResidual);
 
       if(inverseResidual > 0)
-	_residualGraph.add_edge(target, source, inverseResidual);
+	_residualGraph.add_edge(target, source, 0-inverseResidual); //le signe indique le sens de parcours
     }
 }
 

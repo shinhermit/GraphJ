@@ -16,8 +16,6 @@ public:
 private:
   const FlowNetwork<Type> & _network;
   Graph<> _residualGraph;
-
-  void _copy_nodes();
 };
 
 #include "FnResidualBuilder.cpp"

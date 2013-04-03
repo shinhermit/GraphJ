@@ -5,62 +5,58 @@
 #include "Graph.hpp"
 #include "Visitor.hpp"
 
-template<typename Type=GraphTypes::Default>
+template<typename Content=GraphTypes::Default>
 class Traverse
 {
 public:
-  static void Nodes(Graph<Type> & graph,
+  static void Nodes(Graph<Content> & graph,
 		    GraphFunctor::Visitor & visit);
 
-  static void Breadth_once(Graph<Type> & graph,
+  static void Breadth_once(Graph<Content> & graph,
 			   const GraphTypes::node_id & node,
 			   GraphFunctor::Visitor & visit);
 
-  static void Breadth(Graph<Type> & graph,
+  static void Breadth(Graph<Content> & graph,
 		      GraphFunctor::Visitor & visit);
 
-  static void Depth_once(Graph<Type> & graph,
+  static void Depth_once(Graph<Content> & graph,
 			 const GraphTypes::node_id & node,
 			 GraphFunctor::Visitor & visit);
 
-  static void Depth(Graph<Type> & graph,
+  static void Depth(Graph<Content> & graph,
 		    GraphFunctor::Visitor & visit);
 
 
 
-  Traverse(Graph<Type> & graph);
+  Traverse(Graph<Content> & graph);
 
-  void breadth_once(Graph<Type> & graph,
-		    const GraphTypes::node_id & node,
+  void breadth_once(const GraphTypes::node_id & node,
 		    GraphFunctor::Visitor & visit);
 
-  void breadth(Graph<Type> & graph,
-	       GraphFunctor::Visitor & visit);
+  void breadth(GraphFunctor::Visitor & visit);
 
-  void depth_once(Graph<Type> & graph,
-		  const GraphTypes::node_id & node,
+  void depth_once(const GraphTypes::node_id & node,
 		  GraphFunctor::Visitor & visit);
 
-  void depth(Graph<Type> & graph,
-	     GraphFunctor::Visitor & visit);
+  void depth(GraphFunctor::Visitor & visit);
 
   const Graph<> & traversingGraph()const;
   
 private:
-  Graph<Type> & _graph;
+  Graph<Content> & _graph;
   Graph<> _marker;
 
-  static void Traverse<Type>::_Add_edge(Graph<> & marker,
-					Graph<Type> & graph,
-					const GraphTypes::node_id & source,
-					const GraphTypes::node_id & target);
+  static void _Add_edge(Graph<> & marker,
+					   Graph<Content> & graph,
+					   const GraphTypes::node_id & source,
+					   const GraphTypes::node_id & target);
 
-  static void _Breadth_once(Graph<Type> & graph,
+  static void _Breadth_once(Graph<Content> & graph,
 			    const GraphTypes::node_id & node,
 			    GraphFunctor::Visitor & visit,
 			    Graph<> & marker);
 
-  static void _Depth_once(Graph<Type> & graph,
+  static void _Depth_once(Graph<Content> & graph,
 			  const GraphTypes::node_id & node,
 			  GraphFunctor::Visitor & visit,
 			  Graph<> & marker);

@@ -1,8 +1,8 @@
-template<typename Type>
-void Traverse<Type>::_Add_edge(Graph<> & marker,
-			       Graph<Type> & graph,
-			       const GraphTypes::node_id & source,
-			       const GraphTypes::node_id & target)
+template<typename Content>
+void Traverse<Content>::_Add_edge(Graph<> & marker,
+				  Graph<Content> & graph,
+				  const GraphTypes::node_id & source,
+				  const GraphTypes::node_id & target)
 {
   if(graph.is_weighted)
     marker.add_edge( source, target, graph.getCost(source, target) );
@@ -11,15 +11,15 @@ void Traverse<Type>::_Add_edge(Graph<> & marker,
     marker.add_edge(source, target);
 }
 
-template<typename Type>
-void Traverse<Type>::_Breadth_once(Graph<Type> & graph,
-				   const GraphTypes::node_id & node,
-				   GraphFunctor::Visitor & visit,
-				   Graph<> & marker)
+template<typename Content>
+void Traverse<Content>::_Breadth_once(Graph<Content> & graph,
+				      const GraphTypes::node_id & node,
+				      GraphFunctor::Visitor & visit,
+				      Graph<> & marker)
 {
-  typename Graph<Type>::NodeIterator begin;
-  typename Graph<Type>::NodeIterator end;
-  typename Graph<Type>::NodeIterator it;
+  typename Graph<Content>::NodeIterator begin;
+  typename Graph<Content>::NodeIterator end;
+  typename Graph<Content>::NodeIterator it;
   GraphTypes::node_id son;
   std::deque<GraphTypes::node_id> waiters;
 
@@ -58,15 +58,15 @@ void Traverse<Type>::_Breadth_once(Graph<Type> & graph,
     }
 }
 
-template<typename Type>
-void Traverse<Type>::_Depth_once(Graph<Type> & graph,
-				 const GraphTypes::node_id & node,
-				 GraphFunctor::Visitor & visit,
-				 Graph<> & marker)
+template<typename Content>
+void Traverse<Content>::_Depth_once(Graph<Content> & graph,
+				    const GraphTypes::node_id & node,
+				    GraphFunctor::Visitor & visit,
+				    Graph<> & marker)
 {
-  typename Graph<Type>::NodeIterator begin;
-  typename Graph<Type>::NodeIterator end;
-  typename Graph<Type>::NodeIterator it;
+  typename Graph<Content>::NodeIterator begin;
+  typename Graph<Content>::NodeIterator end;
+  typename Graph<Content>::NodeIterator it;
   GraphTypes::node_id curr_node;
 
   visit(node);
@@ -96,11 +96,11 @@ void Traverse<Type>::_Depth_once(Graph<Type> & graph,
     }
 }
 
-template<typename Type>
-void Traverse<Type>::Nodes(Graph<Type> & graph,
-			   GraphFunctor::Visitor & visit)
+template<typename Content>
+void Traverse<Content>::Nodes(Graph<Content> & graph,
+			      GraphFunctor::Visitor & visit)
 {
-  typename Graph<Type>::NodeIterator nodeIt;
+  typename Graph<Content>::NodeIterator nodeIt;
 
   nodeIt = graph.nodes_begin();
 
@@ -112,18 +112,18 @@ void Traverse<Type>::Nodes(Graph<Type> & graph,
     }
 }
 
-template<typename Type>
-void Traverse<Type>::Breadth_once(Graph<Type> & graph, const GraphTypes::node_id & node, GraphFunctor::Visitor & visit)
+template<typename Content>
+void Traverse<Content>::Breadth_once(Graph<Content> & graph, const GraphTypes::node_id & node, GraphFunctor::Visitor & visit)
 {
   Graph<> marker(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
   _Breadth_once(graph, node, visit, marker);
 }
 
-template<typename Type>
-void Traverse<Type>::Breadth(Graph<Type> & graph,
-			     GraphFunctor::Visitor & visit)
+template<typename Content>
+void Traverse<Content>::Breadth(Graph<Content> & graph,
+				GraphFunctor::Visitor & visit)
 {
-  typename Graph<Type>::NodeIterator nodeIt;
+  typename Graph<Content>::NodeIterator nodeIt;
   Graph<> marker(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
 
   nodeIt = graph.nodes_begin();
@@ -138,21 +138,21 @@ void Traverse<Type>::Breadth(Graph<Type> & graph,
 
 }
 
-template<typename Type>
-void Traverse<Type>::Depth_once(Graph<Type> & graph,
-				const GraphTypes::node_id & node,
-				GraphFunctor::Visitor & visit)
+template<typename Content>
+void Traverse<Content>::Depth_once(Graph<Content> & graph,
+				   const GraphTypes::node_id & node,
+				   GraphFunctor::Visitor & visit)
 {
   Graph<> marker(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
 
   _Depth_once(graph, node, visit, marker);
 }
 
-template<typename Type>
-void Traverse<Type>::Depth(Graph<Type> & graph,
-			   GraphFunctor::Visitor & visit)
+template<typename Content>
+void Traverse<Content>::Depth(Graph<Content> & graph,
+			      GraphFunctor::Visitor & visit)
 {
-  typename Graph<Type>::NodeIterator nodeIt;
+  typename Graph<Content>::NodeIterator nodeIt;
   Graph<> marker(graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT);
 
   nodeIt = graph.nodes_begin();
@@ -168,24 +168,24 @@ void Traverse<Type>::Depth(Graph<Type> & graph,
 }
 
 
-template<typename Type>
-Traverse<Type>::Traverse(Graph<Type> & graph):
+template<typename Content>
+Traverse<Content>::Traverse(Graph<Content> & graph):
   _graph(graph),
   _marker( graph.edgeType(), graph.edgeState(), GraphTypes::NOCONTENT )
 {}
 
-template<typename Type>
-void Traverse<Type>::breadth_once(const GraphTypes::node_id & node,
-				  GraphFunctor::Visitor & visit)
+template<typename Content>
+void Traverse<Content>::breadth_once(const GraphTypes::node_id & node,
+				     GraphFunctor::Visitor & visit)
 {
-  Breadth_once(_graph, node, visit, _maker);
+  Breadth_once(_graph, node, visit, _marker);
 }
 
-template<typename Type>
-void Traverse<Type>::breadth(GraphFunctor::Visitor & visit)
+template<typename Content>
+void Traverse<Content>::breadth(GraphFunctor::Visitor & visit)
 {
 
-  for(Graph<Type>::NodeIterator nodeIt nodeIt = _graph.nodes_begin();
+  for(typename Graph<Content>::NodeIterator nodeIt = _graph.nodes_begin();
       nodeIt != _graph.nodes_end();
       ++nodeIt)
     {
@@ -196,18 +196,18 @@ void Traverse<Type>::breadth(GraphFunctor::Visitor & visit)
 
 }
 
-template<typename Type>
-void Traverse<Type>::depth_once(const GraphTypes::node_id & node,
-				GraphFunctor::Visitor & visit)
+template<typename Content>
+void Traverse<Content>::depth_once(const GraphTypes::node_id & node,
+				   GraphFunctor::Visitor & visit)
 {
-  Depth_once(_graph, node, visit, _maker);
+  Depth_once(_graph, node, visit, _marker);
 }
 
-template<typename Type>
-void Traverse<Type>::depth(GraphFunctor::Visitor & visit)
+template<typename Content>
+void Traverse<Content>::depth(GraphFunctor::Visitor & visit)
 {
 
-  for(typename Graph<Type>::NodeIterator nodeIt = _graph.nodes_begin();
+  for(typename Graph<Content>::NodeIterator nodeIt = _graph.nodes_begin();
       nodeIt != _graph.nodes_end();
       ++nodeIt)
     {
@@ -217,8 +217,8 @@ void Traverse<Type>::depth(GraphFunctor::Visitor & visit)
     }
 }
 
-template<typename Type>
-const Graph<> & Traverse<Type>::traversingGraph()const
+template<typename Content>
+const Graph<> & Traverse<Content>::traversingGraph()const
 {
   return _marker;
 }
