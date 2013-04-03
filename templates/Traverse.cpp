@@ -218,7 +218,7 @@ void Traverse<Content>::depth(GraphFunctor::Visitor & visit)
 }
 
 template<typename Content>
-const Graph<> & Traverse<Content>::traversingGraph()const
+Graph<> & Traverse<Content>::traversingGraph()const
 {
   return _marker;
 }

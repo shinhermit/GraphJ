@@ -11,7 +11,7 @@ public:
 
   void build();
 
-  const Graph<> & residualGraph();
+  Graph<> & residualGraph();
 
 private:
   const FlowNetwork<Type> & _network;

@@ -32,7 +32,7 @@ void FnResidualBuilder<Type>::build()
 }
 
 template<typename Type>
-const Graph<> & FnResidualBuilder<Type>::residualGraph()
+Graph<> & FnResidualBuilder<Type>::residualGraph()
 {
   return _residualGraph;
 }
