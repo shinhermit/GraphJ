@@ -40,7 +40,7 @@ public:
 
   void depth(GraphFunctor::Visitor & visit);
 
-  Graph<> & traversingGraph()const;
+  Graph<> & traversingGraph();
   
 private:
   Graph<Content> & _graph;

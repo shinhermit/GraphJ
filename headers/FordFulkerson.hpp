@@ -5,6 +5,7 @@
 
 #include "FlowNetwork.hpp"
 #include "Traverse.hpp"
+#include "DoNothingVisitor.hpp"
 #include "FnResidualBuilder.hpp"
 
 template<typename Content=GraphTypes::Default>
@@ -13,17 +14,18 @@ class FordFulkerson
 public:
   FordFulkerson(FlowNetwork<Content> & network);
 
-  void maximize();
+  void maximizeFlow();
 
 private:
   FlowNetwork<Content> & _network;
   FnResidualBuilder<Content> _residualBuilder;
   Traverse<Content> _traverser;
   std::list<GraphTypes::node_id> _path;
+  GraphFunctor::DoNothingVisitor _noaction;
 
   void _nil_flow();
 
-  bool _exists_path_to_sink()const;
+  bool _exists_path_to_sink();
 
   void _extract_path_to_sink();
 

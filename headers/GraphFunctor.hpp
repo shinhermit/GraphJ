@@ -10,6 +10,7 @@
 #include "MpmEdgeWeighter.hpp"
 
 #include "Visitor.hpp" //abstract
+#include "DoNothingVisitor.hpp"
 #include "ColorizingVisitor.hpp"
 #include "DefaultVisitor.hpp"
 #include "MathVisitor.hpp"

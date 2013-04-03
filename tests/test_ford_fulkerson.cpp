@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "FnResidualBuilder.hpp"
+#include "FordFulkerson.hpp"
 #include "Importer.hpp"
 #include "Exporter.hpp"
 #include "CommandLineParser.hpp"
@@ -13,7 +13,7 @@ int main(int argc, char ** argv)
   std::map<std::string, std::string>::iterator it;
 
   FlowNetwork<> network(GraphTypes::NOCONTENT);
-  FnResidualBuilder<> builder(network);
+  FordFulkerson<> maximizer(network);
   GraphvizAttributesHolder config;
 
   typedef Exporter<> Export;
@@ -32,14 +32,12 @@ int main(int argc, char ** argv)
       Importer::User(network, config);
     }
 
-  builder.build();
+  Export::ToGraphviz(network, config, "bin/initial_network.graph");
 
+  maximizer.maximizeFlow();
 
-  Export::ToGraphviz(network, config, "bin/flow_network.graph");
-  Export::ToGraphviz(builder.residualGraph(), "bin/residual_graph.graph");
+  Export::ToGraphviz(network, config, "bin/maximized_network.graph");
 
-  ::system("dot -Tpng bin/flow_network.graph -o bin/flow_network.png");
-  ::system("dot -Tpng bin/residual_graph.graph -o bin/residual_graph.png");
-
-  return 0;
+  ::system("dot -Tpng bin/initial_network.graph -o bin/initial_network.png");
+  ::system("dot -Tpng bin/maximized_network.graph -o bin/maximized_network.png");
 }

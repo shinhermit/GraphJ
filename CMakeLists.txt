@@ -93,6 +93,12 @@ add_executable(
   )
 
 add_executable(
+  test_ford_fulkerson
+  tests/test_ford_fulkerson.cpp
+  ${sources}
+  )
+
+add_executable(
   reseau_routier
   tests/reseau_routier.cpp
   ${sources}

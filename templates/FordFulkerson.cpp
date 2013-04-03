@@ -1,19 +1,19 @@
 template<typename Content>
-FordFulkerson<Content>::FordFulkerson(const FlowNetwork<Content> & network):
+FordFulkerson<Content>::FordFulkerson(FlowNetwork<Content> & network):
   _network(network),
   _residualBuilder(_network),
   _traverser( _residualBuilder.residualGraph() )
 {}
 
 template<typename Content>
-void FordFulkerson<Content>::maximize()
+void FordFulkerson<Content>::maximizeFlow()
 {
   GraphTypes::Flow delta;
 
   _nil_flow();
 
   _residualBuilder.build();
-  _traverser.breadth_once( _network.source() );
+  _traverser.breadth_once( _network.source(), _noaction );
 
   while( _exists_path_to_sink() )
     {
@@ -24,7 +24,7 @@ void FordFulkerson<Content>::maximize()
       _change_flow(delta);
 
       _residualBuilder.build();
-      _traverser.breadth_once( _network.source() );
+      _traverser.breadth_once( _network.source(), _noaction );
     }
 }
 
@@ -40,7 +40,7 @@ void FordFulkerson<Content>::_nil_flow()
 }
 
 template<typename Content>
-bool FordFulkerson<Content>::_exists_path_to_sink()const
+bool FordFulkerson<Content>::_exists_path_to_sink()
 {
   return _traverser.traversingGraph().has_node( _network.sink() );
 }
@@ -59,7 +59,7 @@ void FordFulkerson<Content>::_extract_path_to_sink()
 
   while( traversing.predecessors_begin(currentNode) != traversing.predecessors_end(currentNode) )
     {
-      currentNode = *predecessors_begin(currentNode);
+      currentNode = *traversing.predecessors_begin(currentNode);
       _path.push_front(currentNode);
     }
 }
@@ -72,7 +72,7 @@ GraphTypes::Flow FordFulkerson<Content>::_min_residual_on_path()
   const Graph<> & traversing = _traverser.traversingGraph();
 
   if( _path.begin() != _path.end() && ++_path.begin() != _path.end() )
-    min = ::abs( traversing.getCost(_path.begin(), ++_path.begin()) );
+    min = ::abs( traversing.getCost(*_path.begin(), *++_path.begin()) );
 
   succ = _path.begin();
   while( succ != _path.end() )

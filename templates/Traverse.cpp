@@ -4,7 +4,7 @@ void Traverse<Content>::_Add_edge(Graph<> & marker,
 				  const GraphTypes::node_id & source,
 				  const GraphTypes::node_id & target)
 {
-  if(graph.is_weighted)
+  if( graph.is_weighted() )
     marker.add_edge( source, target, graph.getCost(source, target) );
 
   else
@@ -178,7 +178,7 @@ template<typename Content>
 void Traverse<Content>::breadth_once(const GraphTypes::node_id & node,
 				     GraphFunctor::Visitor & visit)
 {
-  Breadth_once(_graph, node, visit, _marker);
+  _Breadth_once(_graph, node, visit, _marker);
 }
 
 template<typename Content>
@@ -200,7 +200,7 @@ template<typename Content>
 void Traverse<Content>::depth_once(const GraphTypes::node_id & node,
 				   GraphFunctor::Visitor & visit)
 {
-  Depth_once(_graph, node, visit, _marker);
+  _Depth_once(_graph, node, visit, _marker);
 }
 
 template<typename Content>
@@ -218,7 +218,7 @@ void Traverse<Content>::depth(GraphFunctor::Visitor & visit)
 }
 
 template<typename Content>
-Graph<> & Traverse<Content>::traversingGraph()const
+Graph<> & Traverse<Content>::traversingGraph()
 {
   return _marker;
 }
