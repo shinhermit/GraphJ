@@ -46,12 +46,26 @@ void Importer::_raw(FlowNetwork<> & network,
       network.add_flow(i, j, minCapacity, flow, maxCapacity);
 
       label = "(";
-      label += StringJ::From<GraphTypes::Flow>(minCapacity)+","+StringJ::From<GraphTypes::Flow>(minCapacity)+","+StringJ::From<GraphTypes::Flow>(flow)+")";
+      label += StringJ::From<GraphTypes::Flow>(minCapacity)+","+StringJ::From<GraphTypes::Flow>(maxCapacity)+","+StringJ::From<GraphTypes::Flow>(flow)+")";
       config.attributesOf( Edge(i,j) ).setLabel(label);
 
       if( in.good() )
 	in >> sourceNodeLabel;
     }
+
+  //source and sink
+  if( in.good() )
+    {
+      in >> label;
+      network.setSource( labelToIdMapper[label] );
+    }
+
+  if( in.good() )
+    {
+      in >> label;
+      network.setSink( labelToIdMapper[label] );
+    }
+  
   
 }
   

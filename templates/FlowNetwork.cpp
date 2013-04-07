@@ -389,8 +389,8 @@ GraphTypes::Flow FlowNetwork<Type>::contribution(const GraphTypes::node_id & nod
 	  contribution -= flow(*pred, node);
 	}
 
-      for(typename Graph<Type>::NodeIterator succ = this->flowGraph().succecessors_begin(node);
-	  succ != this->flowGraph().succecessors_begin(node);
+      for(typename Graph<Type>::NodeIterator succ = this->flowGraph().successors_begin(node);
+	  succ != this->flowGraph().successors_begin(node);
 	  ++succ)
 	{
 	  contribution += flow(node, *succ);
@@ -469,15 +469,15 @@ GraphTypes::Flow FlowNetwork<Type>::maxCapacity(const GraphTypes::node_id & sour
 template<typename Type>
 void FlowNetwork<Type>::minCapacitiesToZero()
 {
-  for(std::map<Edge, GraphTypes::Flow>::iterator it = _minCapacities.begin();
-      it != _minCapacities.end();
-      ++it)
+std::map<Edge, GraphTypes::Flow>::iterator it = _minCapacities.begin();
+ while( it != _minCapacities.end() )
     {
       const GraphTypes::node_id & sourceNode = it->first.source();
       const GraphTypes::node_id & targetNode = it->first.target();
       const GraphTypes::Flow & minCapacity = it->second;
 
       _maxCapacities[Edge(sourceNode, targetNode)] -= minCapacity;
+      setFlow( sourceNode, targetNode, flow(sourceNode, targetNode) - minCapacity );
 
       _minCapacities.erase(it++);
     }
@@ -522,14 +522,14 @@ void FlowNetwork<Type>::uniqueContributors()
       node != this->flowGraph().nodes_begin();
       ++node)
     {
-      GraphTypes::Flow contribution = contribution(*node);
-      if( contribution != 0 )
+      GraphTypes::Flow contrib = contribution(*node);
+      if( contrib != 0 )
 	{
-	  if(contribution > 0)
-	    add_flow(this->source(), *node, 0, contribution);
+	  if(contrib > 0)
+	    add_flow(this->source(), *node, 0, contrib);
 
 	  else
-	    add_flow(*node, this->sink(), 0, 0-contribution);
+	    add_flow(*node, this->sink(), 0, 0-contrib);
 	}
     }
 }
@@ -541,7 +541,7 @@ void FlowNetwork<Type>::normalize()
   this->minCapacitiesToZero();
 
   //No capacities on nodes
-  this->nodesCapacitiesToFlowCapacity();
+  this->nodesCapacitiesToFlowCapacities();
 
   //only one source and only one sink
   this->uniqueContributors();

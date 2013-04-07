@@ -10,10 +10,14 @@ void FordFulkerson<Content>::maximizeFlow()
 {
   GraphTypes::Flow delta;
 
-  _nil_flow();
+  // _network.normalize();
+  // _nil_flow();
 
   _residualBuilder.build();
   _traverser.breadth_once( _network.source(), _noaction );
+
+  Exporter<>::ToGraphviz(_network, Exporter<>::SetFnCapacities(_network), "bin/initial.graph");
+  ::system("dot -Tpng bin/initial.graph -o bin/initial.png");
 
   while( _exists_path_to_sink() )
     {
@@ -23,9 +27,27 @@ void FordFulkerson<Content>::maximizeFlow()
 
       _change_flow(delta);
 
+      std::cout << "path: ";
+      for(std::list<GraphTypes::node_id>::iterator it=_path.begin(); it!=_path.end(); ++it)
+	std::cout << *it << " ";
+      std::cout << std::endl;
+
+      std::cout << "delta = " << delta <<std::endl;
+
+      Exporter<>::ToGraphviz(_traverser.traversingGraph(), "bin/traversing.graph");
+      ::system("dot -Tpng bin/traversing.graph -o bin/traversing.png");
+      Exporter<>::ToGraphviz(_residualBuilder.residualGraph(), "bin/residual.graph");
+      ::system("dot -Tpng bin/residual.graph -o bin/residual.png");
+      Exporter<>::ToGraphviz(_network, Exporter<>::SetFnCapacities(_network), "bin/modified.graph");
+      ::system("dot -Tpng bin/modified.graph -o bin/modified.png");
+
+      ::getchar();
+
       _residualBuilder.build();
       _traverser.breadth_once( _network.source(), _noaction );
     }
+  Exporter<>::ToGraphviz(_residualBuilder.residualGraph(), "bin/lastResidual.graph");
+  ::system("dot -Tpng bin/lastResidual.graph -o bin/lastResidual.png");
 }
 
 template<typename Content>
@@ -51,6 +73,9 @@ void FordFulkerson<Content>::_extract_path_to_sink()
   GraphTypes::node_id currentNode, predecessor;
   const Graph<> & traversing = _traverser.traversingGraph();
 
+  _traverser.breadth_once( _network.source(), _noaction );
+
+
   if( _path.size() > 0 )
     _path.clear();
 
@@ -71,8 +96,7 @@ GraphTypes::Flow FordFulkerson<Content>::_min_residual_on_path()
   std::list<GraphTypes::node_id>::iterator pred, succ;
   const Graph<> & traversing = _traverser.traversingGraph();
 
-  if( _path.begin() != _path.end() && ++_path.begin() != _path.end() )
-    min = ::abs( traversing.getCost(*_path.begin(), *++_path.begin()) );
+  min = ::abs( traversing.getCost(*_path.begin(), *++_path.begin()) );
 
   succ = _path.begin();
   while( succ != _path.end() )
@@ -111,10 +135,11 @@ void FordFulkerson<Content>::_change_flow(const GraphTypes::Flow & delta)
 	  residual = _residualBuilder.residualGraph().getCost(*pred, *succ);
 
 	  newFlow = oldFlow + ( residual / ::abs(residual) ) * delta;
+	  std::cout << "Changing flow between " << *pred << ","<< *succ << " from " << oldFlow << " to " << newFlow << std::endl;
 
 	  _network.setFlow(*pred, *succ, newFlow);
+	  ++succ;
 	}
 
-      ++succ;
     }
 }

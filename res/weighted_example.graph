@@ -1,0 +1,18 @@
+DIRECTED WEIGHTED NOCONTENT
+A
+B
+C
+D
+E
+F
+fin.
+A B 2
+A C 2
+B C 3
+C D 2
+C E 3
+D B 2
+D F 2
+E D 1
+E F 2
+fin.

@@ -243,6 +243,38 @@ void Exporter<Type>::GraphvizMpmPrepare(const MpmNetwork & network,
 }
 
 template<typename Type>
+void Exporter<Type>::SetFnCapacities(const FlowNetwork<Type> & network,
+				     GraphvizAttributesHolder & config)
+{
+  std::string label;
+  const Graph<Type> & flowGraph = network.flowGraph();
+  GraphTypes::Flow minCapacity, maxCapacity, flow;
+
+  for(typename Graph<Type>::EdgeIterator edge=flowGraph.edges_begin();
+      edge!=flowGraph.edges_end();
+      ++edge)
+    {
+      minCapacity = network.minCapacity( edge->source(), edge->target() );
+      maxCapacity = network.maxCapacity( edge->source(), edge->target() );
+      flow = network.flow( edge->source(), edge->target() );
+
+      label = "(";
+      label += StringJ::From<GraphTypes::Flow>(minCapacity)+","+StringJ::From<GraphTypes::Flow>(maxCapacity)+","+StringJ::From<GraphTypes::Flow>(flow)+")";
+      config.attributesOf(*edge).setLabel(label);
+    }
+}
+
+
+template<typename Type>
+GraphvizAttributesHolder Exporter<Type>::SetFnCapacities(const FlowNetwork<Type> & network)
+{
+  GraphvizAttributesHolder config;
+  SetFnCapacities(network, config);
+
+  return config;
+}
+
+template<typename Type>
 std::string Exporter<Type>::ToGraphviz(const Graph<Type> & graph,
 				       const GraphvizAttributesHolder & config)
 {

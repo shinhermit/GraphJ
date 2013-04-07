@@ -1,0 +1,18 @@
+DIRECTED WEIGHTED CONTAINER
+A 1 2.4 "une chaine" 'c' 2 4 true
+B -1 2.4 "mon nom" 'c' 0 3 true
+C 2 2.4 "raa" 'c' -1 5 false
+D 3 2.4 "bleue" 'c' 2 6 true
+E 1 2.4 "vador" 'c' 6 4 false
+F 5 2.4 "humm..." 'c' 9 1 true
+fin.
+A B 2
+A C 2
+B C 3
+C D 2
+C E 3
+D B 2
+D F 2
+E D 1
+E F 2
+fin.

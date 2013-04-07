@@ -178,6 +178,9 @@ template<typename Content>
 void Traverse<Content>::breadth_once(const GraphTypes::node_id & node,
 				     GraphFunctor::Visitor & visit)
 {
+  if( _marker.nodes_size() != 0 )
+    _marker = Graph<>( _graph.edgeType(), _graph.edgeState(), GraphTypes::NOCONTENT );
+
   _Breadth_once(_graph, node, visit, _marker);
 }
 
@@ -200,6 +203,9 @@ template<typename Content>
 void Traverse<Content>::depth_once(const GraphTypes::node_id & node,
 				   GraphFunctor::Visitor & visit)
 {
+  if( _marker.nodes_size() != 0 )
+    _marker = Graph<>( _graph.edgeType(), _graph.edgeState(), GraphTypes::NOCONTENT );
+
   _Depth_once(_graph, node, visit, _marker);
 }
 

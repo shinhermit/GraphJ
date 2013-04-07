@@ -2,11 +2,15 @@
 #define _FordFulkerson
 
 #include <cmath>
+#include <cstdlib>
 
 #include "FlowNetwork.hpp"
 #include "Traverse.hpp"
 #include "DoNothingVisitor.hpp"
 #include "FnResidualBuilder.hpp"
+
+#include <cstdio>
+#include "Exporter.hpp"
 
 template<typename Content=GraphTypes::Default>
 class FordFulkerson

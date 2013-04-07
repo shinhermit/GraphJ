@@ -35,5 +35,11 @@ int main(int argc, char ** argv)
 
   ::system("dot -Tpng bin/test_flow_network.graph -o bin/test_flow_network.png");
 
+  network.normalize();
+  Export::SetFnCapacities(network, config);
+  Export::ToGraphviz(network, config, "bin/test_flow_network_normalized.graph");
+
+  ::system("dot -Tpng bin/test_flow_network_normalized.graph -o bin/test_flow_network_normalized.png");
+
   return 0;
 }

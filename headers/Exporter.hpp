@@ -12,6 +12,8 @@
 #include "Color.hpp"
 #include "NamedColor.hpp"
 #include "MpmNetwork.hpp"
+#include "FlowNetwork.hpp"
+#include "StringJ.hpp"
 
 template<typename Type=GraphTypes::Default>
 class Exporter{
@@ -62,6 +64,11 @@ public:
 
   static void GraphvizMpmPrepare(const MpmNetwork & network,
 				 GraphvizAttributesHolder & config);
+
+  static void SetFnCapacities(const FlowNetwork<Type> & network,
+			      GraphvizAttributesHolder & config);
+
+  static GraphvizAttributesHolder SetFnCapacities(const FlowNetwork<Type> & network);
 
   static std::string ToGraphviz(const Graph<Type> & graph,
 				const GraphvizAttributesHolder & config);

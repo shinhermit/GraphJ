@@ -36,6 +36,7 @@ int main(int argc, char ** argv)
 
   maximizer.maximizeFlow();
 
+  Export::SetFnCapacities(network, config);
   Export::ToGraphviz(network, config, "bin/maximized_network.graph");
 
   ::system("dot -Tpng bin/initial_network.graph -o bin/initial_network.png");
