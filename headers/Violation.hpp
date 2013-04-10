@@ -1,6 +1,8 @@
 #ifndef _Violation
 #define _Violation
 
+#include <string>
+
 namespace GraphTypes
 {
   namespace FlowTypes

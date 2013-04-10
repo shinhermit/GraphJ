@@ -11,7 +11,7 @@ Violation::Violation(const Violation::E_Violation & violationType):
   _violationType(violationType)
 {}
 
-Violation::Violation(const Violation & source)
+Violation::Violation(const Violation & source):
   _violationType(source._violationType)
 {}
 
@@ -59,7 +59,7 @@ std::string Violation::toString()const
 {
   std::string conv;
 
-  switch(_violation)
+  switch(_violationType)
     {
     case UNDEFINED:
       conv = "Unset violation";

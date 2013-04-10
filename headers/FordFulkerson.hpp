@@ -18,7 +18,7 @@ public:
 
   const GraphTypes::FlowTypes::Violation &  violation()const;
 
-  void maximizeFlow();
+  void maximizeFlow() throw(GraphException::IncompatibleNetwork);
 
 private:
   FlowNetwork<Content> & _network;
