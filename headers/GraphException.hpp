@@ -5,5 +5,6 @@
 #include "InvalidNodeID.hpp"
 #include "InvalidEdge.hpp"
 #include "InvalidOperation.hpp"
+#include "IncompatibleNetwork.hpp"
 
 #endif

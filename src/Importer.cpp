@@ -8,7 +8,7 @@ void Importer::_raw(FlowNetwork<> & network,
 {
   std::string label(""), sourceNodeLabel(""), targetNodeLabel("");
   std::map<std::string, GraphTypes::node_id> labelToIdMapper;
-  GraphTypes::Flow minCapacity, maxCapacity, flow;
+  GraphTypes::FlowTypes::Flow minCapacity, maxCapacity, flow;
   int i, j;
 
   //nodes
@@ -46,7 +46,7 @@ void Importer::_raw(FlowNetwork<> & network,
       network.add_flow(i, j, minCapacity, flow, maxCapacity);
 
       label = "(";
-      label += StringJ::From<GraphTypes::Flow>(minCapacity)+","+StringJ::From<GraphTypes::Flow>(maxCapacity)+","+StringJ::From<GraphTypes::Flow>(flow)+")";
+      label += StringJ::From<GraphTypes::FlowTypes::Flow>(minCapacity)+","+StringJ::From<GraphTypes::FlowTypes::Flow>(maxCapacity)+","+StringJ::From<GraphTypes::FlowTypes::Flow>(flow)+")";
       config.attributesOf( Edge(i,j) ).setLabel(label);
 
       if( in.good() )

@@ -248,7 +248,7 @@ void Exporter<Type>::SetFnCapacities(const FlowNetwork<Type> & network,
 {
   std::string label;
   const Graph<Type> & flowGraph = network.flowGraph();
-  GraphTypes::Flow minCapacity, maxCapacity, flow;
+  GraphTypes::FlowTypes::Flow minCapacity, maxCapacity, flow;
 
   for(typename Graph<Type>::EdgeIterator edge=flowGraph.edges_begin();
       edge!=flowGraph.edges_end();
@@ -259,7 +259,7 @@ void Exporter<Type>::SetFnCapacities(const FlowNetwork<Type> & network,
       flow = network.flow( edge->source(), edge->target() );
 
       label = "(";
-      label += StringJ::From<GraphTypes::Flow>(minCapacity)+","+StringJ::From<GraphTypes::Flow>(maxCapacity)+","+StringJ::From<GraphTypes::Flow>(flow)+")";
+      label += StringJ::From<GraphTypes::FlowTypes::Flow>(minCapacity)+","+StringJ::From<GraphTypes::FlowTypes::Flow>(maxCapacity)+","+StringJ::From<GraphTypes::FlowTypes::Flow>(flow)+")";
       config.attributesOf(*edge).setLabel(label);
     }
 }

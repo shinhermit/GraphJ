@@ -38,112 +38,112 @@ public:
 
   void add_node(const GraphTypes::node_id & node,
 		const Type & content,
-		const GraphTypes::Flow & capacity);
+		const GraphTypes::FlowTypes::Flow & capacity);
 
   void add_node(const GraphTypes::node_id & node,
-		const GraphTypes::Flow & capacity) throw(GraphException::InvalidOperation);
+		const GraphTypes::FlowTypes::Flow & capacity) throw(GraphException::InvalidOperation);
 
   void remove_node(const GraphTypes::node_id & node);
 
   //add_flow without node Capacity
   void add_flow(const GraphTypes::node_id & sourceNode,
 		const GraphTypes::node_id & targetNode,
-		const GraphTypes::Flow & minCapacity,
-		const GraphTypes::Flow & flowValue,
-		const GraphTypes::Flow & maxCapacity) throw(GraphException::InvalidOperation);
+		const GraphTypes::FlowTypes::Flow & minCapacity,
+		const GraphTypes::FlowTypes::Flow & flowValue,
+		const GraphTypes::FlowTypes::Flow & maxCapacity) throw(GraphException::InvalidOperation);
 
   void add_flow(const GraphTypes::node_id & sourceNode,
 		const GraphTypes::node_id & targetNode,
-		const GraphTypes::Flow & flowValue,
-		const GraphTypes::Flow & maxCapacity) throw(GraphException::InvalidOperation);
-
-  void add_flow(const GraphTypes::node_id & sourceNode,
-		const Type & sourceNodeConent,
-		const GraphTypes::node_id & targetNode,
-		const Type & targetNodeConent,
-		const GraphTypes::Flow & minCapacity,
-		const GraphTypes::Flow & flowValue,
-		const GraphTypes::Flow & maxCapacity);
+		const GraphTypes::FlowTypes::Flow & flowValue,
+		const GraphTypes::FlowTypes::Flow & maxCapacity) throw(GraphException::InvalidOperation);
 
   void add_flow(const GraphTypes::node_id & sourceNode,
 		const Type & sourceNodeConent,
 		const GraphTypes::node_id & targetNode,
 		const Type & targetNodeConent,
-		const GraphTypes::Flow & flowValue,
-		const GraphTypes::Flow & maxCapacity);
+		const GraphTypes::FlowTypes::Flow & minCapacity,
+		const GraphTypes::FlowTypes::Flow & flowValue,
+		const GraphTypes::FlowTypes::Flow & maxCapacity);
+
+  void add_flow(const GraphTypes::node_id & sourceNode,
+		const Type & sourceNodeConent,
+		const GraphTypes::node_id & targetNode,
+		const Type & targetNodeConent,
+		const GraphTypes::FlowTypes::Flow & flowValue,
+		const GraphTypes::FlowTypes::Flow & maxCapacity);
 
   //add_flow with node Capacities
   void add_flow(const GraphTypes::node_id & sourceNode,
-		const GraphTypes::Flow & sourceNodeCapacity,
+		const GraphTypes::FlowTypes::Flow & sourceNodeCapacity,
 		const GraphTypes::node_id & targetNode,
-		const GraphTypes::Flow & targetNodeCapacity,
-		const GraphTypes::Flow & minCapacity,
-		const GraphTypes::Flow & flowValue,
-		const GraphTypes::Flow & maxCapacity) throw(GraphException::InvalidOperation);
+		const GraphTypes::FlowTypes::Flow & targetNodeCapacity,
+		const GraphTypes::FlowTypes::Flow & minCapacity,
+		const GraphTypes::FlowTypes::Flow & flowValue,
+		const GraphTypes::FlowTypes::Flow & maxCapacity) throw(GraphException::InvalidOperation);
 
   void add_flow(const GraphTypes::node_id & sourceNode,
-		const GraphTypes::Flow & sourceNodeCapacity,
+		const GraphTypes::FlowTypes::Flow & sourceNodeCapacity,
 		const GraphTypes::node_id & targetNode,
-		const GraphTypes::Flow & targetNodeCapacity,
-		const GraphTypes::Flow & flowValue,
-		const GraphTypes::Flow & maxCapacity) throw(GraphException::InvalidOperation);
-
-  void add_flow(const GraphTypes::node_id & sourceNode,
-		const Type & sourceNodeConent,
-		const GraphTypes::Flow & sourceNodeCapacity,
-		const GraphTypes::node_id & targetNode,
-		const Type & targetNodeConent,
-		const GraphTypes::Flow & targetNodeCapacity,
-		const GraphTypes::Flow & minCapacity,
-		const GraphTypes::Flow & flowValue,
-		const GraphTypes::Flow & maxCapacity);
+		const GraphTypes::FlowTypes::Flow & targetNodeCapacity,
+		const GraphTypes::FlowTypes::Flow & flowValue,
+		const GraphTypes::FlowTypes::Flow & maxCapacity) throw(GraphException::InvalidOperation);
 
   void add_flow(const GraphTypes::node_id & sourceNode,
 		const Type & sourceNodeConent,
-		const GraphTypes::Flow & sourceNodeCapacity,
+		const GraphTypes::FlowTypes::Flow & sourceNodeCapacity,
 		const GraphTypes::node_id & targetNode,
 		const Type & targetNodeConent,
-		const GraphTypes::Flow & targetNodeCapacity,
-		const GraphTypes::Flow & flowValue,
-		const GraphTypes::Flow & maxCapacity);
+		const GraphTypes::FlowTypes::Flow & targetNodeCapacity,
+		const GraphTypes::FlowTypes::Flow & minCapacity,
+		const GraphTypes::FlowTypes::Flow & flowValue,
+		const GraphTypes::FlowTypes::Flow & maxCapacity);
+
+  void add_flow(const GraphTypes::node_id & sourceNode,
+		const Type & sourceNodeConent,
+		const GraphTypes::FlowTypes::Flow & sourceNodeCapacity,
+		const GraphTypes::node_id & targetNode,
+		const Type & targetNodeConent,
+		const GraphTypes::FlowTypes::Flow & targetNodeCapacity,
+		const GraphTypes::FlowTypes::Flow & flowValue,
+		const GraphTypes::FlowTypes::Flow & maxCapacity);
 
   void remove_flow(const GraphTypes::node_id & sourceNode,
 		   const GraphTypes::node_id & targetNode);
 
   void setNodeCapacity(const GraphTypes::node_id & node,
-		       const GraphTypes::Flow & capacity)
+		       const GraphTypes::FlowTypes::Flow & capacity)
     throw(GraphException::InvalidNodeID);
 
   void setMinCapacity(const GraphTypes::node_id & sourceNode,
 		      const GraphTypes::node_id & targetNode,
-		      const GraphTypes::Flow & capacity)
+		      const GraphTypes::FlowTypes::Flow & capacity)
     throw(GraphException::InvalidEdge);
 
   void setFlow(const GraphTypes::node_id & sourceNode,
 	       const GraphTypes::node_id & targetNode,
-	       const GraphTypes::Flow & flow)
+	       const GraphTypes::FlowTypes::Flow & flow)
     throw(GraphException::InvalidEdge);
 
   void setMaxCapacity(const GraphTypes::node_id & sourceNode,
 		      const GraphTypes::node_id & targetNode,
-		      const GraphTypes::Flow & capacity)
+		      const GraphTypes::FlowTypes::Flow & capacity)
     throw(GraphException::InvalidEdge);
 
-  const GraphTypes::Flow & nodeCapacity(const GraphTypes::node_id & node)
+  const GraphTypes::FlowTypes::Flow & nodeCapacity(const GraphTypes::node_id & node)
     throw(GraphException::InvalidNodeID);
 
-  GraphTypes::Flow contribution(const GraphTypes::node_id & node)
+  GraphTypes::FlowTypes::Flow contribution(const GraphTypes::node_id & node)
     throw(GraphException::InvalidNodeID);
 
-  GraphTypes::Flow minCapacity(const GraphTypes::node_id & sourceNode,
+  GraphTypes::FlowTypes::Flow minCapacity(const GraphTypes::node_id & sourceNode,
 				       const GraphTypes::node_id & targetNode) const
     throw(GraphException::InvalidEdge);
 
-  GraphTypes::Flow flow(const GraphTypes::node_id & sourceNode,
+  GraphTypes::FlowTypes::Flow flow(const GraphTypes::node_id & sourceNode,
 				const GraphTypes::node_id & targetNode) const
     throw(GraphException::InvalidEdge);
 
-  GraphTypes::Flow maxCapacity(const GraphTypes::node_id & sourceNode,
+  GraphTypes::FlowTypes::Flow maxCapacity(const GraphTypes::node_id & sourceNode,
 				       const GraphTypes::node_id & targetNode) const
     throw(GraphException::InvalidEdge);
 
@@ -159,19 +159,19 @@ public:
   void normalize();
 
 private:
-  std::map<Edge, GraphTypes::Flow> _minCapacities; //only minCap > 0 are stored
-  std::map<Edge, GraphTypes::Flow> _maxCapacities;
-  std::map<GraphTypes::node_id, GraphTypes::Flow> _nodesCapacities;  //only nodeCap > 0 are stored
+  std::map<Edge, GraphTypes::FlowTypes::Flow> _minCapacities; //only minCap > 0 are stored
+  std::map<Edge, GraphTypes::FlowTypes::Flow> _maxCapacities;
+  std::map<GraphTypes::node_id, GraphTypes::FlowTypes::Flow> _nodesCapacities;  //only nodeCap > 0 are stored
 
   void _add_node_capacity(const GraphTypes::node_id & node,
-			  const GraphTypes::Flow & capacity);
+			  const GraphTypes::FlowTypes::Flow & capacity);
 
-  void _clean_capacity_map(std::map<Edge, GraphTypes::Flow> & capacityMap, const GraphTypes::node_id & node);
+  void _clean_capacity_map(std::map<Edge, GraphTypes::FlowTypes::Flow> & capacityMap, const GraphTypes::node_id & node);
 
   void _add_edge_capacities(const GraphTypes::node_id & sourceNode,
 			    const GraphTypes::node_id & targetNode,
-			    const GraphTypes::Flow & minCapacity,
-			    const GraphTypes::Flow & maxCapacity);
+			    const GraphTypes::FlowTypes::Flow & minCapacity,
+			    const GraphTypes::FlowTypes::Flow & maxCapacity);
 
   void _remove_edge_capacities(const GraphTypes::node_id & sourceNode,
 			       const GraphTypes::node_id & targetNode);

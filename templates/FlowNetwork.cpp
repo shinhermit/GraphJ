@@ -1,6 +1,6 @@
 
 template<typename Type>
-void FlowNetwork<Type>::_add_node_capacity(const GraphTypes::node_id & node, const GraphTypes::Flow & capacity)
+void FlowNetwork<Type>::_add_node_capacity(const GraphTypes::node_id & node, const GraphTypes::FlowTypes::Flow & capacity)
 {
 
   if(capacity != 0)
@@ -8,9 +8,9 @@ void FlowNetwork<Type>::_add_node_capacity(const GraphTypes::node_id & node, con
 }
 
 template<typename Type>
-void FlowNetwork<Type>::_clean_capacity_map(std::map<Edge, GraphTypes::Flow> & capacityMap, const GraphTypes::node_id & node)
+void FlowNetwork<Type>::_clean_capacity_map(std::map<Edge, GraphTypes::FlowTypes::Flow> & capacityMap, const GraphTypes::node_id & node)
 {
-  for(std::map<Edge, GraphTypes::Flow>::iterator it = capacityMap.begin();
+  for(std::map<Edge, GraphTypes::FlowTypes::Flow>::iterator it = capacityMap.begin();
       it != capacityMap.end();
       ++it)
     {
@@ -27,8 +27,8 @@ void FlowNetwork<Type>::_clean_capacity_map(std::map<Edge, GraphTypes::Flow> & c
 template<typename Type>
 void FlowNetwork<Type>::_add_edge_capacities(const GraphTypes::node_id & sourceNode,
 				       const GraphTypes::node_id & targetNode,
-				       const GraphTypes::Flow & minCapacity,
-				       const GraphTypes::Flow & maxCapacity)
+				       const GraphTypes::FlowTypes::Flow & minCapacity,
+				       const GraphTypes::FlowTypes::Flow & maxCapacity)
 {
   if(minCapacity != 0)
     _minCapacities[ Edge(sourceNode, targetNode) ] = minCapacity;
@@ -132,7 +132,7 @@ void FlowNetwork<Type>::add_node(const GraphTypes::node_id & node,
 template<typename Type>
 void FlowNetwork<Type>::add_node(const GraphTypes::node_id & node,
 			   const Type & content,
-			   const GraphTypes::Flow & capacity)
+			   const GraphTypes::FlowTypes::Flow & capacity)
 {
   this->add_node(node, content);
 
@@ -141,7 +141,7 @@ void FlowNetwork<Type>::add_node(const GraphTypes::node_id & node,
 
 template<typename Type>
 void FlowNetwork<Type>::add_node(const GraphTypes::node_id & node,
-			   const GraphTypes::Flow & capacity) throw(GraphException::InvalidOperation)
+			   const GraphTypes::FlowTypes::Flow & capacity) throw(GraphException::InvalidOperation)
 {
   FlowNetwork<Type>::add_node(node);
 
@@ -163,9 +163,9 @@ void FlowNetwork<Type>::remove_node(const GraphTypes::node_id & node)
 template<typename Type>
 void FlowNetwork<Type>::add_flow(const GraphTypes::node_id & sourceNode,
 			   const GraphTypes::node_id & targetNode,
-			   const GraphTypes::Flow & minCapacity,
-			   const GraphTypes::Flow & flowValue,
-			   const GraphTypes::Flow & maxCapacity)
+			   const GraphTypes::FlowTypes::Flow & minCapacity,
+			   const GraphTypes::FlowTypes::Flow & flowValue,
+			   const GraphTypes::FlowTypes::Flow & maxCapacity)
   throw(GraphException::InvalidOperation)
 {
   try
@@ -177,15 +177,15 @@ void FlowNetwork<Type>::add_flow(const GraphTypes::node_id & sourceNode,
 
   catch(const GraphException::InvalidOperation&)
     {
-      throw GraphException::InvalidOperation("Given node IDs must already be in the FlowNetwork.\n Consider using:\n FlowNetwork<Type>::add_edge(const GraphTypes::node_id&, const Type&, const GraphTypes::node_id&, const Type&, const GraphTypes::Flow&, const GraphTypes::Flow&, const GraphTypes::Flow&).", __LINE__, __FILE__, "FlowNetwork<Type>::add_edge(const GraphTypes::node_id&, const GraphTypes::node_id&, const GraphTypes::Flow&, const GraphTypes::Flow&, const GraphTypes::Flow&)");
+      throw GraphException::InvalidOperation("Given node IDs must already be in the FlowNetwork.\n Consider using:\n FlowNetwork<Type>::add_edge(const GraphTypes::node_id&, const Type&, const GraphTypes::node_id&, const Type&, const GraphTypes::FlowTypes::Flow&, const GraphTypes::FlowTypes::Flow&, const GraphTypes::FlowTypes::Flow&).", __LINE__, __FILE__, "FlowNetwork<Type>::add_edge(const GraphTypes::node_id&, const GraphTypes::node_id&, const GraphTypes::FlowTypes::Flow&, const GraphTypes::FlowTypes::Flow&, const GraphTypes::FlowTypes::Flow&)");
     }
 }
 
 template<typename Type>
 void FlowNetwork<Type>::add_flow(const GraphTypes::node_id & sourceNode,
 			   const GraphTypes::node_id & targetNode,
-			   const GraphTypes::Flow & flowValue,
-			   const GraphTypes::Flow & maxCapacity)
+			   const GraphTypes::FlowTypes::Flow & flowValue,
+			   const GraphTypes::FlowTypes::Flow & maxCapacity)
   throw(GraphException::InvalidOperation)
 {
   add_flow(sourceNode, targetNode, 0, flowValue, maxCapacity);
@@ -196,9 +196,9 @@ void FlowNetwork<Type>::add_flow(const GraphTypes::node_id & sourceNode,
 			   const Type & sourceNodeContent,
 			   const GraphTypes::node_id & targetNode,
 			   const Type & targetNodeContent,
-			   const GraphTypes::Flow & minCapacity,
-			   const GraphTypes::Flow & flowValue,
-			   const GraphTypes::Flow & maxCapacity)
+			   const GraphTypes::FlowTypes::Flow & minCapacity,
+			   const GraphTypes::FlowTypes::Flow & flowValue,
+			   const GraphTypes::FlowTypes::Flow & maxCapacity)
 {
   this->flowGraph().add_edge(sourceNode, sourceNodeContent, targetNode, targetNodeContent, flowValue);
 
@@ -210,8 +210,8 @@ void FlowNetwork<Type>::add_flow(const GraphTypes::node_id & sourceNode,
 			   const Type & sourceNodeContent,
 			   const GraphTypes::node_id & targetNode,
 			   const Type & targetNodeContent,
-			   const GraphTypes::Flow & flowValue,
-			   const GraphTypes::Flow & maxCapacity)
+			   const GraphTypes::FlowTypes::Flow & flowValue,
+			   const GraphTypes::FlowTypes::Flow & maxCapacity)
 {
   add_flow(sourceNode, sourceNodeContent, targetNode, targetNodeContent, 0, flowValue, maxCapacity);
 }
@@ -219,12 +219,12 @@ void FlowNetwork<Type>::add_flow(const GraphTypes::node_id & sourceNode,
 //add_flow with nodes capacities
 template<typename Type>
 void FlowNetwork<Type>::add_flow(const GraphTypes::node_id & sourceNode,
-			   const GraphTypes::Flow & sourceNodeCapacity,
+			   const GraphTypes::FlowTypes::Flow & sourceNodeCapacity,
 			   const GraphTypes::node_id & targetNode,
-			   const GraphTypes::Flow & targetNodeCapacity,
-			   const GraphTypes::Flow & minCapacity,
-			   const GraphTypes::Flow & flowValue,
-			   const GraphTypes::Flow & maxCapacity) throw(GraphException::InvalidOperation)
+			   const GraphTypes::FlowTypes::Flow & targetNodeCapacity,
+			   const GraphTypes::FlowTypes::Flow & minCapacity,
+			   const GraphTypes::FlowTypes::Flow & flowValue,
+			   const GraphTypes::FlowTypes::Flow & maxCapacity) throw(GraphException::InvalidOperation)
 {
   add_flow(sourceNode, targetNode, minCapacity, flowValue, maxCapacity);
 
@@ -233,11 +233,11 @@ void FlowNetwork<Type>::add_flow(const GraphTypes::node_id & sourceNode,
 
 template<typename Type>
 void FlowNetwork<Type>::add_flow(const GraphTypes::node_id & sourceNode,
-			   const GraphTypes::Flow & sourceNodeCapacity,
+			   const GraphTypes::FlowTypes::Flow & sourceNodeCapacity,
 			   const GraphTypes::node_id & targetNode,
-			   const GraphTypes::Flow & targetNodeCapacity,
-			   const GraphTypes::Flow & flowValue,
-			   const GraphTypes::Flow & maxCapacity) throw(GraphException::InvalidOperation)
+			   const GraphTypes::FlowTypes::Flow & targetNodeCapacity,
+			   const GraphTypes::FlowTypes::Flow & flowValue,
+			   const GraphTypes::FlowTypes::Flow & maxCapacity) throw(GraphException::InvalidOperation)
 {
   add_flow(sourceNode, targetNode, flowValue, maxCapacity);
 
@@ -247,13 +247,13 @@ void FlowNetwork<Type>::add_flow(const GraphTypes::node_id & sourceNode,
 template<typename Type>
 void FlowNetwork<Type>::add_flow(const GraphTypes::node_id & sourceNode,
 			   const Type & sourceNodeContent,
-			   const GraphTypes::Flow & sourceNodeCapacity,
+			   const GraphTypes::FlowTypes::Flow & sourceNodeCapacity,
 			   const GraphTypes::node_id & targetNode,
 			   const Type & targetNodeContent,
-			   const GraphTypes::Flow & targetNodeCapacity,
-			   const GraphTypes::Flow & minCapacity,
-			   const GraphTypes::Flow & flowValue,
-			   const GraphTypes::Flow & maxCapacity)
+			   const GraphTypes::FlowTypes::Flow & targetNodeCapacity,
+			   const GraphTypes::FlowTypes::Flow & minCapacity,
+			   const GraphTypes::FlowTypes::Flow & flowValue,
+			   const GraphTypes::FlowTypes::Flow & maxCapacity)
 {
   add_flow(sourceNode, sourceNodeContent, targetNode, targetNodeContent, minCapacity, flowValue, maxCapacity);
 
@@ -263,12 +263,12 @@ void FlowNetwork<Type>::add_flow(const GraphTypes::node_id & sourceNode,
 template<typename Type>
 void FlowNetwork<Type>::add_flow(const GraphTypes::node_id & sourceNode,
 			   const Type & sourceNodeContent,
-			   const GraphTypes::Flow & sourceNodeCapacity,
+			   const GraphTypes::FlowTypes::Flow & sourceNodeCapacity,
 			   const GraphTypes::node_id & targetNode,
 			   const Type & targetNodeContent,
-			   const GraphTypes::Flow & targetNodeCapacity,
-			   const GraphTypes::Flow & flowValue,
-			   const GraphTypes::Flow & maxCapacity)
+			   const GraphTypes::FlowTypes::Flow & targetNodeCapacity,
+			   const GraphTypes::FlowTypes::Flow & flowValue,
+			   const GraphTypes::FlowTypes::Flow & maxCapacity)
 {
   add_flow(sourceNode, sourceNodeContent, targetNode, targetNodeContent, flowValue, maxCapacity);
 
@@ -279,7 +279,7 @@ template<typename Type>
 void FlowNetwork<Type>::remove_flow(const GraphTypes::node_id & sourceNode,
 			      const GraphTypes::node_id & targetNode)
 {
-  std::map<GraphTypes::node_id, GraphTypes::Flow>::iterator it;
+  std::map<GraphTypes::node_id, GraphTypes::FlowTypes::Flow>::iterator it;
 
   this->flowGraph().remove_edge(sourceNode, targetNode);
 
@@ -288,7 +288,7 @@ void FlowNetwork<Type>::remove_flow(const GraphTypes::node_id & sourceNode,
 
 template<typename Type>
 void FlowNetwork<Type>::setNodeCapacity(const GraphTypes::node_id & node,
-					const GraphTypes::Flow & capacity)
+					const GraphTypes::FlowTypes::Flow & capacity)
     throw(GraphException::InvalidNodeID)
 {
   if( this->flowGraph().has_node(node) )
@@ -298,14 +298,14 @@ void FlowNetwork<Type>::setNodeCapacity(const GraphTypes::node_id & node,
 
   else
     {
-      throw GraphException::InvalidNodeID(node, "Invalid node ID.", __LINE__, __FILE__, "FlowNetwork<Type>::setNodeCapacity(const GraphTypes::node_id&, const GraphTypes::Flow&)");
+      throw GraphException::InvalidNodeID(node, "Invalid node ID.", __LINE__, __FILE__, "FlowNetwork<Type>::setNodeCapacity(const GraphTypes::node_id&, const GraphTypes::FlowTypes::Flow&)");
     }
 }
 
 template<typename Type>
 void FlowNetwork<Type>::setMinCapacity(const GraphTypes::node_id & sourceNode,
 				       const GraphTypes::node_id & targetNode,
-				       const GraphTypes::Flow & capacity)
+				       const GraphTypes::FlowTypes::Flow & capacity)
   throw(GraphException::InvalidEdge)
 {
   if( this->flowGraph().has_edge(sourceNode, targetNode) )
@@ -315,14 +315,14 @@ void FlowNetwork<Type>::setMinCapacity(const GraphTypes::node_id & sourceNode,
 
   else
     {
-      throw GraphException::InvalidEdge(sourceNode, targetNode, "Given node_ids do not refer to a valid edge", __LINE__, __FILE__, "FlowNetwork<Type>::setMinCapacity(const GraphTypes::node_id&, const GraphTypes::node_id&, const GraphTypes::Flow&)");
+      throw GraphException::InvalidEdge(sourceNode, targetNode, "Given node_ids do not refer to a valid edge", __LINE__, __FILE__, "FlowNetwork<Type>::setMinCapacity(const GraphTypes::node_id&, const GraphTypes::node_id&, const GraphTypes::FlowTypes::Flow&)");
     }
 }
 
 template<typename Type>
 void FlowNetwork<Type>::setFlow(const GraphTypes::node_id & sourceNode,
 				const GraphTypes::node_id & targetNode,
-				const GraphTypes::Flow & flow)
+				const GraphTypes::FlowTypes::Flow & flow)
   throw(GraphException::InvalidEdge)
 {
   try
@@ -332,14 +332,14 @@ void FlowNetwork<Type>::setFlow(const GraphTypes::node_id & sourceNode,
 
   catch(const GraphException::InvalidEdge&)
     {
-      throw GraphException::InvalidEdge(sourceNode, targetNode, "Given node_ids do not refer to a valid edge", __LINE__, __FILE__, "FlowNetwork<Type>::setFlow(const GraphTypes::node_id&, const GraphTypes::node_id&, const GraphTypes::Flow&)");
+      throw GraphException::InvalidEdge(sourceNode, targetNode, "Given node_ids do not refer to a valid edge", __LINE__, __FILE__, "FlowNetwork<Type>::setFlow(const GraphTypes::node_id&, const GraphTypes::node_id&, const GraphTypes::FlowTypes::Flow&)");
     }
 }
 
 template<typename Type>
 void FlowNetwork<Type>::setMaxCapacity(const GraphTypes::node_id & sourceNode,
 				       const GraphTypes::node_id & targetNode,
-				       const GraphTypes::Flow & capacity)
+				       const GraphTypes::FlowTypes::Flow & capacity)
   throw(GraphException::InvalidEdge)
 {
   if( this->flowGraph().has_edge(sourceNode, targetNode) )
@@ -349,17 +349,17 @@ void FlowNetwork<Type>::setMaxCapacity(const GraphTypes::node_id & sourceNode,
 
   else
     {
-      throw GraphException::InvalidEdge(sourceNode, targetNode, "Given node_ids do not refer to a valid edge", __LINE__, __FILE__, "FlowNetwork<Type>::setMaxCapacity(const GraphTypes::node_id&, const GraphTypes::node_id&, const GraphTypes::Flow&)");
+      throw GraphException::InvalidEdge(sourceNode, targetNode, "Given node_ids do not refer to a valid edge", __LINE__, __FILE__, "FlowNetwork<Type>::setMaxCapacity(const GraphTypes::node_id&, const GraphTypes::node_id&, const GraphTypes::FlowTypes::Flow&)");
     }
 }
 
 template<typename Type>
-const GraphTypes::Flow & FlowNetwork<Type>::nodeCapacity(const GraphTypes::node_id & node)
+const GraphTypes::FlowTypes::Flow & FlowNetwork<Type>::nodeCapacity(const GraphTypes::node_id & node)
   throw(GraphException::InvalidNodeID)
 {
   if( this->flowGraph().has_node(node) )
     {
-      std::map<GraphTypes::node_id, GraphTypes::Flow>::iterator it = _nodesCapacities.find(node);
+      std::map<GraphTypes::node_id, GraphTypes::FlowTypes::Flow>::iterator it = _nodesCapacities.find(node);
 
       if( it != _nodesCapacities.end() )
 	return *it;
@@ -375,12 +375,12 @@ const GraphTypes::Flow & FlowNetwork<Type>::nodeCapacity(const GraphTypes::node_
 }
 
 template<typename Type>
-GraphTypes::Flow FlowNetwork<Type>::contribution(const GraphTypes::node_id & node) 
+GraphTypes::FlowTypes::Flow FlowNetwork<Type>::contribution(const GraphTypes::node_id & node) 
   throw(GraphException::InvalidNodeID)
 {
   if( this->flowGraph().has_node(node) )
     {
-      GraphTypes::Flow contribution = 0;
+      GraphTypes::FlowTypes::Flow contribution = 0;
 
       for(typename Graph<Type>::NodeIterator pred = this->flowGraph().predecessors_begin(node);
 	  pred != this->flowGraph().predecessors_begin(node);
@@ -406,13 +406,13 @@ GraphTypes::Flow FlowNetwork<Type>::contribution(const GraphTypes::node_id & nod
 }
 
 template<typename Type>
-GraphTypes::Flow FlowNetwork<Type>::minCapacity(const GraphTypes::node_id & sourceNode,
+GraphTypes::FlowTypes::Flow FlowNetwork<Type>::minCapacity(const GraphTypes::node_id & sourceNode,
 							const GraphTypes::node_id & targetNode) const
   throw(GraphException::InvalidEdge)
 {
   if( this->flowGraph().has_edge(sourceNode, targetNode) )
     {
-      std::map<Edge, GraphTypes::Flow>::const_iterator it = _minCapacities.find( Edge(sourceNode, targetNode) );
+      std::map<Edge, GraphTypes::FlowTypes::Flow>::const_iterator it = _minCapacities.find( Edge(sourceNode, targetNode) );
 
       if( it != _minCapacities.end() )
 	return it->second;
@@ -428,13 +428,13 @@ GraphTypes::Flow FlowNetwork<Type>::minCapacity(const GraphTypes::node_id & sour
 }
 
 template<typename Type>
-GraphTypes::Flow FlowNetwork<Type>::flow(const GraphTypes::node_id & sourceNode,
+GraphTypes::FlowTypes::Flow FlowNetwork<Type>::flow(const GraphTypes::node_id & sourceNode,
 						 const GraphTypes::node_id & targetNode) const
   throw(GraphException::InvalidEdge)
 {
   try
     {
-      return (GraphTypes::Flow) this->flowGraph().getCost(sourceNode, targetNode);
+      return (GraphTypes::FlowTypes::Flow) this->flowGraph().getCost(sourceNode, targetNode);
     }
 
   catch(const GraphException::InvalidEdge&)
@@ -444,13 +444,13 @@ GraphTypes::Flow FlowNetwork<Type>::flow(const GraphTypes::node_id & sourceNode,
 }
 
 template<typename Type>
-GraphTypes::Flow FlowNetwork<Type>::maxCapacity(const GraphTypes::node_id & sourceNode,
+GraphTypes::FlowTypes::Flow FlowNetwork<Type>::maxCapacity(const GraphTypes::node_id & sourceNode,
 							const GraphTypes::node_id & targetNode) const
   throw(GraphException::InvalidEdge)
 {
   if( this->flowGraph().has_edge(sourceNode, targetNode) )
     {
-      std::map<Edge, GraphTypes::Flow>::const_iterator it = _maxCapacities.find( Edge(sourceNode, targetNode) );
+      std::map<Edge, GraphTypes::FlowTypes::Flow>::const_iterator it = _maxCapacities.find( Edge(sourceNode, targetNode) );
 
       if( it != _maxCapacities.end() )
 	return it->second;
@@ -469,12 +469,12 @@ GraphTypes::Flow FlowNetwork<Type>::maxCapacity(const GraphTypes::node_id & sour
 template<typename Type>
 void FlowNetwork<Type>::minCapacitiesToZero()
 {
-std::map<Edge, GraphTypes::Flow>::iterator it = _minCapacities.begin();
+std::map<Edge, GraphTypes::FlowTypes::Flow>::iterator it = _minCapacities.begin();
  while( it != _minCapacities.end() )
     {
       const GraphTypes::node_id & sourceNode = it->first.source();
       const GraphTypes::node_id & targetNode = it->first.target();
-      const GraphTypes::Flow & minCapacity = it->second;
+      const GraphTypes::FlowTypes::Flow & minCapacity = it->second;
 
       _maxCapacities[Edge(sourceNode, targetNode)] -= minCapacity;
       setFlow( sourceNode, targetNode, flow(sourceNode, targetNode) - minCapacity );
@@ -487,13 +487,13 @@ std::map<Edge, GraphTypes::Flow>::iterator it = _minCapacities.begin();
 template<typename Type>
 void FlowNetwork<Type>::nodesCapacitiesToFlowCapacities()
 {
-  for(std::map<GraphTypes::node_id, GraphTypes::Flow>::iterator it = _nodesCapacities.begin();
+  for(std::map<GraphTypes::node_id, GraphTypes::FlowTypes::Flow>::iterator it = _nodesCapacities.begin();
       it != _nodesCapacities.end();
       ++it)
     {
       const GraphTypes::node_id & sourceNode = it->first;
       GraphTypes::node_id targetNode = _find_free_node_id();
-      const GraphTypes::Flow & capacity = it->second;
+      const GraphTypes::FlowTypes::Flow & capacity = it->second;
 
       if( this->flowGraph().is_container() )
 	add_node( targetNode, this->flowGraph().get_node_content(sourceNode) );
@@ -522,7 +522,7 @@ void FlowNetwork<Type>::uniqueContributors()
       node != this->flowGraph().nodes_begin();
       ++node)
     {
-      GraphTypes::Flow contrib = contribution(*node);
+      GraphTypes::FlowTypes::Flow contrib = contribution(*node);
       if( contrib != 0 )
 	{
 	  if(contrib > 0)

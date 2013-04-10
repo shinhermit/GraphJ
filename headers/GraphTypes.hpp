@@ -10,6 +10,7 @@
 #include "ColorIntensity.hpp"
 #include "ColorIncrementor.hpp"
 #include "NamedColor.hpp"
+#include "Violation.hpp"
 
 namespace GraphTypes
 {
@@ -19,13 +20,9 @@ namespace GraphTypes
 
   typedef std::list<node_id> Path;
 
-  typedef float Flow;
-
   enum EdgeType{DIRECTED, UNDIRECTED};
 
   enum EdgeState{WEIGHTED, UNWEIGHTED};
-
-  // enum What{NODES, CONTENTS};
 
   enum NodeType{CONTAINER, NOCONTENT};
 
@@ -34,12 +31,12 @@ namespace GraphTypes
   namespace Exceptions
   {
     enum Verbosity{BRIEVE, VERBOSE};
-  };
+  }
 
   namespace Iterator
   {
     enum Type{SIMPLE, DOUBLE};
-  };
+  }
 
   namespace Algorithms
   {
@@ -53,7 +50,7 @@ namespace GraphTypes
 
     const float POSITIVE_INFINITY = 20000.F;
     const float NEGATIVE_INFINITY = -20000.F;
-  };
+  }
 
   namespace Planning
   {
@@ -61,8 +58,13 @@ namespace GraphTypes
     typedef float Duration;
 
     enum EdgeDirection{DIRECT, REVERSED};
-  };
+  }
 
-};
+  namespace FlowTypes
+  {
+    typedef float Flow;
+  }
+
+}
 
 #endif

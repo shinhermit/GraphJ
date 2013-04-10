@@ -2,22 +2,42 @@ template<typename Content>
 FordFulkerson<Content>::FordFulkerson(FlowNetwork<Content> & network):
   _network(network),
   _residualBuilder(_network),
-  _traverser( _residualBuilder.residualGraph() )
+  _traverser( _residualBuilder.residualGraph() ),
+  _violation(GraphTypes::FlowTypes::UNDEFINED)
 {}
+
+template<typename Content>
+bool FordFulkerson<Content>::checkCompatibility()
+{
+  _violation = GraphTypes::FlowTypes::NOVIOLATION;
+
+  _check_flow_conservation();
+  _check_interval_neutrality();
+  _check_flow_limits_compliance();
+
+  return _compatible();
+}
+
+template<typename Content>
+const GraphTypes::FlowTypes::Violation &  FordFulkerson<Content>::violation()const
+{
+  return _violation;
+}
 
 template<typename Content>
 void FordFulkerson<Content>::maximizeFlow()
 {
-  GraphTypes::Flow delta;
+  GraphTypes::FlowTypes::Flow delta;
+  bool compatible = checkCompatibility();
+
+  if( !compatible )
+    throw GraphException::IncompatibleNetwork(_violation, "FordFulkerson<Content>::maximizeFlow()");
 
   // _network.normalize();
   // _nil_flow();
 
   _residualBuilder.build();
   _traverser.breadth_once( _network.source(), _noaction );
-
-  Exporter<>::ToGraphviz(_network, Exporter<>::SetFnCapacities(_network), "bin/initial.graph");
-  ::system("dot -Tpng bin/initial.graph -o bin/initial.png");
 
   while( _exists_path_to_sink() )
     {
@@ -27,27 +47,9 @@ void FordFulkerson<Content>::maximizeFlow()
 
       _change_flow(delta);
 
-      std::cout << "path: ";
-      for(std::list<GraphTypes::node_id>::iterator it=_path.begin(); it!=_path.end(); ++it)
-	std::cout << *it << " ";
-      std::cout << std::endl;
-
-      std::cout << "delta = " << delta <<std::endl;
-
-      Exporter<>::ToGraphviz(_traverser.traversingGraph(), "bin/traversing.graph");
-      ::system("dot -Tpng bin/traversing.graph -o bin/traversing.png");
-      Exporter<>::ToGraphviz(_residualBuilder.residualGraph(), "bin/residual.graph");
-      ::system("dot -Tpng bin/residual.graph -o bin/residual.png");
-      Exporter<>::ToGraphviz(_network, Exporter<>::SetFnCapacities(_network), "bin/modified.graph");
-      ::system("dot -Tpng bin/modified.graph -o bin/modified.png");
-
-      ::getchar();
-
       _residualBuilder.build();
       _traverser.breadth_once( _network.source(), _noaction );
     }
-  Exporter<>::ToGraphviz(_residualBuilder.residualGraph(), "bin/lastResidual.graph");
-  ::system("dot -Tpng bin/lastResidual.graph -o bin/lastResidual.png");
 }
 
 template<typename Content>
@@ -59,6 +61,56 @@ void FordFulkerson<Content>::_nil_flow()
     {
       _network.setFlow(edge->source(), edge->target(), 0);
     }
+}
+
+template<typename Content>
+void FordFulkerson<Content>::_check_flow_conservation()
+{
+  if(_network.source().contribution() + _network.sink().contribution() != 0)
+      _violation = GraphTypes::FlowTypes::CONSERVATION_VIOLATION;
+
+}
+
+template<typename Content>
+void FordFulkerson<Content>::_check_interval_neutrality()
+{
+
+  typename Graph<Content>::NodeIterator node = _network.flowGraph().nodes_begin();
+
+  while( node = _network.flowGraph().nodes_end() && _compatible() )
+    {
+      if(*node != _network.source() && *node != _network.sink() && _network.contribution(*node) != 0)
+	_violation = GraphTypes::FlowTypes::INTERNAL_NEUTRALITY_VIOLATION;
+
+      ++node;
+    }
+}
+
+template<typename Content>
+void FordFulkerson<Content>::_check_flow_limits_compliance()
+{
+
+  GraphTypes::node_id source, target;
+  typename Graph<Content>::EdgeIterator edge = _network.flowGraph().edges_begin();
+
+ while( edge = _network.flowGraph().edges_end() && _compatible() )
+    {
+      source = edge->source();
+      target = edge->target();
+
+      if( _network.flow(source, target) < _network.minCapacity(source, target)
+	  ||
+	  _network.flow(source, target) > _network.maxCapacity(source, target) )
+	_violation = GraphTypes::FlowTypes::FLOW_LIMITS_VIOLATION;
+	
+      ++edge;
+    }
+}
+
+template<typename Content>
+bool FordFulkerson<Content>::_compatible()const
+{
+  return _violation == GraphTypes::FlowTypes::NOVIOLATION;
 }
 
 template<typename Content>
@@ -90,7 +142,7 @@ void FordFulkerson<Content>::_extract_path_to_sink()
 }
 
 template<typename Content>
-GraphTypes::Flow FordFulkerson<Content>::_min_residual_on_path()
+GraphTypes::FlowTypes::Flow FordFulkerson<Content>::_min_residual_on_path()
 {
   GraphTypes::Cost min;
   std::list<GraphTypes::node_id>::iterator pred, succ;
@@ -113,14 +165,14 @@ GraphTypes::Flow FordFulkerson<Content>::_min_residual_on_path()
 	}
     }
 
-  return (GraphTypes::Flow) min;
+  return (GraphTypes::FlowTypes::Flow) min;
 }
 
 template<typename Content>
-void FordFulkerson<Content>::_change_flow(const GraphTypes::Flow & delta)
+void FordFulkerson<Content>::_change_flow(const GraphTypes::FlowTypes::Flow & delta)
 {
   std::list<GraphTypes::node_id>::iterator pred, succ;
-  GraphTypes::Flow oldFlow, newFlow;
+  GraphTypes::FlowTypes::Flow oldFlow, newFlow;
   GraphTypes::Cost residual;
 
   succ = _path.begin();
@@ -135,7 +187,6 @@ void FordFulkerson<Content>::_change_flow(const GraphTypes::Flow & delta)
 	  residual = _residualBuilder.residualGraph().getCost(*pred, *succ);
 
 	  newFlow = oldFlow + ( residual / ::abs(residual) ) * delta;
-	  std::cout << "Changing flow between " << *pred << ","<< *succ << " from " << oldFlow << " to " << newFlow << std::endl;
 
 	  _network.setFlow(*pred, *succ, newFlow);
 	  ++succ;

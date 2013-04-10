@@ -7,7 +7,7 @@ FnResidualBuilder<Type>::FnResidualBuilder(const FlowNetwork<Type> & network):
 template<typename Type>
 void FnResidualBuilder<Type>::build()
 {
-  GraphTypes::Flow directResidual, inverseResidual;
+  GraphTypes::FlowTypes::Flow directResidual, inverseResidual;
 
   if(_residualGraph.nodes_size() != 0)
     _residualGraph = Graph<>(GraphTypes::DIRECTED, GraphTypes::WEIGHTED, GraphTypes::NOCONTENT);
