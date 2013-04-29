@@ -7,15 +7,74 @@ FordFulkerson<Content>::FordFulkerson(FlowNetwork<Content> & network):
 {}
 
 template<typename Content>
-bool FordFulkerson<Content>::checkCompatibility()
+bool FordFulkerson<Content>::flowConserving()
 {
-  _violation = GraphTypes::FlowTypes::Violation::NOVIOLATION;
+  GraphTypes::FlowTypes::Flow sigmaContrib = 0;
 
-  _check_flow_conservation();
-  _check_interval_neutrality();
-  _check_flow_limits_compliance();
+  for(typename Graph<Content>::NodeIterator node = _network.flowGraph().nodes_begin();
+      node != _network.flowGraph().nodes_end();
+      ++node)
+    {
+      sigmaContrib += _network.contribution(*node);
+    }
 
-  return _compatible();
+  if(sigmaContrib != 0)
+    _violation = GraphTypes::FlowTypes::Violation::CONSERVATION_VIOLATION;
+
+  return (_violation != GraphTypes::FlowTypes::Violation::CONSERVATION_VIOLATION);
+}
+
+template<typename Content>
+bool FordFulkerson<Content>::flowLimitCompliant()
+{
+
+  GraphTypes::node_id source, target;
+  typename Graph<Content>::EdgeIterator edge = _network.flowGraph().edges_begin();
+  bool compliant;
+
+  compliant = true;
+  while( edge != _network.flowGraph().edges_end() && compliant )
+    {
+      source = edge->source();
+      target = edge->target();
+
+      if( _network.flow(source, target) < _network.minCapacity(source, target)
+	  ||
+	  _network.flow(source, target) > _network.maxCapacity(source, target) )
+	_violation = GraphTypes::FlowTypes::Violation::FLOW_LIMITS_VIOLATION;
+
+      compliant = (_violation != GraphTypes::FlowTypes::Violation::FLOW_LIMITS_VIOLATION);
+
+      ++edge;
+    }
+
+  return compliant;
+}
+
+template<typename Content>
+bool FordFulkerson<Content>::internallyNeutral()
+{
+  bool neutral;
+  typename Graph<Content>::NodeIterator node = _network.flowGraph().nodes_begin();
+
+  neutral = true;
+  while( node != _network.flowGraph().nodes_end() && neutral )
+    {
+      if(*node != _network.source() && *node != _network.sink() && _network.contribution(*node) != 0)
+	_violation = GraphTypes::FlowTypes::Violation::INTERNAL_NEUTRALITY_VIOLATION;
+
+      neutral = (_violation != GraphTypes::FlowTypes::Violation::INTERNAL_NEUTRALITY_VIOLATION);
+
+      ++node;
+    }
+
+  return neutral;
+}
+
+template<typename Content>
+bool FordFulkerson<Content>::compatible()
+{
+  return ( flowConserving() && flowLimitCompliant() );
 }
 
 template<typename Content>
@@ -25,16 +84,23 @@ const GraphTypes::FlowTypes::Violation &  FordFulkerson<Content>::violation()con
 }
 
 template<typename Content>
+void FordFulkerson<Content>::nilFlow()
+{
+  for(typename Graph<Content>::EdgeIterator edge = _network.flowGraph().edges_begin();
+      edge != _network.flowGraph().edges_end();
+      ++edge)
+    {
+      _network.setFlow(edge->source(), edge->target(), 0);
+    }
+}
+
+template<typename Content>
 void FordFulkerson<Content>::maximizeFlow()  throw(GraphException::IncompatibleNetwork)
 {
   GraphTypes::FlowTypes::Flow delta;
-  bool compatible = checkCompatibility();
 
-  if( !compatible )
+  if( !compatible() )
     throw GraphException::IncompatibleNetwork(_violation, "FordFulkerson<Content>::maximizeFlow()");
-
-  // _network.normalize();
-  //_nil_flow();
 
   _residualBuilder.build();
   _traverser.breadth_once( _network.source(), _noaction );
@@ -50,67 +116,6 @@ void FordFulkerson<Content>::maximizeFlow()  throw(GraphException::IncompatibleN
       _residualBuilder.build();
       _traverser.breadth_once( _network.source(), _noaction );
     }
-}
-
-template<typename Content>
-void FordFulkerson<Content>::_nil_flow()
-{
-  for(typename Graph<Content>::EdgeIterator edge = _network.flowGraph().edges_begin();
-      edge != _network.flowGraph().edges_end();
-      ++edge)
-    {
-      _network.setFlow(edge->source(), edge->target(), 0);
-    }
-}
-
-template<typename Content>
-void FordFulkerson<Content>::_check_flow_conservation()
-{
-  if(_network.contribution(_network.source()) + _network.contribution(_network.sink()) != 0)
-    _violation = GraphTypes::FlowTypes::Violation::CONSERVATION_VIOLATION;
-
-}
-
-template<typename Content>
-void FordFulkerson<Content>::_check_interval_neutrality()
-{
-
-  typename Graph<Content>::NodeIterator node = _network.flowGraph().nodes_begin();
-
-  while( node != _network.flowGraph().nodes_end() && _compatible() )
-    {
-      if(*node != _network.source() && *node != _network.sink() && _network.contribution(*node) != 0)
-	_violation = GraphTypes::FlowTypes::Violation::INTERNAL_NEUTRALITY_VIOLATION;
-
-      ++node;
-    }
-}
-
-template<typename Content>
-void FordFulkerson<Content>::_check_flow_limits_compliance()
-{
-
-  GraphTypes::node_id source, target;
-  typename Graph<Content>::EdgeIterator edge = _network.flowGraph().edges_begin();
-
-  while( edge != _network.flowGraph().edges_end() && _compatible() )
-    {
-      source = edge->source();
-      target = edge->target();
-
-      if( _network.flow(source, target) < _network.minCapacity(source, target)
-	  ||
-	  _network.flow(source, target) > _network.maxCapacity(source, target) )
-	_violation = GraphTypes::FlowTypes::Violation::FLOW_LIMITS_VIOLATION;
-	
-      ++edge;
-    }
-}
-
-template<typename Content>
-bool FordFulkerson<Content>::_compatible()const
-{
-  return _violation == GraphTypes::FlowTypes::Violation::NOVIOLATION;
 }
 
 template<typename Content>

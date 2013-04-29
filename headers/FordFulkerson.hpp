@@ -14,9 +14,17 @@ class FordFulkerson
 public:
   FordFulkerson(FlowNetwork<Content> & network);
 
-  bool checkCompatibility();
+  bool flowConserving();
+
+  bool flowLimitCompliant();
+
+  bool internallyNeutral();
+
+  bool compatible();
 
   const GraphTypes::FlowTypes::Violation &  violation()const;
+
+  void nilFlow();
 
   void maximizeFlow() throw(GraphException::IncompatibleNetwork);
 
@@ -27,16 +35,6 @@ private:
   std::list<GraphTypes::node_id> _path;
   GraphFunctor::DoNothingVisitor _noaction;
   GraphTypes::FlowTypes::Violation _violation;
-
-  void _check_flow_conservation();
-
-  void _check_interval_neutrality();
-
-  void _check_flow_limits_compliance();
-
-  bool _compatible()const;
-
-  void _nil_flow();
 
   bool _exists_path_to_sink();
 
