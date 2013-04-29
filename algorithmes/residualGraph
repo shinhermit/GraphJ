@@ -1,0 +1,39 @@
+FONCTION graphEcart( G(S,E):Graphe ) : G'(S,E'):Graphe
+Pré:
+	. \forall x_ij \quad \in E (x_ij \ge 0) /\ ( \exists u_ij, l_ij : l_ij \le x_ij \le u_ij)
+
+Post:
+	. \forall a_ij \in E'  \quad (a_ij \ne 0) /\ ( cout(a_ij) = u_ij - x_ij || cout(a_ij) = x_ji - l_ji)
+
+Variables:
+	i : entier
+	A, B : Arc
+	p, t : Sommet
+	x, u, l, Rd, Ri : Réel
+
+Début
+	POUR i=0 à taille(E) FAIRE
+	DEBUT
+		A = ième(E, i)
+		x = flux(G, A)
+		u = C_max(G, A)
+		l = C_min(G, A)
+		p = initial(A) //extrémité initiale
+		t = terminal(A) // extrémité terminale
+		
+		Rd = u - x
+		Ri = l - x
+		
+		SI
+			Rd > 0
+		ALORS
+			ajouter_arc(G', p, t, 0-Rd)
+		FINSI
+
+		SI
+			Ri > 0
+		ALORS
+			ajouter_arc(G', t, p, 0-Ri)
+		FINSI
+	FIN
+Fin

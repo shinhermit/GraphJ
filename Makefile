@@ -21,3 +21,4 @@ buildclean:
 
 clean: cleantemp distclean
 	cd build; make clean
+	make buildclean

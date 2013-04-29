@@ -87,13 +87,13 @@ add_executable(
   )
 
 add_executable(
-  test_residual_graph_builder
+  residual_graph
   tests/test_fn_residual_builder.cpp
   ${sources}
   )
 
 add_executable(
-  test_ford_fulkerson
+  ford_fulkerson
   tests/test_ford_fulkerson.cpp
   ${sources}
   )

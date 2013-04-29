@@ -34,7 +34,7 @@ void FordFulkerson<Content>::maximizeFlow()  throw(GraphException::IncompatibleN
     throw GraphException::IncompatibleNetwork(_violation, "FordFulkerson<Content>::maximizeFlow()");
 
   // _network.normalize();
-  _nil_flow();
+  //_nil_flow();
 
   _residualBuilder.build();
   _traverser.breadth_once( _network.source(), _noaction );
@@ -93,7 +93,7 @@ void FordFulkerson<Content>::_check_flow_limits_compliance()
   GraphTypes::node_id source, target;
   typename Graph<Content>::EdgeIterator edge = _network.flowGraph().edges_begin();
 
- while( edge != _network.flowGraph().edges_end() && _compatible() )
+  while( edge != _network.flowGraph().edges_end() && _compatible() )
     {
       source = edge->source();
       target = edge->target();
@@ -124,9 +124,6 @@ void FordFulkerson<Content>::_extract_path_to_sink()
 {
   GraphTypes::node_id currentNode, predecessor;
   const Graph<> & traversing = _traverser.traversingGraph();
-
-  _traverser.breadth_once( _network.source(), _noaction );
-
 
   if( _path.size() > 0 )
     _path.clear();
@@ -160,8 +157,6 @@ GraphTypes::FlowTypes::Flow FordFulkerson<Content>::_min_residual_on_path()
 	  GraphTypes::Cost cost = ::abs( traversing.getCost(*pred, *succ) );
 	  if(cost < min)
 	    min = cost;
-
-	  ++succ;
 	}
     }
 
@@ -171,24 +166,38 @@ GraphTypes::FlowTypes::Flow FordFulkerson<Content>::_min_residual_on_path()
 template<typename Content>
 void FordFulkerson<Content>::_change_flow(const GraphTypes::FlowTypes::Flow & delta)
 {
-  std::list<GraphTypes::node_id>::iterator pred, succ;
+  std::list<GraphTypes::node_id>::iterator it_pred, it_succ;
+  GraphTypes::node_id pred, succ;
   GraphTypes::FlowTypes::Flow oldFlow, newFlow;
   GraphTypes::Cost residual;
+  int sign;
 
-  succ = _path.begin();
-  while( succ != _path.end() )
+  it_succ = _path.begin();
+  while( it_succ != _path.end() )
     {
-      pred = succ++;
+      it_pred = it_succ++;
 
-      if( succ != _path.end() )
+      if( it_succ != _path.end() )
 	{
-	  oldFlow = _network.flow(*pred, *succ);
+	  sign = ( _residualBuilder.residualGraph().getCost(*it_pred, *it_succ) >= 0 ) ? 1 : -1;
 
-	  residual = _residualBuilder.residualGraph().getCost(*pred, *succ);
+	  if(sign > 0)
+	    {
+	      pred = *it_pred;
+	      succ = *it_succ;
+	    }
 
-	  newFlow = oldFlow + ( residual / ::abs(residual) ) * delta;
+	  else
+	    {
+	      pred = *it_succ;
+	      succ = *it_pred;
+	    }
 
-	  _network.setFlow(*pred, *succ, newFlow);
+	  oldFlow = _network.flow(pred, succ);
+
+	  newFlow = oldFlow + sign*delta;
+
+	  _network.setFlow(pred, succ, newFlow);
 	}
 
     }
